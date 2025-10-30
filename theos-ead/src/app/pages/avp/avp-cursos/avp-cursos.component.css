@@ -1,0 +1,64 @@
+::ng-deep .ant-table{
+    background: #3f3f3f !important;
+    color: #fff;
+    border-radius: 10px;
+  }
+
+  ::ng-deep .ant-table-thead > tr > th{
+    background: #272727 !important;
+    color: #fff;
+  }
+
+  ::ng-deep .ant-table-tbody > tr:hover > td{
+    background: #111111 !important;
+  }
+
+  ::ng-deep .ant-table-container{
+    border-radius: 10px !important;
+  }
+
+  ::ng-deep .ant-pagination-prev .ant-pagination-item-link,
+  ::ng-deep .ant-pagination-next .ant-pagination-item-link {
+    background-color: #dc3545 !important;
+    color: white !important;
+    border-color: #dc3545 !important;
+  }
+
+  ::ng-deep .ant-pagination-item-active {
+    background-color: #dc35466b !important;
+    color: #fff !important;
+    border: none !important;
+  }
+  
+  ::ng-deep .ant-modal-title{
+    color: rgb(255, 107, 107);
+}
+
+::ng-deep .ant-modal-header {
+  background-color: rgb(27, 27, 27);
+  color: aliceblue;
+  border: none;
+}
+
+::ng-deep .ant-modal-footer {
+  background-color: rgb(27, 27, 27);
+  color: aliceblue;
+  border: none;
+}
+
+::ng-deep .ant-modal-body {
+  background-color: rgb(27, 27, 27);
+  color: aliceblue;
+  border: none;
+}
+
+::ng-deep .ant-modal-content {
+  background-color: rgb(27, 27, 27);
+  color: aliceblue;
+  border: none;
+}
+
+::ng-deep .ant-modal {
+  background-color: rgb(27, 27, 27);
+  color: aliceblue;
+}

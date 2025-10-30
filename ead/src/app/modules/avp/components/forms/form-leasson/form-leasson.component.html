@@ -1,0 +1,105 @@
+<form [formGroup]="formLesson">
+  <div class="row">
+
+    <div class="col-8">
+
+      <div class="row">
+
+        <div class="col-6 mb-3">
+          <label for="titleLesson" class="form-label text-secondary">
+            <b>Título da Aula</b>
+          </label>
+          <input
+            type="text"
+            class="form-control"
+            id="titleLesson"
+            formControlName="Name"
+          />
+          <small class="text-secondary">Max.: 50 caractéres</small>
+        </div>
+
+        <div class="col-6 mb-3">
+          <label for="DescriptionSmall" class="form-label text-secondary">
+            <b>Descrição Resumida</b>
+          </label>
+          <input
+            type="text"
+            class="form-control"
+            id="description"
+            formControlName="DescriptionSmall"
+          />
+          <small class="text-secondary">Max.: 100 caractéres</small>
+        </div>
+
+        <div class="col-6 mb-3">
+          <label for="ModuleId" class="form-label text-secondary">
+            <b>Módulo</b>
+          </label>
+          <select class="form-select" id="ModuleId" formControlName="ModuleId" [ngClass]="{ 'is-invalid': formLesson.get('ModuleId')?.invalid && formLesson.get('ModuleId')?.touched }">
+            <option [ngValue]="null" disabled>Selecione...</option>
+            <option *ngFor="let item of listModules" [value]="item.ordem">{{item.Name}}</option>
+          </select>
+          <div *ngIf="formLesson.get('ModuleId')?.invalid && formLesson.get('ModuleId')?.touched" class="invalid-feedback">
+            <div *ngIf="formLesson.get('ModuleId')?.hasError('required')">Selecione um módulo.</div>
+          </div>
+        </div>
+
+        <div class="col-6 mb-3">
+          <label for="description-large" class="form-label text-secondary">
+            <b>Descrição Completa</b>
+          </label>
+          <input type="text" class="form-control" id="DescriptionLarge" formControlName="DescriptionLarge" [ngClass]="{ 'is-invalid': formLesson.get('DescriptionLarge')?.invalid && formLesson .get('DescriptionLarge')?.touched }">
+          <small class="text-secondary" [ngClass]="{ 'text-danger': formLesson.get('DescriptionLarge')?.hasError('maxlength') }">
+            {{ formLesson.get('DescriptionLarge')?.value?.length || 0 }} / 100 caracteres </small>
+          <div *ngIf="formLesson.get('DescriptionLarge')?.invalid && formLesson.get('DescriptionLarge')?.touched" class="invalid-feedback">
+            <div *ngIf="formLesson.get('DescriptionLarge')?.hasError('required')">A descrição é obrigatória.</div>
+            <div *ngIf="formLesson.get('DescriptionLarge')?.hasError('maxlength')">A descrição excedeu o limite de 100 caracteres.</div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+    <div class="col-4">
+      <label class="form-label text-secondary">
+        <b>Vídeo da Aula</b>
+      </label>
+
+      <div class="drop-zone"
+          (dragover)="onDragOver($event)"
+          (dragleave)="onDragLeave($event)"
+          (drop)="onDrop($event)"
+          (click)="fileInput.click()"
+          [class.drag-over]="isDraggingOver">
+
+        <input #fileInput
+              type="file"
+              (change)="onFileSelected($event)"
+              accept="image/png, image/jpeg, image/gif"
+              hidden>
+
+        <div *ngIf="!selectedFile;" class="text-center p-3">
+          <p class="mb-1">
+            <i class="bi bi-cloud-arrow-up-fill fs-2 text-secondary"></i>
+          </p>
+          <p class="mb-0 text-secondary">Arraste o vídeo ou clique aqui</p>
+          <small class="text-secondary">mp4 | Max: 1gb</small>
+        </div>
+
+        <ng-template #imagePreview>
+          <span>Vídeo Selecionado!</span>
+        </ng-template>
+
+      </div>
+    </div>
+
+    <div class="col-12 pb-3 d-flex justify-content-end border-bottom border-secondary mb-4">
+      <button class="btn btn-sm btn-danger d-flex justify-content-between align-items-center gap-2" (click)="addLesson()">
+        <i class="fa fa-plus-square" aria-hidden="true"></i>
+        <span>Adicionar Aula</span>
+      </button>
+    </div>
+
+  </div>
+</form>

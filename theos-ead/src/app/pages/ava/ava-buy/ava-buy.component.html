@@ -1,0 +1,68 @@
+<div class="row ps-xl-5 pe-xl-5 ps-lg-5 pe-lg-5" *ngIf="dadosCurso.length > 0">
+  <div class="col-xl-6 col-md-12 col-12 mt-2 pe-5 ps-5">
+    <div
+      class="card bg-black border-secondary h-100"
+      [style.background-image]="'url(' + dadosCurso[0].UrlHeader + ')'"
+      style="
+        background-size: cover;
+        background-position: center;
+        position: relative;
+      "
+    >
+      <div
+        style="
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: black;
+          opacity: 0.6;
+          z-index: 1;
+        "
+      ></div>
+
+      <div class="card-header" style="position: relative; z-index: 2">
+        <h4 class="text-danger h2 mt-4">{{ dadosCurso[0].Titulo }}</h4>
+      </div>
+
+      <div class="card-body" style="position: relative; z-index: 2">
+        <div class="row">
+          <div class="col-12 text-light">
+            <span>{{ dadosCurso[0].Descricao }}</span>
+          </div>
+          <div class="col-8 mt-3">
+            <strong class="text-danger">Categoria: </strong
+            ><span class="text-light text-uppercase">{{
+              dadosCurso[0].Categoria
+            }}</span
+            ><br />
+            <strong class="text-danger">Criado em: </strong
+            ><span class="text-light">{{
+              formatarData(dadosCurso[0].DataInc)
+            }}</span
+            ><br />
+            <strong class="text-danger">Autor: </strong
+            ><span class="text-light text-uppercase">{{
+              dadosCurso[0].Autor
+            }}</span>
+          </div>
+          <div class="col-4 mt-3 d-flex justify-content-end align-items-center">
+            <span class="text-light"></span>
+            <strong class="h1 bg-success p-1 rounded text-light">{{
+              formatarParaBRL(dadosCurso[0].Valor)
+            }}</strong>
+            <input
+              type="hidden"
+              id="paymentAmount"
+              [value]="dadosCurso[0].Valor"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-xl-6 col-md-12 col-12 mt-2 pe-5 ps-5 mt-4 mt-xl-0">
+    <app-cart class="w-100" [amount]="dadosCurso[0].Valor" [courseId]="idCurso" [userId]="idUser"></app-cart>
+  </div>
+</div>

@@ -1,0 +1,51 @@
+.upload-box {
+  border: 2px dashed #ccc;
+  border-radius: 8px;
+  padding: 5px 20px;
+  text-align: center;
+  cursor: pointer;
+  background-color: #f9f9f986;
+  transition: all 0.2s ease-in-out;
+}
+
+.upload-box.dragover {
+  border-color: #004369; 
+  background-color: #e9f5ff; 
+}
+
+.file-info button {
+  pointer-events: auto; 
+}
+
+.no-resize {
+  resize: none;
+}
+
+.strong{
+  font-weight: bolder;
+}
+
+.horizontal-scroll-custom::-webkit-scrollbar {
+  background-color: transparent; 
+}
+
+.horizontal-scroll-custom::-webkit-scrollbar-track {
+  background-color: #f0f0f000; 
+  border-radius: 10px;     
+  margin: 0 5px;            
+}
+
+.horizontal-scroll-custom::-webkit-scrollbar-thumb {
+  background-color: #ff00005d; 
+  border-radius: 10px;       
+  border: 2px solid #f0f0f000;
+}
+
+.horizontal-scroll-custom::-webkit-scrollbar-thumb:hover {
+  background-color: #ff00005d; 
+}
+
+.horizontal-scroll-custom {
+  scrollbar-width: thin; 
+  scrollbar-color: #ff00005d #f0f0f000; 
+}

@@ -1,0 +1,59 @@
+body{
+  background-color: #0c0d0f;
+}
+
+.layout {
+  min-height: 100vh;
+}
+
+nz-header {
+  position: fixed;
+  width: 100%;
+  z-index: 999;
+}
+
+[nz-menu] {
+  line-height: 64px;
+}
+
+nz-content {
+  padding: 0 50px;
+  margin-top: 64px;
+}
+
+nz-breadcrumb {
+  margin: 16px 0;
+}
+
+.inner-content {
+  background: #0c0d0f;
+  padding: 24px;
+  min-height: 380px;
+}
+
+nz-footer {
+  text-align: center;
+  background-color: #0c0d0f;
+}
+
+::ng-deep .ant-layout-content{
+  background-color: #0c0d0f;
+}
+
+::ng-deep .ant-menu.ant-menu-dark{
+  background-color: #0c0d0f;
+}
+
+::ng-deep .ant-layout-header{
+  background-color: #0c0d0f;
+}
+
+:ng-deep .ant-layout {
+  background-color: #0c0d0f !important;
+}
+
+.layout{
+  background-color: #0c0d0f !important;
+
+}
+

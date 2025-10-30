@@ -1,0 +1,44 @@
+<div class="row h-100">
+    <div class="col-xl-6 col-12 d-flex justify-content-center align-items-top">
+      <div class="card text-center bg-dark-light card-login">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-12">
+              <a routerLink="/home"><img src="https://res.cloudinary.com/dez4evjlq/image/upload/v1724259645/header_earf0j.png" width="300" alt=""></a>
+            </div>
+            <div class="col-12">
+              <span class="text-light">Informe seu e-mail! <br>Você receberá um link para recuperação de senha.</span><br>
+              <span class="text-danger">Verifique o lixo eletrônico</span><br>
+              <span class="text-light">Atenção, ao solicitar uma recuperação de senha, seu cadastro será bloqueado automáticamente, até que cadastre uma nova senha!</span>
+            </div>
+            <div class="col-12 d-flex justify-content-center mt-5 text-center" >
+              <form nz-form [formGroup]="validateForm" (ngSubmit)="submitForm()">
+                <div class="row">
+                  <div class="col-12">
+                    <nz-form-item>
+                      <nz-form-control nzErrorTip="O e-mail informado não é válido">
+                        <nz-input-group nzPrefixIcon="mail">
+                          <input nz-input formControlName="email" id="email" placeholder="E-mail" />
+                        </nz-input-group>
+                      </nz-form-control>
+                    </nz-form-item>
+                  </div>
+                <nz-form-item nz-row class="register-area">
+                  <nz-form-control>
+                    <button class="btn btn-danger mt-3">Enviar</button>
+                  </nz-form-control>
+                </nz-form-item>
+                </div>
+              </form>
+            </div>
+          </div>
+          <br><a routerLink="/login"><i class="fa-solid fa-door-open"></i>Voltar para Login</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-6">
+      
+    </div>
+  </div>
+  
+  

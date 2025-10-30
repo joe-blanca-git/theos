@@ -1,0 +1,24 @@
+.image-card-aula {
+    width: 100%;
+    display: block;
+  }
+  
+  .play-button {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    padding: 10px 10px;
+    margin-right: 20px;
+  }
+  
+  .play-button:hover {
+    background-color: rgba(0, 0, 0, 0.8); 
+  }
+  
+  ::ng-deep .img-header-ava {
+    width: 100% !important;
+    height: 20vh !important;
+    object-fit: cover !important;
+    object-position: top !important; 
+  }
+  

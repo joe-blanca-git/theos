@@ -1,0 +1,132 @@
+<div
+*ngIf="loading"
+class="d-flex justify-content-center align-items-center"
+style="height: 100vh"
+>
+<div class="row">
+    <div class="col-12 d-flex justify-content-center">
+    <img
+        src="https://i.imgur.com/ISvbhQp.png"
+        alt="Loading..."
+        class="img-fluid animate-grow"
+        style="width: 50px; height: 50px; "
+    />
+    </div>
+    <div class="col-12 mt-5 d-flex justify-content-center">
+    <span class="text-danger"><strong>Carregando...</strong></span>
+    </div>
+</div>
+</div>
+
+
+<div class="container-fluid p-0" 
+    style="
+        display: flex;
+        flex-direction: column;
+        align-content: center;
+        align-items: center;
+        ">
+    <div class="row w-100">
+        <div class="col-md-6 col-xl-3 col-sm-6 col-6 mt-4 p-sm-0 p-1">
+            <a routerLink="../ava-cursando">
+                <div class="card bg-black border-dark m-sm-0 m-xl-2 m-md-2 card-menu-danger h-100">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12">
+                                <span class="h6 text-secondary"><span class="hidden-sm">Meus</span> Cursos</span>
+                            </div>
+                            <div class="col-6 d-flex justify-content-center align-items-center">
+                                <span class="h2 text-light text-responsive"><strong>{{cursando}}</strong></span>
+                            </div>
+                            <div class="col-6 d-flex justify-content-end align-items-center">
+                                <i class="fa-solid fa-book-open fa-3x text-info hidden-sm"></i>
+                                <i class="fa-solid fa-book-open fa-2x text-info view-sm"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>  
+            </a>
+        </div>
+        <div class="col-md-6 col-xl-3 col-6 mt-4 p-sm-0 p-1">
+            <div class="card bg-black border-dark m-sm-0 m-xl-2 m-md-2  h-100">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <span class="h6 text-secondary"><span class="hidden-sm">Cursos</span> Concluídos</span>
+                        </div>
+                        <div class="col-6 d-flex justify-content-center align-items-center">
+                            <span class="h2 text-light text-responsive"><strong>{{concluido}}</strong></span>
+                        </div>
+                        <div class="col-6 d-flex justify-content-end align-items-center">
+                            <i class="fa-solid fa-check-circle fa-3x text-success hidden-sm"></i>
+                            <i class="fa-solid fa-check-circle fa-2x text-success view-sm"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-xl-3 col-6 mt-4 p-sm-0 p-1">
+            <div class="card bg-black border-dark m-sm-0 m-xl-2 m-md-2 h-100">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <span class="h6 text-secondary">Tempo <span class="hidden-sm">Estudando</span></span>
+                        </div>
+                        <div class="col-8 d-flex justify-content-end align-items-center">
+                            <span class="text-responsive text-light"><strong>{{tempoH}}</strong>h</span>
+                        </div>
+                        <div class="col-4 d-flex justify-content-end align-items-center">
+                            <i class="fa-solid fa-clock fa-3x text-warning hidden-sm"></i>
+                            <i class="fa-solid fa-clock fa-2x text-warning view-sm"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-xl-3 col-6 mt-4 p-sm-0 p-1">
+            <div class="card bg-black border-dark m-sm-0 m-xl-2 m-md-2  h-100">
+                <div class="card-body ">
+                    <div class="row">
+                        <div class="col-12">
+                            <span class="text-secondary"><span class="hidden-sm">Percentual</span> Progresso</span>
+                        </div>
+                        <div class="col-6 d-flex justify-content-center align-items-center">
+                            <span class="h2 text-light text-responsive"><strong>{{percentual}}%</strong></span>
+                        </div>
+                        <div class="col-6 d-flex justify-content-end align-items-center">
+                            <i class="fa-solid fa-arrow-trend-up fa-3x text-primary hidden-sm"></i>
+                            <i class="fa-solid fa-arrow-trend-up fa-2x text-primary view-sm"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 mt-4">
+            <h4 class="text-light">Explore seu potêncial com a categoria adequada!</h4>
+        </div>
+    </div>
+    <div class="row w-100">
+        <div class="col-md-6 col-xl-3 col-12 mt-1 p-sm-0 p-xl-2" *ngFor="let card of categorias">
+            <div class="card card-categoria" style="background-image: url({{card.imgUrl}});">
+                <div class="card-body ">
+                    <div class="row">
+                        <div  class="col-12">
+                            <span class="h6 text-light">{{card.title}}</span>
+                        </div>
+                        <div class="col-xl-8 col-8 d-flex justify-content-center align-items-center">
+                            <p class="text-justify text-light mt-4 t-sm">
+                                {{card.descricao}}
+                            </p>
+                        </div>
+                        <div class="col-12 d-flex justify-content-star">
+                            <button class="btn btn-sm btn-danger" routerLink="{{card.link}}" [queryParams]="{categoria:card.categoria}">Ver Cursos</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

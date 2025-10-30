@@ -1,0 +1,19 @@
+::ng-deep  .ant-modal-body{
+    background-color: #212529;
+    border-color: #212529;
+}
+
+::ng-deep .ant-modal-footer {
+    background-color: #212529;
+    border-color: #212529;
+}
+
+::ng-deep .ant-modal-content{
+    background-color: #212529;
+    border-color: #212529;
+}
+
+::ng-deep .ant-modal-footer {
+    display: none;
+}
+  

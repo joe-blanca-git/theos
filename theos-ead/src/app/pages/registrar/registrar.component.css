@@ -1,0 +1,99 @@
+
+
+.login-form {
+  max-width: 300px;
+}
+
+.login-form-margin {
+  margin-bottom: 16px;
+}
+
+.login-form-forgot {
+  float: right;
+}
+
+.login-form-button {
+  width: 100%;
+}
+
+.bg-dark-light{
+  background-color: rgba(0, 0, 0, 0.744);
+}
+
+@media (min-width: 768px) {
+
+	.card-login{
+    width: 70%;
+    height: 70%;
+    margin-top: 10vh;
+    padding-top: 2vw;
+    padding-bottom: 2vw;
+	}
+
+  :host {
+    display: block;
+    height: 100vh;
+    background-image: url('../../../assets/img/bg-registrar.png');
+    background-size: cover; 
+    background-repeat: no-repeat; 
+    background-position: center center;
+}
+  
+}
+
+@media (max-width: 768px) {
+
+    .card-login{
+      width: 85%;
+      height: 100%;
+      margin-top: 10vh;
+      padding-top: 2vw;
+      padding-bottom: 2vw;
+    }
+  
+    .p-desktop{
+      margin-top: 40px;
+      padding-top: 40px;
+      padding-bottom: 30px;
+      padding-right: 30px;
+      padding-left: 30px;
+    }
+
+    :host {
+      display: block;
+      height: 100vh;
+      background-image: url('../../../assets/img/bg-registrar.png');
+      background-size: cover; 
+      background-repeat: no-repeat; 
+      background-position: center center;
+  }
+
+  .bg-dark-light{
+    background-color: rgba(0, 0, 0, 0.744);
+    color: #fff;
+  }
+  
+}
+
+@keyframes slideUpFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card {
+  opacity: 0; /* Inicialmente invisível */
+  animation: slideUpFadeIn 1s ease-out 2s forwards;
+}
+
+:host {
+  display: block;
+  height: 100vh;
+  overflow: hidden;
+}
+

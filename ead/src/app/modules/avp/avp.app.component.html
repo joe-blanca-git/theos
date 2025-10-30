@@ -1,0 +1,23 @@
+<!-- -->
+
+<nz-layout>
+  <nz-header class="bg-dark">
+    <div class="header">
+      <div class="d-flex flex-column">
+        <span class="page-title"><i [class]="pageIcon"></i> {{ pageTitle }}</span>
+        <span class="page-description">{{ pageDescription }}</span>
+      </div>
+    </div>
+  </nz-header>
+  <nz-content class="bg-dark">
+    <!-- <nz-breadcrumb>
+          <nz-breadcrumb-item>Home</nz-breadcrumb-item>
+          <nz-breadcrumb-item>List</nz-breadcrumb-item>
+          <nz-breadcrumb-item>App</nz-breadcrumb-item>
+        </nz-breadcrumb> -->
+    <div class="inner-content bg-dark">
+      <router-outlet></router-outlet>
+    </div>
+  </nz-content>
+  <nz-footer>Joeder Blanca ©{{ 2025 }} Desenvolvimeento de Software</nz-footer>
+</nz-layout>

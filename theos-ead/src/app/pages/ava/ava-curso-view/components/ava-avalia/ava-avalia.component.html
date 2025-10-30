@@ -1,0 +1,12 @@
+<nz-modal [(nzVisible)]="statusModal" nzFooter="" nzTitle="" nzCloseIcon="">
+  <ng-container *nzModalContent>
+    <div class="row text-success text-center">
+      <div class="col-12">
+        <span class="h3">PARABÉNS, MÓDULO CONCLUÍDO COM SUCESSO!</span>
+      </div>
+      <div class="col-12 mt-3">
+        <button class="btn btn-success" (click)="handleOk()"><i class="fa-solid fa-thumbs-up xl-2"></i> OK</button>
+      </div>
+    </div>
+  </ng-container>
+</nz-modal>

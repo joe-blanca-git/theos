@@ -1,0 +1,66 @@
+<div class="container-fluid p-0" 
+    style="
+        display: flex;
+        flex-direction: column;
+        align-content: center;
+        align-items: center;
+        ">
+    <div class="row w-100 p-xl-5 ms-xl-5 mt-5 align-items-baseline">
+        <div class="col-md-4 col-xl-4 col-sm-4 col-4 mt-4 p-sm-0 p-1">
+            <h5 class="text-light">Meus Cursos</h5>
+        </div>
+        <div class="col-md-8 col-xl-8 col-sm-8 col-8 p-sm-0 text-end align-content-between">
+            <button class="btn btn-sm btn-outline-danger" (click)="showNovoCurso()"><i class="fa fa-plus-square" aria-hidden="true"></i> Novo Curso</button>
+        </div>
+        <div class="col-12">
+            <hr class="border-light">
+        </div>
+        <div class="col-12">
+            <nz-table #sortTable [nzData]="listCursos" nzTableLayout="fixed">
+                <thead>
+                  <tr>
+                    <th class="text-center">Título</th>
+                    <th class="text-center ">Data Inclusão</th>
+                    <th class="text-center">Ações</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let data of sortTable.data">
+                    <td class="text-center">{{ data?.Titulo }}</td>
+                    <td class="text-center ">{{ data?.DataInc }}</td>
+                    <td class="text-center">
+                        <button 
+                          class="btn btn-sm me-2" 
+                          [ngClass]="{
+                            'btn-danger': data.Status === 'A',
+                            'btn-secondary': data.Status === 'N'
+                          }" 
+                          title="Inativar Curso"
+                          (click)="inactiveCourse(data.Id)"
+                        >
+                          <i class="fa-solid " 
+                            [ngClass]="{
+                              'fa-toggle-off': data.Status === 'A',
+                              'fa-toggle-on': data.Status === 'N'
+                            }" 
+                            aria-hidden="true"
+                          ></i>
+                        </button>
+                        <button 
+                          class="btn btn-warning btn-sm me-2" 
+                          title="Editar Curso"
+                          (click)="redirectToRoute(data.Id)"
+                        >
+                          <i class="fa fa-pen-alt" aria-hidden="true"></i>
+                        </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </nz-table>
+        </div>
+    </div>
+</div>
+<app-new-curso [statusModal]="visibleNovoCurso" (close)="getCursos()" (close)="hiddeNovoCurso($event)"></app-new-curso>
+
+
+

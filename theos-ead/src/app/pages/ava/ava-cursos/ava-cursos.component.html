@@ -1,0 +1,69 @@
+<div
+  *ngIf="loading"
+  class="d-flex justify-content-center align-items-center"
+  style="height: 100vh"
+>
+  <div class="row">
+      <div class="col-12 d-flex justify-content-center">
+      <img
+          src="https://i.imgur.com/ISvbhQp.png"
+          alt="Loading..."
+          class="img-fluid animate-grow"
+          style="width: 50px; height: 50px; "
+      />
+      </div>
+      <div class="col-12 mt-5 d-flex justify-content-center">
+      <span class="text-danger"><strong>Carregando...</strong></span>
+      </div>
+  </div>
+</div>
+
+
+<div class="row d-flex justify-content-center" >
+    <div *ngFor="let card of listCursos; let i = index" class="col-auto mt-3 mb-5 d-flex justify-content-center">      
+      <a>
+        <div class="movie-card-list" style="z-index: 99;">
+          <div style="z-index: 9999;" class="content-card" [ngClass]="{'move-up': isCardMovedUp[i]}" (click)="toggleMove(i, 'show')">
+            <img [src]="card.UrlPoster" alt="Poster">
+            <span class="shadow"></span>
+            <div class="content">
+              <h1 class="text-white" style="text-transform: uppercase;">{{ card.Titulo }}</h1>
+              <span class="text-white">{{ card.DataInc ? (card.DataInc | date: 'dd/MM/yyyy') : '' }} - {{ card.Origem }}</span><br>
+              <b>&nbsp;&nbsp;{{ formatDuration(card.Duracao) }}&nbsp; Horas</b>
+              <div class="stars">
+                <div class="row">
+                  <div class="col-6">
+                    <!-- <ng-container *ngFor="let star of [0, 1, 2, 3, 4]; let i = index">
+                      <span class="fa fa-star" [ngClass]="{'checked': i < card.Avaliacao}"></span>
+                    </ng-container> -->
+                  </div>
+                  <div class="col-6 text-right">
+                    <!-- <span class="fa-solid fa-comment fa-xl mr-3" (click)="toggleMove(i, 'comment')"></span>
+                    <span class="fa-solid fa-share-nodes fa-xl mr-3" (click)="toggleMove(i, 'share')"></span> -->
+                  </div>
+                </div>
+              </div>
+              <!-- <div class="hex-tag">
+                <span class="badge badge-danger">LANÇAMENTO EM BREVE</span>
+                <div *ngFor="let tag of card.tags" class="tag">
+                  {{ tag }}
+                </div>
+              </div> -->
+              <i class="fa fa-angle-up" ></i>
+            </div>
+          </div>                
+          <div 
+              style="z-index: 999 !important;"               
+              [ngClass]="card.curso_comprado === 1 ? 'watch-card-view' : 'watch-card-buy'"
+          >
+          <ng-container *ngIf="card.curso_comprado === 1; else comprar">
+            <button routerLink="../ava-curso-detalhe" [queryParams]="{curso: card.CursoId}">Estudar Agora</button>
+          </ng-container>
+          <ng-template #comprar>
+            <button routerLink="../ava-buy" [queryParams]="{curso: card.CursoId}">Comprar Agora</button>
+          </ng-template>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>

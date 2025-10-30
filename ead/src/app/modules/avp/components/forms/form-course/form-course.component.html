@@ -1,0 +1,151 @@
+<form [formGroup]="formCourse">
+  <div class="row">
+    <div class="col-6 mb-3">
+      <label for="title" class="form-label text-secondary">
+        <b>Título do Curso</b>
+      </label>
+      <input type="text" class="form-control" id="title" formControlName="Name" [ngClass]="{
+          'is-invalid':
+            formCourse.get('Name')?.invalid && formCourse.get('Name')?.touched
+        }" />
+      <small class="text-secondary" [ngClass]="{
+          'text-danger': formCourse.get('Name')?.hasError('maxlength')
+        }">
+        {{ formCourse.get("Name")?.value?.length || 0 }} / 50 caracteres </small>
+      <div *ngIf="
+          formCourse.get('Name')?.invalid && formCourse.get('Name')?.touched
+        " class="invalid-feedback">
+        <div *ngIf="formCourse.get('Name')?.hasError('required')"> Este campo é obrigatório. </div>
+        <div *ngIf="formCourse.get('Name')?.hasError('maxlength')"> O título excedeu o limite de 50 caracteres. </div>
+      </div>
+    </div>
+
+    <div class="col-3 mb-3">
+      <label for="category" class="form-label text-secondary">
+        <b>Categoria</b>
+      </label>
+      <select class="form-select" id="category" formControlName="CategoryId" [ngClass]="{
+          'is-invalid':
+            formCourse.get('CategoryId')?.invalid &&
+            formCourse.get('CategoryId')?.touched
+        }">
+        <option [ngValue]="null" disabled>Selecione...</option>
+        <option *ngFor="let item of listCourseCategories" [value]="item.CategoryId">{{item.Name}}</option>
+      </select>
+      <div *ngIf="
+          formCourse.get('CategoryId')?.invalid &&
+          formCourse.get('CategoryId')?.touched
+        " class="invalid-feedback">
+        <div *ngIf="formCourse.get('CategoryId')?.hasError('required')"> Este campo é obrigatório. </div>
+      </div>
+    </div>
+
+    <div class="col-3 mb-3">
+      <label for="price" class="form-label text-secondary">
+        <b>Valor</b>
+      </label>
+      <input type="number" class="form-control" id="price" formControlName="Price" [ngClass]="{
+          'is-invalid':
+            formCourse.get('Price')?.invalid && formCourse.get('Price')?.touched
+        }" />
+      <div *ngIf="
+          formCourse.get('Price')?.invalid && formCourse.get('Price')?.touched
+        " class="invalid-feedback">
+        <div *ngIf="formCourse.get('Price')?.hasError('required')"> Este campo é obrigatório. </div>
+        <div *ngIf="formCourse.get('Price')?.hasError('min')"> O valor deve ser positivo. </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="row">
+    <div class="col-8">
+      <div class="row">
+
+        <div class="col-12 mb-3">
+      <label for="description-small" class="form-label text-secondary">
+        <b>Descrição Resumida</b>
+      </label>
+      <input type="text" class="form-control" id="description-small" formControlName="DescriptionSmall" [ngClass]="{
+          'is-invalid':
+            formCourse.get('DescriptionSmall')?.invalid &&
+            formCourse.get('DescriptionSmall')?.touched
+        }" />
+      <small class="text-secondary" [ngClass]="{
+          'text-danger': formCourse
+            .get('DescriptionSmall')
+            ?.hasError('maxlength')
+        }">
+        {{ formCourse.get("DescriptionSmall")?.value?.length || 0 }} / 100 caracteres </small>
+      <div *ngIf="
+          formCourse.get('DescriptionSmall')?.invalid &&
+          formCourse.get('DescriptionSmall')?.touched
+        " class="invalid-feedback">
+        <div *ngIf="formCourse.get('DescriptionSmall')?.hasError('required')"> Este campo é obrigatório. </div>
+        <div *ngIf="formCourse.get('DescriptionSmall')?.hasError('maxlength')"> A descrição excedeu o limite de 100 caracteres. </div>
+      </div>
+        </div>
+        
+        <div class="col-12 mb-3">
+          <label for="description-large" class="form-label text-secondary">
+            <b>Descrição Completa</b>
+          </label>
+          <textarea class="form-control" id="description-large" rows="5" formControlName="DescriptionLarge" [ngClass]="{
+              'is-invalid':
+                formCourse.get('DescriptionLarge')?.invalid &&
+                formCourse.get('DescriptionLarge')?.touched
+            }"></textarea>
+          <small class="text-secondary" [ngClass]="{
+              'text-danger': formCourse
+                .get('DescriptionLarge')
+                ?.hasError('maxlength')
+            }">
+            {{ formCourse.get("DescriptionLarge")?.value?.length || 0 }} / 500 caracteres </small>
+          <div *ngIf="
+              formCourse.get('DescriptionLarge')?.invalid &&
+              formCourse.get('DescriptionLarge')?.touched
+            " class="invalid-feedback">
+            <div *ngIf="formCourse.get('DescriptionLarge')?.hasError('required')"> Este campo é obrigatório. </div>
+            <div *ngIf="formCourse.get('DescriptionLarge')?.hasError('maxlength')"> A descrição excedeu o limite de 500 caracteres. </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="col-4">
+      <label class="form-label text-secondary">
+        <b>Poster do Curso</b>
+      </label>
+
+      <div class="drop-zone"
+          (dragover)="onDragOver($event)"
+          (dragleave)="onDragLeave($event)"
+          (drop)="onDrop($event)"
+          (click)="fileInput.click()"
+          [class.drag-over]="isDragging">
+
+        <input #fileInput
+              type="file"
+              (change)="onFileSelected($event)"
+              accept="image/png, image/jpeg, image/gif"
+              hidden>
+
+        <div *ngIf="!imgModule; else imagePreview" class="text-center p-3">
+          <p class="mb-1">
+            <i class="bi bi-cloud-arrow-up-fill fs-2 text-secondary"></i>
+          </p>
+          <p class="mb-0 text-secondary">Arraste a imagem ou clique aqui</p>
+          <small class="text-secondary">JPG, PNG, GIF | Max: 1080x720 (16:9)</small>
+        </div>
+
+        <ng-template #imagePreview>
+          <img [src]="imgModule" class="img-preview" alt="Pré-visualização do Módulo">
+        </ng-template>
+      </div>
+
+      <div *ngIf="imageError" class="text-danger mt-1">
+        <small>{{ imageError }}</small>
+      </div>
+    </div>
+  </div>
+</form>

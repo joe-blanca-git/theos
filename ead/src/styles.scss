@@ -1,0 +1,26 @@
+.rounded-table .ant-table-container {
+  border-radius: 12px !important;
+  overflow: hidden !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+}
+
+.rounded-table.ant-table-bordered .ant-table-container {
+  border: 1px solid #f0f0f0 !important;
+}
+
+body {
+  //background-color: rgb(27, 27, 27);
+  background-color: #343746;
+  background-size: cover;
+  background-position: center;
+  background-blend-mode: overlay;
+}
+
+//text
+.text-justify {
+  text-align: justify;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}

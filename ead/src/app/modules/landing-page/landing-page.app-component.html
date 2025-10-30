@@ -1,0 +1,37 @@
+<!-- -->
+
+<nz-layout>
+  <nz-header class="bg-dark">
+    <div class="logo">
+      <img src="https://i.imgur.com/ISvbhQp.png" width="30" height="30" />
+    </div>
+    <ul nz-menu nzMode="horizontal" class="bg-dark text-light d-none d-sm-block">
+      <li
+        nz-menu-item
+        *ngFor="let item of menu"
+        [routerLink]="item.route"
+        routerLinkActive="router-link-active"
+      >
+        <span
+          [ngClass]="{
+                active: item.active,
+                'text-danger': item.name === 'Entrar'
+              }"
+        >
+          <b>{{ item.name }}</b>
+        </span>
+      </li>
+    </ul>
+  </nz-header>
+  <nz-content class="bg-dark">
+    <!-- <nz-breadcrumb>
+          <nz-breadcrumb-item>Home</nz-breadcrumb-item>
+          <nz-breadcrumb-item>List</nz-breadcrumb-item>
+          <nz-breadcrumb-item>App</nz-breadcrumb-item>
+        </nz-breadcrumb> -->
+    <div class="inner-content bg-dark">
+      <router-outlet></router-outlet>
+    </div>
+  </nz-content>
+  <nz-footer>Joeder Blanca ©{{2025}} Desenvolvimeento de Software</nz-footer>
+</nz-layout>

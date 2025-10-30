@@ -1,0 +1,101 @@
+<div class="row h-100">
+  <div class="col-xl-6 col-12 d-flex justify-content-center align-items-top">
+    <div class="card text-center bg-dark-light card-login">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-12">
+            <a routerLink="/home"
+              ><img
+                src="https://res.cloudinary.com/dez4evjlq/image/upload/v1724259645/header_earf0j.png"
+                width="300"
+                alt=""
+            /></a>
+          </div>
+          <div class="col-12">
+            <span class="text-light">Cadastre uma nova senha!</span><br />
+            <span class="text-danger">Utilize uma senha forte!</span><br />
+          </div>
+          <div class="col-12 d-flex justify-content-center mt-5 text-center">
+            <form
+              nz-form
+              [formGroup]="newPasswordForm"
+              (ngSubmit)="submitForm()"
+            >
+              <div class="row">
+                <div class="col-3"></div>
+                <div class="col-6">
+                  <!-- Campo para nova senha -->
+                  <nz-form-item>
+                    <nz-form-control
+                      [nzSm]="24"
+                      [nzXs]="24"
+                      nzErrorTip="A senha é obrigatória!"
+                    >
+                      <nz-input-group nzPrefixIcon="lock">
+                        <input
+                          type="password"
+                          nz-input
+                          id="password"
+                          formControlName="password"
+                          placeholder="Nova Senha"
+                          (ngModelChange)="updateConfirmValidator()"
+                        />
+                      </nz-input-group>
+                    </nz-form-control>
+                  </nz-form-item>
+                </div>
+                <div class="col-3"></div>
+                <div class="col-3"></div>
+                <div class="col-6">
+                  <!-- Campo para confirmar a senha -->
+                  <nz-form-item>
+                    <nz-form-control
+                      [nzSm]="24"
+                      [nzXs]="24"
+                      [nzErrorTip]="errorTpl"
+                    >
+                      <nz-input-group nzPrefixIcon="lock">
+                        <input
+                          nz-input
+                          type="password"
+                          formControlName="checkPassword"
+                          id="checkPassword"
+                          placeholder="Confirme Nova Senha"
+                        />
+                        <ng-template #errorTpl let-control>
+                          <ng-container *ngIf="control.errors?.['required']">
+                            A confirmação é obrigatória!
+                          </ng-container>
+                          <ng-container *ngIf="control.errors?.['confirm']">
+                            As senhas estão diferentes!
+                          </ng-container>
+                        </ng-template>
+                      </nz-input-group>
+                    </nz-form-control>
+                  </nz-form-item>
+                </div>
+                <div class="col-3"></div>
+                <nz-form-item nz-row class="register-area">
+                  <nz-form-control>
+                    <button
+                      nz-button
+                      nzType="primary"
+                      class="btn btn-danger mt-3"
+                      [disabled]="!newPasswordForm.valid"
+                    >
+                      Savar Nova Senha
+                    </button>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+            </form>
+          </div>
+        </div>
+        <a routerLink="/login"
+          ><i class="fa-solid fa-door-open"></i>Voltar para Login</a
+        >
+      </div>
+    </div>
+  </div>
+  <div class="col-6"></div>
+</div>

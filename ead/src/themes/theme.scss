@@ -1,0 +1,99 @@
+@import "./variables.base.scss";
+@import "./nz-theme.scss";
+
+.header {
+  padding: 5vh 6vh;
+  width: 100%;
+  background-image: url("../../public/images/assets/header-avp.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+
+  .page-title {
+    margin-left: 3vw;
+    font-size: 24px;
+    font-weight: bolder;
+    color: $title-color;
+  }
+
+  .page-description {
+    margin-left: 3vw;
+    font-size: 14px;
+    font-weight: normal;
+    color: $description-color;
+  }
+}
+
+.dash {
+  padding: 5vh 6vh;
+
+  .card {
+    background-color: #282a36;
+  }
+}
+
+.filter {
+  padding: 5vh 6vh;
+}
+
+.data {
+  padding: 5vh 6vh;
+}
+
+//items
+.badge-click {
+  transition: font-size 0.3s ease;
+  cursor: pointer;
+}
+
+.badge-click:hover {
+  font-size: 20px;
+}
+
+.close-icon{
+  color: rgb(252, 140, 140);
+}
+
+
+///////////////////* tool notification *////////////////////
+.custom-notification-error {
+  background-color: rgb(180, 2, 2) !important;
+  color: #fff !important;
+}
+
+.custom-notification-error .ant-notification-notice-icon-error {
+  color: #fff;
+}
+
+.custom-notification-error .ant-notification-notice-message {
+  color: #fff !important;
+  font-weight: bold !important;
+  font-size: large;
+}
+
+.custom-notification-warning {
+  background-color: #ffc107 !important;
+  color: red !important;
+}
+
+.custom-notification-warning .ant-notification-notice-icon-warning {
+  color: red;
+}
+
+.custom-notification-warning .ant-notification-notice-message {
+  color: red !important;
+  font-weight: bold !important;
+  font-size: large;
+}
+
+.custom-notification-success {
+  background-color: green !important;
+  color: #fff !important;
+}
+
+.custom-notification-success .ant-notification-notice-message {
+  color: #fff !important;
+  font-weight: bold !important;
+  font-size: large;
+}
+/////////////////////////////////////////////////////////////

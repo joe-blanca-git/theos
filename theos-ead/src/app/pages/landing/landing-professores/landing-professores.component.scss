@@ -1,0 +1,115 @@
+
+  @media screen and (min-width: 768px) {
+
+  }
+  
+  @media screen and (max-width: 768px) {
+    .prof-text {
+      text-align: start !important;
+      position: absolute !important;
+      top: 30px !important;
+      left: 1rem !important;
+      transform: translateY(-50%) !important;
+      color: white !important; 
+      font-size: 1.0rem  !important;
+      font-weight: bold !important;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7) !important; 
+      z-index: 1;
+    }
+
+    .prof-image {
+      width: 150% !important;
+      height: auto !important;
+      position: absolute;
+      left: -12rem !important;
+      z-index: 0;
+    }
+  }
+  
+  
+  #tomb{
+    box-shadow: 0px 0px 150px -45px rgba(19, 160, 134, 0.6);
+    &:hover{
+      box-shadow: 0px 0px 120px -55px rgba(19, 160, 134, 0.6);
+    }
+  }
+  
+  .joe_back{
+    background: url("../../../../assets/img/professores/joe.png");
+  }
+
+  .cleber_back{
+    background: url("../../../../assets/img/professores/cleber3.png");
+  }
+
+  .jefferson_back{
+    background: url("../../../../assets/img/professores/jefferson.png");
+  }
+
+  .tiago_back{
+    background: url("../../../../assets/img/professores/tiago.png");
+  }
+
+  .fernando_back{
+    background: url("../../../../assets/img/professores/fernando.png");
+  }
+  
+  .prof-header {
+    position: relative;
+    width: 100%;
+    padding-left: 1rem; 
+    padding-right: 1rem; 
+  }
+  
+  .prof-image {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  
+  .prof-text {
+    text-align: start;
+    position: absolute;
+    top: 50%;
+    left: 15rem;
+    transform: translateY(-50%);
+    color: white; 
+    font-size: 2.5rem;
+    font-weight: bold;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); 
+  }
+
+
+.m-t-20 {
+    margin-top: 20px
+}
+
+.text-center {
+    text-align: center !important
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: #e6ecef;
+    font-family: "Poppins", sans-serif;
+    font-weight: 400
+}
+
+p {
+    margin-top: 0;
+    margin-bottom: 1rem
+}
+
+.card-body img {
+  width: 100%;        
+  height: 100%;      
+  object-fit: cover; 
+}
+
+
+
+
