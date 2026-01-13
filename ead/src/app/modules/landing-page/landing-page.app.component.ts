@@ -1,72 +1,50 @@
-import { Component, Input } from "@angular/core";
-import { Router, RouterModule, RouterOutlet } from "@angular/router";
+import { Component, Input } from '@angular/core';
+import { Router, RouterModule, RouterOutlet } from '@angular/router';
 import { NzBreadCrumbModule } from 'ng-zorro-antd/breadcrumb';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
-import { CommonModule } from "@angular/common";
+import { CommonModule } from '@angular/common';
+import { NzDrawerModule } from 'ng-zorro-antd/drawer'; 
+import { NzButtonModule } from 'ng-zorro-antd/button'; 
+
+
 export interface Menu {
-  name: string, 
-  route: string,
-  active: boolean
+  name: string;
+  route: string;
 }
 @Component({
-    selector: 'landing-page-app-root',
-    templateUrl: './landing-page.app-component.html',
-    styleUrls: ['landing-page.app.component.scss',],
-    standalone: true,
-    imports: [CommonModule, RouterOutlet, NzBreadCrumbModule, NzIconModule, NzMenuModule, NzLayoutModule, RouterModule]
+  selector: 'landing-page-app-root',
+  standalone: true,
+  imports: [
+    CommonModule,
+    RouterOutlet,
+    NzBreadCrumbModule,
+    NzIconModule,
+    NzMenuModule,
+    NzLayoutModule,
+    NzDrawerModule,
+    NzButtonModule,
+    RouterModule,
+  ],
+  templateUrl: './landing-page.app-component.html',
+  styleUrls: ['landing-page.app.component.scss'],
 })
 export class LandingPageAppComponent {
-  @Input('activeRoute') activeRoute: boolean = false;
 
+  isMobileMenuOpen = false;
   menu: Menu[] = [
-    {
-      name: 'Inicio',
-      route: '/landing/home',
-      active: false,
-    },
-    {
-      name: 'Sobre nós',
-      route: '/landing/about-us',
-      active: false,
-    },
-    // {
-    //   name: 'Objetivos',
-    //   route: '/landing/targets',
-    //   active: false,
-    // },
-    {
-      name: 'Professores',
-      route: '/landing/teachers',
-      active: false,
-    },
-    {
-      name: 'Planos',
-      route: '/landing/plans',
-      active: false,
-    },
-    {
-      name: 'Cursos',
-      route: '/landing/courses',
-      active: false,
-    },
-    {
-      name: 'Entrar',
-      route: '/auth/menu-auth',
-      active: false,
-    },
+    { name: 'Inicio', route: '/landing/home' },
+    { name: 'Sobre nós', route: '/landing/about-us' },
+    { name: 'Entrar', route: '/auth/login' },
   ];
 
-  constructor(private router: Router) {}
+openMobileMenu(): void {
+    this.isMobileMenuOpen = true;
+  }
 
-  ngOnInit(): void {
-    const rotaAtual = this.router.url;
-
-    this.menu.forEach((e: any) => {
-      if (e.route === rotaAtual) {
-        e.active = true;
-      }
-    });
+  closeMobileMenu(): void {
+    this.isMobileMenuOpen = false;
   }
 }
+

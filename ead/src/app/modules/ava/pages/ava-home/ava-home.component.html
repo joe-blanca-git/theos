@@ -1,0 +1,163 @@
+<div class="header">
+  <span class="header-title">{{ titlePage }}</span>
+  <span class="header-description">{{ descriptionPage }}</span>
+</div>
+<div class="dash">
+  <div class="row ps-0">
+    <div class="col-12 mb-2 col-sm-3" *ngFor="let card of cards">
+      <div class="card">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-3 card-icon">
+              <i [className]="card.icon"></i>
+            </div>
+            <div class="col-6 card-title text-nowrap">{{ card.title }}</div>
+            <div class="col-3 card-value">
+              <span *ngIf="!loading; else loadingSpinner">{{
+                card.value
+              }}</span>
+            </div>
+          </div>
+          <span
+            *ngIf="card.badge > 0"
+            class="card-badge text-light bg-danger rounded-circle ps-2 pe-2 fa-beat"
+            >{{ card.badge }}</span
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="content" *ngIf="!loading; else loadingData">
+  <div class="last-updates">
+    <hr class="border-danger-subtle" />
+    <span class="h4 text-danger text-uppercase">Cursos Recentes</span>
+    <app-movie-list
+      [listCourses]="listLatestCourses"
+      (courseSelected)="navigateToCourse($event)"
+    ></app-movie-list>
+  </div>
+
+  <div class="top-then">
+    <hr class="border-danger-subtle" />
+    <span class="h4 text-danger text-uppercase">TOP 10</span>
+    <app-movie-list [listCourses]="listTopThenCourses"></app-movie-list>
+  </div>
+
+  <div class="categories mb-5">
+    <hr class="border-danger-subtle" />
+    <span class="h4 text-danger text-uppercase">Categorias</span><br />
+
+    <div class="row mt-2">
+      <div class="col-auto">
+        <div
+          *ngFor="let item of listCategoriesCourses"
+          class="category-card position-relative mb-3"
+        >
+          <img
+            class="category-image rounded shadow cursor-pointer"
+            [title]="item.name"
+            [src]="item.cover"
+            [alt]="item.name"
+          />
+
+          <span class="category-title shadow">
+            {{ item.name }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- <div class="news">
+    <div class="row">
+      <div class="col-12 col-sm-4">
+        <div class="top-new">
+          <nz-carousel [nzDotPosition]="dotPosition">
+            <div nz-carousel-content *ngFor="let index of array">
+              <div class="card bg-dark" style="min-height: 18rem; height: 100%;">
+                <h3>{{ index }}</h3>
+              </div>
+            </div>
+          </nz-carousel>
+        </div>
+      </div>
+      <div class="col-12 col-sm-8">
+        <div class="last-new">
+          <div class="row">
+            <div class="col-auto mb-3">
+              <div class="card bg-danger" style="height: 10rem; width: 10rem;">
+                a
+              </div>
+            </div>
+            <div class="col-auto mb-3">
+              <div class="card bg-danger" style="height: 10rem; width: 10rem;">
+                a
+              </div>
+            </div>
+            <div class="col-auto mb-3">
+              <div class="card bg-danger" style="height: 10rem; width: 10rem;">
+                a
+              </div>
+            </div>
+            <div class="col-auto mb-3">
+              <div class="card bg-danger" style="height: 10rem; width: 10rem;">
+                a
+              </div>
+            </div>
+            <div class="col-auto mb-3">
+              <div class="card bg-danger" style="height: 10rem; width: 10rem;">
+                a
+              </div>
+            </div>
+            <div class="col-auto mb-3">
+              <div class="card bg-danger" style="height: 10rem; width: 10rem;">
+                a
+              </div>
+            </div>
+            <div class="col-auto mb-3">
+              <div class="card bg-danger" style="height: 10rem; width: 10rem;">
+                a
+              </div>
+            </div>
+            <div class="col-auto mb-3">
+              <div class="card bg-danger" style="height: 10rem; width: 10rem;">
+                a
+              </div>
+            </div>
+            <div class="col-auto mb-3">
+              <div class="card bg-danger" style="height: 10rem; width: 10rem;">
+                a
+              </div>
+            </div>
+            <div class="col-auto mb-3">
+              <div class="card bg-danger" style="height: 10rem; width: 10rem;">
+                a
+              </div>
+            </div>
+            <div class="col-auto mb-3">
+              <div class="card bg-danger" style="height: 10rem; width: 10rem;">
+                a
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div> -->
+</div>
+
+<ng-template #loadingData>
+  <div class="row h-100" style="height: 70vh !important">
+    <div
+      class="col-12 d-flex flex-column align-items-center align-items-center justify-content-center text-center text-danger h-100r"
+    >
+      <div class="spinner-border" role="status"></div>
+      <span class="h6">Carregando</span>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #loadingSpinner>
+  <div class="spinner-grow text-dark" role="status"></div>
+</ng-template>

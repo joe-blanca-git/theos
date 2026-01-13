@@ -2,113 +2,400 @@
   <div class="row">
     <div class="col-12 mb-3">
       <label for="name" class="form-label text-secondary">Nome</label>
-      <input class="form-control" [ngClass]="{
-                    'border-success border-3': formRegister.get('name')?.valid && formRegister.get('name')?.touched,
-                    'border-danger border-3': formRegister.get('name')?.invalid && formRegister.get('name')?.touched
-                }" formControlName="name" type="text" placeholder="" aria-label="nome" />
-      <div class="text-danger" *ngIf="formRegister.get('name')?.invalid && formRegister.get('name')?.touched">
-        <small *ngIf="formRegister.get('name')?.errors?.['required']">Nome é obrigatório.</small>
-        <small *ngIf="formRegister.get('name')?.errors?.['minlength']"> Mínimo {{ formRegister.get('name')?.errors?.['minlength'].requiredLength }} caracteres (você informou {{ formRegister.get('name')?.errors?.['minlength'].actualLength }}). </small>
+      <input
+        [readOnly]="loading"
+        class="form-control"
+        [ngClass]="{
+          'border-success border-3':
+            formRegister.get('name')?.valid &&
+            formRegister.get('name')?.touched,
+          'border-danger border-3':
+            formRegister.get('name')?.invalid &&
+            formRegister.get('name')?.touched
+        }"
+        formControlName="name"
+        type="text"
+        placeholder=""
+        aria-label="nome"
+      />
+      <div
+        class="text-danger"
+        *ngIf="
+          formRegister.get('name')?.invalid && formRegister.get('name')?.touched
+        "
+      >
+        <small *ngIf="formRegister.get('name')?.errors?.['required']"
+          >Nome é obrigatório.</small
+        >
+        <small *ngIf="formRegister.get('name')?.errors?.['minlength']">
+          Mínimo
+          {{ formRegister.get('name')?.errors?.['minlength'].requiredLength }}
+          caracteres (você informou
+          {{ formRegister.get('name')?.errors?.['minlength'].actualLength }}).
+        </small>
       </div>
     </div>
     <div class="col-6 mb-3">
       <label for="cpf" class="form-label text-secondary">CPF:</label>
-      <input [ngClass]="{'border-success border-3': isValidCPF() === 2, 'border-danger border-3': isValidCPF() === 1 || formRegister.get('cpf')?.invalid && formRegister.get('cpf')?.touched}" class="form-control" formControlName="cpf" type="cpf" mask="000.000.000-00" placeholder="000.000.000.00" aria-label="cpf">
+      <input
+        [readOnly]="loading"
+        [ngClass]="{
+          'border-success border-3': isValidCPF() === 2,
+          'border-danger border-3':
+            isValidCPF() === 1 ||
+            (formRegister.get('cpf')?.invalid &&
+              formRegister.get('cpf')?.touched)
+        }"
+        class="form-control"
+        formControlName="cpf"
+        type="cpf"
+        mask="000.000.000-00"
+        placeholder="000.000.000.00"
+        aria-label="cpf"
+      />
       <small class="text-danger" *ngIf="isValidCPF() === 1">CPF Inválido</small>
-      <div class="text-danger" *ngIf="formRegister.get('cpf')?.invalid && formRegister.get('cpf')?.touched">
-        <small *ngIf="formRegister.get('cpf')?.errors?.['required']">CPF é obrigatório.</small>
+      <div
+        class="text-danger"
+        *ngIf="
+          formRegister.get('cpf')?.invalid && formRegister.get('cpf')?.touched
+        "
+      >
+        <small *ngIf="formRegister.get('cpf')?.errors?.['required']"
+          >CPF é obrigatório.</small
+        >
       </div>
     </div>
     <div class="col-6 mb-3">
-      <label for="birthday" class="form-label text-secondary">Nascimento:</label>
-      <input class="form-control" [ngClass]="{
-                    'border-success border-3': formRegister.get('birthday')?.valid && formRegister.get('birthday')?.touched,
-                    'border-danger border-3': formRegister.get('birthday')?.invalid && formRegister.get('birthday')?.touched
-                }" formControlName="birthday" type="text" mask="00/00/0000" placeholder="00/00/000" aria-label="cpf">
-      <div class="text-danger" *ngIf="formRegister.get('birthday')?.invalid && formRegister.get('birthday')?.touched">
-        <small *ngIf="formRegister.get('birthday')?.errors?.['required']">Data de Nascimento é obrigatório.</small>
+      <label for="birthday" class="form-label text-secondary"
+        >Nascimento:</label
+      >
+      <input
+        [readOnly]="loading"
+        class="form-control"
+        [ngClass]="{
+          'border-success border-3':
+            formRegister.get('birthday')?.valid &&
+            formRegister.get('birthday')?.touched,
+          'border-danger border-3':
+            formRegister.get('birthday')?.invalid &&
+            formRegister.get('birthday')?.touched
+        }"
+        formControlName="birthday"
+        type="text"
+        mask="00/00/0000"
+        placeholder="00/00/000"
+        aria-label="cpf"
+      />
+      <div
+        class="text-danger"
+        *ngIf="
+          formRegister.get('birthday')?.invalid &&
+          formRegister.get('birthday')?.touched
+        "
+      >
+        <small *ngIf="formRegister.get('birthday')?.errors?.['required']"
+          >Data de Nascimento é obrigatório.</small
+        >
       </div>
     </div>
     <div class="col-12 col-sm-7 mb-3">
       <label for="email" class="form-label text-secondary">E-mail</label>
-      <input class="form-control" [ngClass]="{
-                    'border-success border-3': formRegister.get('email')?.valid && formRegister.get('email')?.touched,
-                    'border-danger border-3': formRegister.get('email')?.invalid && formRegister.get('email')?.touched
-                }" formControlName="email" type="email" placeholder="" aria-label="email">
-      <div class="text-danger" *ngIf="formRegister.get('email')?.invalid && formRegister.get('email')?.touched">
-        <small *ngIf="formRegister.get('email')?.errors?.['required']">E-mail é obrigatório.</small>
+      <input
+        [readOnly]="loading"
+        class="form-control"
+        [ngClass]="{
+          'border-success border-3':
+            formRegister.get('email')?.valid &&
+            formRegister.get('email')?.touched,
+          'border-danger border-3':
+            formRegister.get('email')?.invalid &&
+            formRegister.get('email')?.touched
+        }"
+        formControlName="email"
+        type="email"
+        placeholder=""
+        aria-label="email"
+      />
+      <div
+        class="text-danger"
+        *ngIf="
+          formRegister.get('email')?.invalid &&
+          formRegister.get('email')?.touched
+        "
+      >
+        <small *ngIf="formRegister.get('email')?.errors?.['required']"
+          >E-mail é obrigatório.</small
+        >
       </div>
     </div>
     <div class="col-6 col-sm-5 mb-3">
       <label for="phone" class="form-label text-secondary">Fone:</label>
-      <input class="form-control" [ngClass]="{
-                    'border-success border-3': formRegister.get('phone')?.valid && formRegister.get('phone')?.touched,
-                    'border-danger border-3': formRegister.get('phone')?.invalid && formRegister.get('phone')?.touched
-                }" formControlName="phone" type="tel" mask="(00) 0000-00009" placeholder="(00) 00000-0000" aria-label="phone">
-      <div class="text-danger" *ngIf="formRegister.get('phone')?.invalid && formRegister.get('phone')?.touched">
-        <small *ngIf="formRegister.get('phone')?.errors?.['required']">Fone é obrigatório.</small>
+      <input
+        [readOnly]="loading"
+        class="form-control"
+        [ngClass]="{
+          'border-success border-3':
+            formRegister.get('phone')?.valid &&
+            formRegister.get('phone')?.touched,
+          'border-danger border-3':
+            formRegister.get('phone')?.invalid &&
+            formRegister.get('phone')?.touched
+        }"
+        formControlName="phone"
+        type="tel"
+        mask="(00) 00000-0009"
+        placeholder="(00) 00000-0000"
+        aria-label="phone"
+      />
+      <div
+        class="text-danger"
+        *ngIf="
+          formRegister.get('phone')?.invalid &&
+          formRegister.get('phone')?.touched
+        "
+      >
+        <small *ngIf="formRegister.get('phone')?.errors?.['required']"
+          >Fone é obrigatório.</small
+        >
       </div>
     </div>
     <div class="col-6 col-sm-5 mb-3">
       <label for="adressZipcode" class="form-label text-secondary">CEP:</label>
-      <input class="form-control" [ngClass]="{
-                    'border-success border-3': formRegister.get('adressZipcode')?.valid && formRegister.get('adressZipcode')?.touched,
-                    'border-danger border-3': formRegister.get('adressZipcode')?.invalid && formRegister.get('adressZipcode')?.touched
-                }" formControlName="adressZipcode" type="adressZipcode" mask="00000-000" placeholder="00000-000" aria-label="adressZipcode">
-      <div class="text-danger" *ngIf="formRegister.get('adressZipcode')?.invalid && formRegister.get('adressZipcode')?.touched">
-        <small *ngIf="formRegister.get('adressZipcode')?.errors?.['required']">CEP Inválido</small>
+      <input
+        [readOnly]="loading"
+        class="form-control"
+        [ngClass]="{
+          'border-success border-3':
+            formRegister.get('adressZipcode')?.valid &&
+            formRegister.get('adressZipcode')?.touched,
+          'border-danger border-3':
+            formRegister.get('adressZipcode')?.invalid &&
+            formRegister.get('adressZipcode')?.touched
+        }"
+        formControlName="adressZipcode"
+        type="adressZipcode"
+        mask="00000-000"
+        placeholder="00000-000"
+        aria-label="adressZipcode"
+      />
+      <div
+        class="text-danger"
+        *ngIf="
+          formRegister.get('adressZipcode')?.invalid &&
+          formRegister.get('adressZipcode')?.touched
+        "
+      >
+        <small *ngIf="formRegister.get('adressZipcode')?.errors?.['required']"
+          >CEP Inválido</small
+        >
       </div>
     </div>
     <div class="col-6 col-sm-7 mb-3">
       <label for="adressState" class="form-label text-secondary">Estado</label>
-      <nz-select [nzDisabled]="isLoadingStates" nzShowSearch nzAllowClear class="form-select" [ngClass]="{
-                    'border-success border-3': formRegister.get('adressState')?.valid && formRegister.get('adressState')?.touched,
-                    'border-danger border-3': formRegister.get('adressState')?.invalid && formRegister.get('adressState')?.touched
-                }" formControlName="adressState" aria-label="adressState" (ngModelChange)="onStateChange($event)">
-        <nz-option *ngFor="let item of states" [nzLabel]="item.sigla + ' - ' + item.nome" [nzValue]="item.id"></nz-option>
+      <nz-select
+        [nzDisabled]="isLoadingStates || loading"
+        nzShowSearch
+        nzAllowClear
+        class="form-select"
+        [ngClass]="{
+          'border-success border-3':
+            formRegister.get('adressState')?.valid &&
+            formRegister.get('adressState')?.touched,
+          'border-danger border-3':
+            formRegister.get('adressState')?.invalid &&
+            formRegister.get('adressState')?.touched
+        }"
+        formControlName="adressState"
+        aria-label="adressState"
+        (ngModelChange)="onStateChange($event)"
+      >
+        <nz-option
+          *ngFor="let item of states"
+          [nzLabel]="item.sigla + ' - ' + item.nome"
+          [nzValue]="item.id"
+        ></nz-option>
       </nz-select>
-      <div class="text-danger" *ngIf="formRegister.get('adressState')?.invalid && formRegister.get('adressState')?.touched">
-        <small *ngIf="formRegister.get('adressState')?.errors?.['required']">Estado é obrigatório.</small>
+      <div
+        class="text-danger"
+        *ngIf="
+          formRegister.get('adressState')?.invalid &&
+          formRegister.get('adressState')?.touched
+        "
+      >
+        <small *ngIf="formRegister.get('adressState')?.errors?.['required']"
+          >Estado é obrigatório.</small
+        >
       </div>
     </div>
     <div class="col-6 col-sm-5 mb-3">
       <label for="adressCity" class="form-label text-secondary">Cidade</label>
-      <nz-select [nzDisabled]="isLoadingCities" nzShowSearch nzAllowClear class="form-select"  [ngClass]="{
-                    'border-success border-3': formRegister.get('adressCity')?.valid && formRegister.get('adressCity')?.touched,
-                    'border-danger border-3': formRegister.get('adressCity')?.invalid && formRegister.get('adressCity')?.touched
-                }" formControlName="adressCity" aria-label="adressCity">
-        <nz-option *ngFor="let item of cities" [nzLabel]="item.nome" [nzValue]="item.id"></nz-option>
+
+      <nz-select
+        [nzDisabled]="isLoadingCities || loading"
+        nzShowSearch
+        nzAllowClear
+        class="form-select"
+        [ngClass]="{
+          'border-success border-3':
+            formRegister.get('adressCity')?.valid &&
+            formRegister.get('adressCity')?.touched,
+          'border-danger border-3':
+            formRegister.get('adressCity')?.invalid &&
+            formRegister.get('adressCity')?.touched
+        }"
+        formControlName="adressCity"
+        aria-label="adressCity"
+      >
+        <nz-option
+          *ngFor="let item of cities"
+          [nzLabel]="item.nome"
+          [nzValue]="item.id"
+        ></nz-option>
       </nz-select>
-      <div class="text-danger" *ngIf="formRegister.get('adressCity')?.invalid && formRegister.get('adressCity')?.touched">
-        <small *ngIf="formRegister.get('adressCity')?.errors?.['required']">Cidade é obrigatório.</small>
+
+      <div
+        class="text-danger"
+        *ngIf="
+          formRegister.get('adressCity')?.invalid &&
+          formRegister.get('adressCity')?.touched
+        "
+      >
+        <small *ngIf="formRegister.get('adressCity')?.errors?.['required']"
+          >Cidade é obrigatório.</small
+        >
       </div>
     </div>
     <div class="col-12 col-sm-7 mb-3">
-      <label for="adressStreet" class="form-label text-secondary">Logradouro</label>
-      <input class="form-control" [ngClass]="{
-                    'border-success border-3': formRegister.get('adressStreet')?.valid && formRegister.get('adressStreet')?.touched,
-                    'border-danger border-3': formRegister.get('adressStreet')?.invalid && formRegister.get('adressStreet')?.touched
-                }" formControlName="adressStreet" type="text" placeholder="" aria-label="Rua">
-      <div class="text-danger" *ngIf="formRegister.get('adressStreet')?.invalid && formRegister.get('adressStreet')?.touched">
-        <small *ngIf="formRegister.get('adressStreet')?.errors?.['required']">Logradouro é obrigatório.</small>
+      <label for="adressStreet" class="form-label text-secondary"
+        >Logradouro</label
+      >
+      <input
+        [readOnly]="loading"
+        class="form-control"
+        [ngClass]="{
+          'border-success border-3':
+            formRegister.get('adressStreet')?.valid &&
+            formRegister.get('adressStreet')?.touched,
+          'border-danger border-3':
+            formRegister.get('adressStreet')?.invalid &&
+            formRegister.get('adressStreet')?.touched
+        }"
+        formControlName="adressStreet"
+        type="text"
+        placeholder=""
+        aria-label="Rua"
+      />
+      <div
+        class="text-danger"
+        *ngIf="
+          formRegister.get('adressStreet')?.invalid &&
+          formRegister.get('adressStreet')?.touched
+        "
+      >
+        <small *ngIf="formRegister.get('adressStreet')?.errors?.['required']"
+          >Logradouro é obrigatório.</small
+        >
       </div>
     </div>
+
     <div class="col-12 col-sm-6 mb-3">
       <label for="password" class="form-label text-secondary">Senha</label>
-      <input class="form-control" [ngClass]="{
-                    'border-success border-3': formRegister.get('password')?.valid && formRegister.get('password')?.touched,
-                    'border-danger border-3': formRegister.get('password')?.invalid && formRegister.get('password')?.touched
-                }" formControlName="password" type="text" placeholder="" aria-label="Senha">
-      <div class="text-danger" *ngIf="formRegister.get('password')?.invalid && formRegister.get('password')?.touched">
-        <small *ngIf="formRegister.get('password')?.errors?.['required']">Senha é obrigatória.</small>
+      <input
+        [readOnly]="loading"
+        class="form-control"
+        [ngClass]="{
+          'border-success border-3':
+            formRegister.get('password')?.valid &&
+            formRegister.get('password')?.touched,
+          'border-danger border-3':
+            formRegister.get('password')?.invalid &&
+            formRegister.get('password')?.touched
+        }"
+        formControlName="password"
+        type="password"
+        placeholder=""
+        aria-label="Senha"
+      />
+
+      <div
+        class="text-danger"
+        *ngIf="
+          formRegister.get('password')?.invalid &&
+          (formRegister.get('password')?.touched ||
+            formRegister.get('password')?.dirty)
+        "
+      >
+        <small *ngIf="formRegister.get('password')?.errors?.['required']"
+          >Senha é obrigatória.</small
+        >
+
+        <small *ngIf="formRegister.get('password')?.errors?.['weakPassword']">
+          A senha deve conter:
+          <ul class="mb-0 ps-3">
+            <li>Uma letra maiúscula</li>
+            <li>Um número</li>
+            <li>Um caractere especial (&#64;, #, $, etc)</li>
+          </ul>
+        </small>
       </div>
     </div>
+
     <div class="col-12 col-sm-6 mb-3">
-      <label for="passwordConfirm" class="form-label text-secondary">Confirmar Senha</label>
-      <input class="form-control"  formControlName="passwordConfirm" type="text" placeholder="" aria-label="Confirmar Senha">
+      <label for="passwordConfirm" class="form-label text-secondary"
+        >Confirmar Senha</label
+      >
+      <input
+        [readOnly]="loading"
+        class="form-control"
+        [ngClass]="{
+          'border-success border-3':
+            formRegister.get('passwordConfirm')?.valid &&
+            formRegister.get('passwordConfirm')?.touched,
+          'border-danger border-3':
+            formRegister.get('passwordConfirm')?.invalid &&
+            formRegister.get('passwordConfirm')?.touched
+        }"
+        formControlName="passwordConfirm"
+        type="password"
+        placeholder=""
+        aria-label="Confirmar Senha"
+      />
+
+      <div
+        class="text-danger"
+        *ngIf="
+          formRegister.get('passwordConfirm')?.invalid &&
+          (formRegister.get('passwordConfirm')?.touched ||
+            formRegister.get('passwordConfirm')?.dirty)
+        "
+      >
+        <small *ngIf="formRegister.get('passwordConfirm')?.errors?.['required']"
+          >Confirmação é obrigatória.&nbsp;</small
+        >
+        <small *ngIf="formRegister.get('passwordConfirm')?.errors?.['mismatch']"
+          >As senhas não conferem.</small
+        >
+      </div>
     </div>
-    <div class="col-12 text-secondary d-flex justify-content-between">
-      <a href="">*Termos e condições de uso</a>
+
+    <div class="col-12 text-secondary">
+      Ao clicar em Confirmar, você aceita os
+      <a href="">Termos e condições de uso</a> ?
+    </div>
+    <div class="col-12 text-center text-danger mt-3" *ngIf="loading">
+      <div class="spinner-border" role="status"></div>
+      <br />
+      <span>Cadastrando</span>
+    </div>
+    <div class="col-12 mt-3 text-end">
+      <button
+        [disabled]="loading"
+        class="btn btn-sm btn-danger"
+        (click)="registerUser()"
+      >
+        <i class="fa fa-floppy-disk" aria-hidden="true"></i>&nbsp;
+        <span>Confirmar</span>
+      </button>
     </div>
   </div>
 </form>

@@ -12,7 +12,7 @@ export class BaseService {
 
   public LocalStorage = new LocalStorageUtils();
 
-  protected UrlServiceV1: string = environment.apiUrlv1;
+  public UrlServiceV1: string = environment.apiUrlv1;
   protected UrlAuth: string = environment.apiUrlLoginv1;
 
   protected ObterHeaderJson() {
@@ -35,7 +35,7 @@ export class BaseService {
     return {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + this.LocalStorage.obterTokenUsuario()
+        Authorization: 'Bearer ' + this.LocalStorage.obterTokenUsuario(),
       }),
     };
   }
@@ -44,34 +44,31 @@ export class BaseService {
     return response || {};
   }
 
-      protected serviceError(response: Response | any) {
+  protected serviceError(response: Response | any) {
+    let CustomError: string[] = [];
 
-        let CustomError: string[] = [];
+    if (response instanceof HttpErrorResponse) {
+      if (response.statusText === 'Unknown Error') {
+        //CustomError.push("Ocorreu um erro desconhecido");
+        //response.error.errors = CustomError;
 
-        if (response instanceof HttpErrorResponse) {
-
-            if (response.statusText === "Unknown Error") {
-                //CustomError.push("Ocorreu um erro desconhecido");
-                //response.error.errors = CustomError;
-
-                return throwError(() => 'Falha na comunicação - tente novamente mais tarde')
-            }
-            else if (response.status === 400) {
-                CustomError.push("Erros de validação");
-                response.error.errors = CustomError;
-            }
-            else if (response.status === 401) {
-                return throwError(() => '401 - Sem autorização')
-            }
-            else if (response.status === 403) {
-                return throwError(() => '403 - Sem autorização')
-            }
-            else if (response.status === 409) {
-                return throwError(() => '409 - Usuário já Existe')
-            }
-        }
-
-        //console.error(response.error);
-        return throwError(() => response);
+        return throwError(
+          () => 'Falha na comunicação - tente novamente mais tarde'
+        );
+      } else if (response.status === 400) {
+        CustomError.push('Erros de validação');
+        response.error.errors = CustomError;
+      } else if (response.status === 401) {
+        this.LocalStorage.limparDadosLocaisUsuario();
+        return throwError(() => 'Sem autorização');
+      } else if (response.status === 403) {
+        return throwError(() => 'Sem autorização');
+      } else if (response.status === 409) {
+        return throwError(() => 'Usuário já Existe');
+      }
     }
+
+    //console.error(response.error);
+    return throwError(() => response);
+  }
 }

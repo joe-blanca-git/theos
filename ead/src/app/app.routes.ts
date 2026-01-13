@@ -9,6 +9,10 @@ export const routes: Routes = [
         path:'auth',
         loadChildren: () => import('../app/modules/auth/auth.routes').then((r) => r.AUTH_ROUTES)
     },
+    {
+        path:'avat',
+        loadChildren: () => import('../app/modules/ava/ava.routes').then((r) => r.AVA_ROUTES)
+    },
      {
         path:'avp',
         loadChildren: () => import('../app/modules/avp/avp.routes').then((r) => r.AVP_ROUTES)

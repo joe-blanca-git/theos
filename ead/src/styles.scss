@@ -10,7 +10,7 @@
 
 body {
   //background-color: rgb(27, 27, 27);
-  background-color: #343746;
+  background-color: rgb(33 37 41) !important;
   background-size: cover;
   background-position: center;
   background-blend-mode: overlay;
@@ -23,4 +23,15 @@ body {
 
 .cursor-pointer {
   cursor: pointer;
+}
+
+:root {
+  --brand-color: #fe4141;
+  --dark-color: #1e1b26;
+  --accent-color: #e7e7e7;
+  --text-light: #b4b4b4;
+  --text-lighter: #d7d7d7;
+  --section-space: 16px;
+  --card-padding: 24px;
+  --poster-overlay: rgba(30, 27, 38, 0.8);
 }

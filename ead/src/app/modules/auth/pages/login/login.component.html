@@ -9,7 +9,16 @@
                     <span class="h1 text-uppercase">{{pageTitle}}</span>
                 </div>
                 <div class="col-12 text-center ">
-                    <app-form-login></app-form-login>
+                    <div class="col-12 text-center" [ngSwitch]="currentUrl">
+
+                        <app-form-recovery *ngSwitchCase="'/auth/recovery-password'"></app-form-recovery>
+
+                        <app-form-replace *ngSwitchCase="'/auth/replace-password'"></app-form-replace>
+
+                        <app-form-login *ngSwitchDefault></app-form-login>
+
+                    </div>
+
                 </div>
             </div>
         </div>

@@ -1,10 +1,9 @@
 import { Routes } from "@angular/router";
 import { LandingPageAppComponent } from "./landing-page.app.component";
-import { LandingHomeComponent } from "./pages/landing-home/landing-home.component";
+import { LandingHomeComponent } from "./pages/landing-home/index/landing-home.component";
 import { LandingAboutUsComponent } from "./pages/landing-about-us/landing-about-us.component";
 import { LandingTeachersComponent } from "./pages/landing-teachers/landing-teachers.component";
-import { LandingPlansComponent } from "./pages/landing-plans/landing-plans.component";
-import { LandingPlansBuyComponent } from "./pages/landing-plans-buy/landing-plans-buy.component";
+import { LandingRegisterComponent } from "./pages/landing-register/index/landing-register.component";
 
 export const LANDINGPAGE_ROUTES: Routes = [
     {
@@ -20,12 +19,9 @@ export const LANDINGPAGE_ROUTES: Routes = [
             {
                 path: 'teachers', component: LandingTeachersComponent
             },
-            {
-                path: 'plans', component: LandingPlansComponent
+             {
+                path: 'register', component: LandingRegisterComponent
             },
-            {
-                path: 'buy-subscription', component: LandingPlansBuyComponent
-            }
         ]
     }
 ]

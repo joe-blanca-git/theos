@@ -1,0 +1,104 @@
+@import "../../../themes/variables.base.scss";
+
+.header {
+  background: linear-gradient(135deg, rgba(20, 0, 0, 0.9), rgba(20, 0, 0, 0)),
+    url("https://storage.googleapis.com/ai-sandbox-videofx/image/244a7926-fbe7-40a4-8e41-8f0c7567609b?GoogleAccessId=labs-ai-sandbox-videoserver-prod@system.gserviceaccount.com&Expires=1766000727&Signature=atOpMoBeLDDhJKcbfke1aQkVRhpOpACKDS9gBpULebBr7%2B1nJztzIX78ClwCH%2F6n7oHvQGEvNhzq2o%2Fo%2Fd9FGtExzJLQN8wr5Kc9F6g%2BqIgPq9U9HzITaXae0I0h3kGF%2FKTae90mwP9p1owp8qmL1XmkwMwH1dsjMW0mI8LZuY79GZ3SbtlMgBm51nRI1GzO0VlS0T2X7GzB8SvzalclkAnr8xyUteCr3Smszpv7JEwC2zRa7GxzpbKuO%2B2s%2BVVBAflMOFzFlBVfEQDB7V2sWfRZP8rNoOoXjDtIuLeR%2BdzOhlJJwYu%2Bf47ZrDHIlDfpxkczQqUCZo366EAFFpnvjA%3D%3D");
+
+  height: 15vh;
+  display: flex;
+  flex-direction: column;
+  padding: 2% 4%;
+
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+
+  :host-context(.screen-x-small) & {
+    height: 10vh;
+  }
+  :host-context(.screen-small) & {
+    height: 12vh;
+  }
+  :host-context(.screen-medium) & {
+    height: 13vh;
+  }
+
+  .header-title {
+    font-size: 29px;
+    font-weight: 700;
+    color: $accent;
+
+    :host-context(.screen-x-small) & {
+      font-size: 19px;
+    }
+    :host-context(.screen-small) & {
+      font-size: 22px;
+    }
+    :host-context(.screen-medium) & {
+      font-size: 26px;
+    }
+  }
+
+  .header-description {
+    font-size: 16px;
+    font-weight: 500;
+    color: $accent-light;
+
+    :host-context(.screen-x-small) & {
+      font-size: 14px;
+    }
+    :host-context(.screen-small) & {
+      font-size: 14px;
+    }
+    :host-context(.screen-medium) & {
+      font-size: 16px;
+    }
+  }
+}
+
+[nz-menu] {
+  line-height: 64px;
+  background-color: rgb(33 37 41) !important;
+}
+
+nz-layout {
+  height: 100vh;
+  background-color: rgb(33 37 41) !important;
+  color: #fff;
+}
+
+nz-breadcrumb {
+  margin: 16px 0;
+}
+
+nz-content {
+  padding: 0 50px;
+  background-color: rgb(33 37 41) !important;
+  color: #fff;
+
+  :host-context(.screen-x-small) & {
+    padding: 0 10px;
+  }
+  :host-context(.screen-small) & {
+    padding: 0 20px;
+  }
+  :host-context(.screen-medium) & {
+    padding: 0 30px;
+  }
+}
+
+nz-header {
+  background-color: rgb(33 37 41) !important;
+  color: #fff;
+}
+
+nz-footer {
+  background-color: rgb(33 37 41) !important;
+  color: #fff;
+  text-align: center;
+}
+
+.inner-content {
+  min-height: 280px;
+  height: 100%;
+}

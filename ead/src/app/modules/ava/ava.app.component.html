@@ -1,0 +1,38 @@
+<nz-layout>
+  <nz-header class="w-100">
+    <div class="row">
+      <div class="col-1 text-end cursor-pointer" routerLink="/avat/home">
+        <img src="https://i.imgur.com/ISvbhQp.png" width="40" alt="" />
+      </div>
+      <div class="col-11 d-flex justify-content-end">
+        <ul nz-menu nzMode="horizontal" class="text-light d-none d-sm-block">
+          <li
+            nz-menu-item
+            *ngFor="let item of menu"
+            [routerLink]="item.route"
+            routerLinkActive="ant-menu-item-selected"
+            [routerLinkActiveOptions]="{ exact: true }"
+          >
+            <span>
+              <b>{{ item.name }}</b>
+            </span>
+          </li>
+        </ul>
+
+        <app-user-panel></app-user-panel>
+      </div>
+    </div>
+  </nz-header>
+
+  <nz-content>
+    <!-- <nz-breadcrumb class="text-secondary">
+      <nz-breadcrumb-item><span class="text-uppercase" *ngIf="routeBase">{{routeBase}}</span></nz-breadcrumb-item>
+      <nz-breadcrumb-item><span class="text-uppercase" *ngIf="routeModule">{{routeModule}}</span></nz-breadcrumb-item>
+      <nz-breadcrumb-item><span class="text-uppercase" *ngIf="routeApp">{{routeApp}}</span></nz-breadcrumb-item>
+    </nz-breadcrumb> -->
+    <div class="inner-content">
+      <router-outlet></router-outlet>
+    </div>
+  </nz-content>
+  <!-- <nz-footer>Joeder Blanca ©{{ 2025 }} Desenvolvimento de Sistemas</nz-footer> -->
+</nz-layout>

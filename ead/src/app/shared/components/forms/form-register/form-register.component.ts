@@ -1,10 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
+  AbstractControl,
   FormBuilder,
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
+  ValidationErrors,
+  ValidatorFn,
   Validators,
 } from '@angular/forms';
 import { NgxMaskDirective } from 'ngx-mask';
@@ -17,6 +20,9 @@ import {
   Cep,
 } from '../../../services/locations.service';
 import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs';
+import { AuthService, UserRegisterRequest } from '../../../services/auth.service';
+import { Router } from '@angular/router';
+import { NotificationService } from '../../../services/notification.service';
 
 @Component({
   selector: 'app-form-register',
@@ -26,37 +32,43 @@ import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs';
     FormsModule,
     ReactiveFormsModule,
     NgxMaskDirective,
-
     NzInputModule,
     NzSelectModule,
   ],
   templateUrl: './form-register.component.html',
   styleUrl: './form-register.component.scss',
 })
-export class FormRegisterComponent {
+export class FormRegisterComponent implements OnInit {
   formRegister: FormGroup;
   isLoadingStates = false;
   isLoadingCities = false;
+  loading = false;
   states: States[] = [];
   cities: Cities[] = [];
 
   constructor(
     private fb: FormBuilder,
+    private authService: AuthService,
+    private router: Router,
+    private notificationService: NotificationService,
     private locationsService: LocationsService
   ) {
-    this.formRegister = this.fb.group({
-      name: [null, [Validators.required, Validators.minLength(3)]],
-      cpf: [null, Validators.required],
-      birthday: [null, Validators.required],
-      email: [null, Validators.required],
-      phone: [null, Validators.required],
-      adressZipcode: [null, Validators.required],
-      adressCity: [null, Validators.required],
-      adressState: [null, Validators.required],
-      adressStreet: [null, Validators.required],
-      password: [null, Validators.required],
-      passwordConfirm: [null, Validators.required],
-    });
+    this.formRegister = this.fb.group(
+      {
+        name: [null, [Validators.required, Validators.minLength(3)]],
+        cpf: [null, Validators.required],
+        birthday: [null, Validators.required],
+        email: [null, Validators.required],
+        phone: [null, Validators.required],
+        adressZipcode: [null, Validators.required],
+        adressCity: [null, Validators.required],
+        adressState: [null, Validators.required],
+        adressStreet: [null, Validators.required],
+        password: [null, [Validators.required, this.strongPasswordValidator()]],
+        passwordConfirm: [null, Validators.required],
+      },
+      { validators: this.matchPasswordValidator }
+    );
   }
 
   ngOnInit(): void {
@@ -76,20 +88,43 @@ export class FormRegisterComponent {
     this.getStates();
   }
 
-  registerUser(): boolean {
+  registerUser() {
     if (this.formRegister.valid) {
-      // faz o registro aqui...
-      return true;
+      this.loading = true;
+      
+      const formValues = this.formRegister.value;
+      const userToRegister: UserRegisterRequest = {
+        email: formValues.email,
+        password: formValues.password,
+        username: formValues.name,
+        phone: formValues.phone,
+        Street: formValues.adressStreet,
+        IdCity: formValues.adressCity,
+        IdState: formValues.adressState,
+        ZipCode: formValues.adressZipcode,
+        cpfCnpj: formValues.cpf
+      };
+
+      this.authService.register(userToRegister).subscribe({
+        next: (response) => {
+          this.notificationService.show('success', 'Sucesso', response.message);
+          this.router.navigate(['/auth/login']);
+        },
+        error: (fail) => {
+          this.notificationService.show('error', 'Erro!', fail, 5000);
+          this.loading = false;
+          console.error('Erro no registro:', fail);
+        },
+        complete: () => (this.loading = false)
+      });
     } else {
       this.formRegister.markAllAsTouched();
       this.formRegister.markAsDirty();
-      return false;
     }
   }
 
   async getStates() {
     this.isLoadingStates = true;
-
     try {
       this.states = await this.locationsService.getStates();
     } finally {
@@ -103,7 +138,7 @@ export class FormRegisterComponent {
     try {
       this.cities = await this.locationsService.getCities(uf);
     } finally {
-      this.isLoadingStates = false;
+      this.isLoadingCities = false;
     }
   }
 
@@ -115,7 +150,10 @@ export class FormRegisterComponent {
       const response: any = await this.locationsService.getCep(cep);
 
       if (response.erro === 'true') {
-        console.error('CEP inválido');
+        this.formRegister.get('adressZipcode')?.setErrors({ invalidCep: true });
+        this.formRegister.get('adressZipcode')?.markAsTouched();
+        this.formRegister.get('adressZipcode')?.markAsDirty();
+        return;
       } else {
         result = response;
 
@@ -193,4 +231,41 @@ export class FormRegisterComponent {
 
     return 2;
   }
+
+  strongPasswordValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const value = control.value;
+      if (!value) return null;
+
+      const hasUpperCase = /[A-Z]+/.test(value);
+      const hasNumeric = /[0-9]+/.test(value);
+      const hasSymbol = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/.test(value);
+
+      const passwordValid = hasUpperCase && hasNumeric && hasSymbol;
+
+      return !passwordValid ? { weakPassword: true } : null;
+    };
+  }
+
+  matchPasswordValidator: ValidatorFn = (
+    control: AbstractControl
+  ): ValidationErrors | null => {
+    const password = control.get('password');
+    const confirm = control.get('passwordConfirm');
+
+    if (!password || !confirm) return null;
+
+    if (password.value !== confirm.value) {
+      confirm.setErrors({ ...confirm.errors, mismatch: true });
+      return { mismatch: true };
+    } else {
+      if (confirm.errors?.['mismatch']) {
+        delete confirm.errors['mismatch'];
+        if (Object.keys(confirm.errors).length === 0) {
+          confirm.setErrors(null);
+        }
+      }
+      return null;
+    }
+  };
 }

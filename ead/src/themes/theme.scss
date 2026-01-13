@@ -1,99 +1,93 @@
 @import "./variables.base.scss";
 @import "./nz-theme.scss";
 
-.header {
-  padding: 5vh 6vh;
-  width: 100%;
-  background-image: url("../../public/images/assets/header-avp.png");
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
+.courses {
+  background-color: black;
+  padding: 5vh 10vw;
 
-  .page-title {
-    margin-left: 3vw;
-    font-size: 24px;
-    font-weight: bolder;
-    color: $title-color;
+  :host-context(.screen-x-small) & {
+    padding: 5vh 2vw;
   }
 
-  .page-description {
-    margin-left: 3vw;
-    font-size: 14px;
-    font-weight: normal;
-    color: $description-color;
+  .price {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    background-color: $accent;
+    padding: 0 5px;
+    border-radius: 8px;
+    color: aliceblue;
+
+    :host-context(.screen-x-small) & {
+      font-size: 10px;
+    }
+  }
+
+  .categorie {
+    position: absolute;
+    top: 5px;
+    left: 10px;
+    background-color: $accent;
+    padding: 0 5px;
+    border-radius: 8px;
+    color: aliceblue;
+
+    :host-context(.screen-x-small) & {
+      font-size: 10px;
+    }
+  }
+
+  .duration {
+    :host-context(.screen-x-small) & {
+      font-size: 10px;
+    }
+  }
+
+  .card-title {
+    :host-context(.screen-x-small) & {
+      font-size: 14px;
+    }
+  }
+
+  .card-text {
+    text-align: justify;
+    :host-context(.screen-x-small) & {
+      font-size: 10px;
+    }
+  }
+
+  .instructor {
+    .instructor-avatar {
+      width: 50px;
+      height: 50px;
+      :host-context(.screen-x-small) & {
+        width: 25px;
+        height: 25px;
+      }
+    }
+    .instructor-label {
+      color: rgb(169, 169, 169);
+      margin-left: 20px;
+
+      :host-context(.screen-x-small) & {
+        font-size: 10px;
+        margin-left: 5px;
+      }
+    }
+    .instructor-name {
+      color: rgb(250, 178, 178);
+      margin-left: 20px;
+
+      :host-context(.screen-x-small) & {
+        font-size: 10px;
+        margin-left: 5px;
+      }
+    }
+  }
+
+  .card-footer{
+    :host-context(.screen-x-small) & {
+      font-size: 10px;
+    }
   }
 }
-
-.dash {
-  padding: 5vh 6vh;
-
-  .card {
-    background-color: #282a36;
-  }
-}
-
-.filter {
-  padding: 5vh 6vh;
-}
-
-.data {
-  padding: 5vh 6vh;
-}
-
-//items
-.badge-click {
-  transition: font-size 0.3s ease;
-  cursor: pointer;
-}
-
-.badge-click:hover {
-  font-size: 20px;
-}
-
-.close-icon{
-  color: rgb(252, 140, 140);
-}
-
-
-///////////////////* tool notification *////////////////////
-.custom-notification-error {
-  background-color: rgb(180, 2, 2) !important;
-  color: #fff !important;
-}
-
-.custom-notification-error .ant-notification-notice-icon-error {
-  color: #fff;
-}
-
-.custom-notification-error .ant-notification-notice-message {
-  color: #fff !important;
-  font-weight: bold !important;
-  font-size: large;
-}
-
-.custom-notification-warning {
-  background-color: #ffc107 !important;
-  color: red !important;
-}
-
-.custom-notification-warning .ant-notification-notice-icon-warning {
-  color: red;
-}
-
-.custom-notification-warning .ant-notification-notice-message {
-  color: red !important;
-  font-weight: bold !important;
-  font-size: large;
-}
-
-.custom-notification-success {
-  background-color: green !important;
-  color: #fff !important;
-}
-
-.custom-notification-success .ant-notification-notice-message {
-  color: #fff !important;
-  font-weight: bold !important;
-  font-size: large;
-}
-/////////////////////////////////////////////////////////////

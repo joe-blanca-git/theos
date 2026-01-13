@@ -37,6 +37,7 @@ export interface IDisplayLesson {
   VideoBin: string;
   Duration: number | string;
   ModuloOrdem: number;
+  Name: string;
 }
 
 @Component({
@@ -118,6 +119,8 @@ export class NewCourseComponent {
   }
 
   recieveLesson(lesson: any) {
+    console.log(lesson);
+    
     const newLesson: IDisplayLesson = {
       ordem: this.listOfLessons.length + 1,
       Lesson: lesson.Lesson.Name,
@@ -126,6 +129,7 @@ export class NewCourseComponent {
       VideoBin: lesson.Lesson.VideoBin,
       Duration: lesson.Lesson.DurationSeconds,
       ModuloOrdem: lesson.Lesson.ModuleId,
+      Name: lesson.Lesson.Name,
     };
 
     this.listOfLessons = [...this.listOfLessons, newLesson];
@@ -135,127 +139,98 @@ export class NewCourseComponent {
     this.current -= 1;
   }
 
-  async next(): Promise<void> {
-    try {
-      // === ETAPA 0 - Cadastro do Curso ===
-      if (this.current === 0) {
-        if (!this.formCourse) {
-          console.error('O formulário de curso não foi inicializado!');
-          return;
-        }
+async next(): Promise<void> {
+  try {
+    if (this.current === 0) {
+      if (!this.formCourse) return;
 
-        const formCourseData = this.formCourse.outPutData();
-        if (!formCourseData) return;
+      const formCourseData = this.formCourse.outPutData();
+      if (!formCourseData) return;
 
-        // Cria o corpo inicial do curso
-        this.bodyCourse = {
-          Curso: {
-            Author: this.user.id,
-            User: this.user.id,
-            Name: formCourseData.Name,
-            Description: formCourseData.DescriptionSmall,
-            DescriptionLarge: formCourseData.DescriptionLarge,
-            ImgPoster: formCourseData.Image,
-            ImgHeader: 'a',
-            CategoryId: formCourseData.CategoryId,
-            Price: formCourseData.Price,
-          },
-          Modulos: [],
-          Lessons: [],
-        };
+      this.bodyCourse = {
+        Curso: {
+          Author: this.user.id,
+          User: this.user.id,
+          Name: formCourseData.Name,
+          Description: formCourseData.DescriptionSmall,
+          DescriptionLarge: formCourseData.DescriptionLarge,
+          ImgPoster: formCourseData.Image,
+          ImgHeader: 'a',
+          CategoryId: formCourseData.CategoryId,
+          Price: formCourseData.Price
+        },
+        Modulos: []
+      };
 
-        this.current += 1;
-        return;
-      }
-
-      // === ETAPA 1 - Cadastro do Módulo ===
-      if (this.current === 1) {
-        if (!this.formModule) {
-          console.error('O formulário de módulo não foi inicializado!');
-          return;
-        }
-
-        // Garante que há pelo menos um módulo
-        if (!this.listOfModules || this.listOfModules.length === 0) {
-          this.notificationService.show(
-            'warning',
-            'Atenção!',
-            'Adicione pelo menos 1 Módulo ao Curso!',
-            5000
-          );
-          return;
-        }
-
-        // Garante que bodyCourse existe
-        if (!this.bodyCourse) {
-          this.bodyCourse = { Curso: {}, Modulos: [], Lessons: [] };
-        }
-
-        // Atualiza lista de módulos
-        this.bodyCourse.Modulos = [...this.listOfModules];
-
-        this.current += 1;
-        return;
-      }
-
-      // === ETAPA 2 - Cadastro da Aula (Lógica Corrigida) ===
-      if (this.current === 2) {
-        if (!this.FormLeasson) {
-          console.error('O formulário de aula não foi inicializado!');
-          return;
-        }
-
-        // Garante que há aulas
-        if (!this.listOfLessons || this.listOfLessons.length === 0) {
-          this.notificationService.show(
-            'warning',
-            'Atenção!',
-            'Adicione pelo menos 1 Aula ao Curso!',
-            5000
-          );
-          return;
-        }
-
-        if (!this.bodyCourse || !this.bodyCourse.Modulos) {
-          console.error(
-            'O corpo do curso ou os módulos não foram inicializados!'
-          );
-          return;
-        }
-
-        // Mapeia os módulos e aninha as aulas correspondentes
-        const modulosComAulas = this.bodyCourse.Modulos.map((modulo: any) => {
-          // Filtra as aulas que pertencem a este módulo (pelo ModuloOrdem)
-          const aulasDoModulo = this.listOfLessons.filter(
-            (aula: any) => aula.ModuloOrdem == modulo.ModuleOrder
-          );
-
-          // Retorna uma nova versão do módulo com a propriedade 'Lessons'
-          return {
-            ...modulo, // Copia todas as propriedades existentes do módulo
-            Lessons: aulasDoModulo, // Adiciona o array de aulas filtradas
-          };
-        });
-
-        // Atualiza a lista de módulos no corpo do curso
-        this.bodyCourse.Modulos = modulosComAulas;
-
-        // Remove a lista de aulas do nível principal, já que agora está aninhada
-        delete this.bodyCourse.Lessons;
-
-        this.current += 1;
-        return;
-      }
-    } catch (error) {
-      console.error('Erro no processo:', error);
-      this.notificationService.show(
-        'error',
-        'Erro!',
-        'Ocorreu um erro ao avançar o cadastro do curso.',
-        5000
-      );
+      this.current += 1;
+      return;
     }
+
+    if (this.current === 1) {
+      if (!this.formModule) return;
+
+      if (!this.listOfModules || this.listOfModules.length === 0) {
+        this.notificationService.show(
+          'warning',
+          'Atenção!',
+          'Adicione pelo menos 1 Módulo ao Curso!',
+          5000
+        );
+        return;
+      }
+
+      this.bodyCourse.Modulos = this.listOfModules.map((m: any) => ({
+        ...m,
+        Lessons: []
+      }));
+
+      this.current += 1;
+      return;
+    }
+
+    if (this.current === 2) {
+      if (!this.FormLeasson) return;
+
+      if (!this.listOfLessons || this.listOfLessons.length === 0) {
+        this.notificationService.show(
+          'warning',
+          'Atenção!',
+          'Adicione pelo menos 1 Aula ao Curso!',
+          5000
+        );
+        return;
+      }
+
+      for (const aula of this.listOfLessons) {
+        const moduloIndex = this.bodyCourse.Modulos.findIndex(
+          (m: any) =>
+            Number(m['ModuleOrder']) === Number(aula['ModuloOrdem'])
+        );
+
+        if (moduloIndex !== -1) {
+          this.bodyCourse.Modulos[moduloIndex].Lessons.push(aula);
+        }
+      }
+      console.log(this.listOfLessons);
+      
+      console.log(this.bodyCourse);
+      
+      this.current += 1;
+      return;
+    }
+  } catch (error) {
+    console.error('Erro no processo:', error);
+    this.notificationService.show(
+      'error',
+      'Erro!',
+      'Ocorreu um erro ao avançar o cadastro do curso.',
+      5000
+    );
   }
+}
+
+
+
 
   async done(): Promise<void> {
     // Garante que temos o que salvar
@@ -275,7 +250,7 @@ export class NewCourseComponent {
       (sum:any, modulo:any) => sum + (modulo.Lessons?.length || 0),
       0
     );
-    const totalSteps = 1 + totalModules + totalLessons; // 1 (curso) + N módulos + N aulas
+    const totalSteps = 1 + totalModules + totalLessons; 
     let stepsCompleted = 0;
 
     try {
@@ -326,17 +301,22 @@ export class NewCourseComponent {
 
         // === ETAPA 3: Cadastrar as AULAS (loop aninhado) ===
         this.progressLabel = `3/3 - Cadastrando aulas do módulo "${modulo.Name}"...`;
-
+        
         if (modulo.Lessons && modulo.Lessons.length > 0) {
-          // Loop aninhado para as AULAS do módulo atual
+          
           for (const lesson of modulo.Lessons) {
-            // Prepara o payload da aula, associando ao módulo recém-criado
-            const lessonPayload = {
-              ...lesson,
-              ModuleId: moduleId,
-            };
 
-            await this.avpService.postLesson(lessonPayload);
+            const formData = new FormData();
+              formData.append('video', lesson.VideoBin.get('video'));
+              formData.append('Name', lesson.Name);
+              formData.append('DescriptionLarge', lesson.DescriptionLarge);
+              formData.append('DescriptionSmall', lesson.DescriptionSmall);
+              formData.append('DurationSeconds', lesson.Duration);
+              formData.append('ModuleId', moduleId);
+              formData.append('CourseId', courseId);
+              formData.append('UserIncId', this.user.id);
+
+              await this.avpService.postLessonFormData(formData);
 
             stepsCompleted++;
             this.progressLoading = (stepsCompleted / totalSteps) * 100;

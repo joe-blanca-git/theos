@@ -6,23 +6,32 @@ import {
   ɵInternalFormsSharedModule,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { AuthService } from '../../../services/auth.service';
+import { CommonModule } from '@angular/common';
+import { LocalStorageUtils } from '../../../utils/localstorage';
 
 @Component({
   selector: 'app-form-login',
   standalone: true,
-  imports: [ɵInternalFormsSharedModule, ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    ɵInternalFormsSharedModule,
+    ReactiveFormsModule,
+    RouterModule,
+  ],
   templateUrl: './form-login.component.html',
   styleUrl: './form-login.component.scss',
 })
 export class FormLoginComponent {
   responseLogin: any;
   loginForm: FormGroup;
+  loading = false;
+
+  localStorageUtils = new LocalStorageUtils();
 
   constructor(
-    private route: ActivatedRoute,
     private authService: AuthService,
     private router: Router,
     private fb: FormBuilder,
@@ -35,15 +44,21 @@ export class FormLoginComponent {
     });
   }
 
+  ngOnInit(): void {
+    this.verifyLogin();
+  }
+
   onLogin(): void {
     if (this.loginForm.valid) {
+      this.loading = true;
+
       const username = this.loginForm.get('email')!.value;
       const password = this.loginForm.get('password')!.value;
 
       this.authService.login(username, password).subscribe({
         next: (v) => this.processSuccess(v),
         error: (e) => this.processFail(e),
-        complete: () => console.info('Login completed'),
+        complete: () => (this.loading = false),
       });
     } else {
     }
@@ -52,21 +67,16 @@ export class FormLoginComponent {
   processSuccess(response: any) {
     this.authService.localStorageUtils.salvarDadosLocaisUsuario(response);
 
-    const userClaims = response.usuarioToken.claims;
-    const roleClaim = userClaims.find((claim: any) => claim.Name === 'user_type');
+    const userRole = response.user.roles;
+    const role = userRole.find((role: any) => role.Name === 'user_type');
 
-    console.log(roleClaim);
-    
-
-    if (roleClaim?.Value === 'TEACHER' || roleClaim?.Value === 'ADMIN') {
+    if (role?.Value === 'TEACHER' || role?.Value === 'ADMIN') {
       this.router.navigate(['/avp']);
-    } else if (roleClaim?.Value === 'STUDENT') {
-      this.router.navigate(['/ava']);
+    } else if (role?.Value === 'STUDENT') {
+      this.router.navigate(['/avat']);
     } else {
-      console.error('Tipo de usuário não reconhecido:', roleClaim?.Value);
+      console.error('Tipo de usuário não reconhecido:', role?.Value);
     }
-
-    
   }
 
   processFail(fail: any) {
@@ -80,10 +90,6 @@ export class FormLoginComponent {
         {
           nzClass: 'custom-notification-error',
           nzDuration: 5000,
-          nzStyle: {
-            'background-color': '#5c0011',
-            color: '#ffffffff',
-          },
         }
       );
     } else if (typeof fail === 'string' && fail.includes('500')) {
@@ -92,5 +98,31 @@ export class FormLoginComponent {
         'Erro no Sistema, aguarde e tente novamente mais tarde!'
       );
     }
+
+    this.loading = false;
+  }
+
+  verifyLogin() {
+    const validToken = this.localStorageUtils.verifyToken();
+
+    if (validToken) {
+      const userType = this.localStorageUtils.obterTipoDeUsuario();
+
+      if (userType === 'TEACHER' || userType === 'ADMIN') {
+        this.router.navigate(['/avp']);
+      } else if (userType === 'STUDENT') {
+        this.router.navigate(['/avat']);
+      } else {
+        console.error('Tipo de usuário não reconhecido:', userType);
+      }
+    } else {
+      this.localStorageUtils.limparDadosLocaisUsuario();
+    }
+  }
+
+  showPassword = false;
+
+  togglePassword() {
+    this.showPassword = !this.showPassword;
   }
 }

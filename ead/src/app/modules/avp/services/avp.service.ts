@@ -115,17 +115,19 @@ export class AvpService extends BaseService {
     }
   }
 
-  async postLesson(body: any): Promise<any> {
-    const url = `${this.UrlServiceV1}avp/course/new_lesson`;
+  postLessonFormData(formData: FormData) {
+  const token = localStorage.getItem('token'); // ou como você já usa para pegar o token
+  const url = this.UrlServiceV1 + 'avp/course/new_lesson';
 
-    try {
-      const response = await firstValueFrom(
-        this.httpClient.post(url, body, this.ObterAuthHeaderJson())
-      );
+  return firstValueFrom(
+    this.httpClient.post(url, formData, {
+      headers: {
+        Authorization: `Bearer ${token}`
+        // NÃO coloque Content-Type aqui!!
+        // O navegador define automaticamente o multipart/form-data correto.
+      }
+    })
+  );
+}
 
-      return this.extractData(response);
-    } catch (error) {
-      throw error;
-    }
-  }
 }

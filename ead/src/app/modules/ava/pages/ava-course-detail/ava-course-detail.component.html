@@ -1,0 +1,195 @@
+<div class="header">
+  <span class="header-title">{{ titlePage }}</span>
+  <span class="header-description">{{ descriptionPage }}</span>
+</div>
+<div class="course-detail-header" *ngIf="!loading; else loadingData">
+  <!-- ---------- -->
+  <div class="row mt-4">
+    <div class="col-12 col-sm-5 d-flex justify-content-end">
+      <svg
+        style="width: 0; height: 0; position: absolute"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <linearGradient id="halfGradient">
+          <stop offset="50%" stop-color="#FFD700" />
+          <stop offset="50%" stop-color="rgba(255, 255, 255, 0.2)" />
+        </linearGradient>
+      </svg>
+
+      <div class="movie-card">
+        <div class="movie-img-container">
+          <div
+            class="movie-img"
+            [style.background]="
+              'url(' + course.Poster + ') no-repeat center / cover'
+            "
+          ></div>
+          <div class="movie-overlay"></div>
+        </div>
+        <div class="movie-content">
+          <div class="title-row">
+            <h1 class="movie-title">
+              {{ course.Title }}
+              <span class="year-badge">{{ course.Year }}</span>
+            </h1>
+            <span class="rating-badge">C</span>
+          </div>
+
+          <div class="metadata">
+            <div class="duration">
+              <svg class="duration-icon" viewBox="0 0 24 24">
+                <path
+                  d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+                />
+                <path d="M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z" />
+              </svg>
+              {{ course.DurationSeconds }}min
+            </div>
+          </div>
+
+          <div class="genres">
+            <span class="genre-tag">{{ course.Category }}</span>
+          </div>
+
+          <div class="ratings-row">
+            <div class="star-rating">
+              <nz-rate [ngModel]="course.Rate" [disabled]="true"></nz-rate>
+              <span class="rating-text">{{ course.Rate }}/5</span>
+            </div>
+
+            <!-- <div class="likes">
+          <svg class="heart-icon" viewBox="0 0 24 24">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+          </svg>
+          <span class="likes-count">2.3M</span>
+        </div> -->
+          </div>
+
+          <div class="description-section">
+            <h5 class="section-title">Resumo</h5>
+            <p class="movie-description" id="description">
+              {{ course.DescriptionLarge }}
+            </p>
+          </div>
+
+          <div class="cast-section">
+            <h5 class="section-title">Autor</h5>
+            <div class="cast-list">
+              <div class="cast-item">
+                <img [src]="course.AuthorAvatar" class="cast-photo" alt="" />
+                <span class="cast-name">{{ course.AuthorName }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="action-row">
+            <div class="watch-btn" [ngClass]="{'bg-success': !course.AllowedCourse}" (click)="goToLearn()">
+              <span class="watch-btn-text" *ngIf="course.AllowedCourse && course.PaymentStatus != 'pending'">
+                <i class="fa-solid fa-play text-light"></i>&nbsp;
+                ESTUDAR AGORA
+              </span>
+              <span class="watch-btn-text" *ngIf="!course.AllowedCourse && course.PaymentStatus != 'pending'">
+                <i class="fa-solid fa-shopping-cart text-light"></i>&nbsp;
+                COMPRAR AGORA POR: 
+              </span>
+              <span class="watch-btn-text" *ngIf="course.PaymentStatus === 'pending'">
+                <i class="fa-solid fa-shopping-cart text-light"></i>&nbsp;
+                FINALIZAR PAGAMENTO: 
+              </span>
+              <span class="h4 text-warning">&nbsp;{{formatBrl(course.Price)}}</span>
+            </div>
+
+            <!-- <div class="action-btn">
+          <svg class="action-icon" viewBox="0 0 24 24">
+            <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/>
+          </svg>
+        </div>
+
+        <div class="action-btn">
+          <svg class="action-icon" viewBox="0 0 24 24">
+            <path d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"/>
+          </svg>
+        </div>
+
+        <div class="action-btn">
+          <svg class="action-icon" viewBox="0 0 24 24">
+            <path d="M15 4C12.8 4 11 5.8 11 8c0 2.2 1.8 4 4 4s4-1.8 4-4c0-2.2-1.8-4-4-4zm4.9 8.5c.6 1 .8 2.3.8 3.5 0 2.8-2.2 5-5 5h-5.4c-3.1 0-5.6-2.5-5.6-5.6V15c0-1.1.9-2 2-2h4.6c.3 0 .5.1.7.3.5.5.8 1.1.8 1.7v.3c0 .3-.3.6-.6.6h-1.5c-.5 0-.9.4-.9.9s.4.9.9.9h2.4c1.1 0 2.1-.5 2.8-1.2.4-.4 1.2-1.5 1.2-1.5M9 17c-.8 0-1.5-.7-1.5-1.5S8.2 14 9 14s1.5.7 1.5 1.5S9.8 17 9 17z"/>
+          </svg>
+        </div> -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-sm-7">
+      <div class="row ps-3">
+        <div class="col-12">
+          <span class="h4 text-danger">Aulas</span>
+        </div>
+        <div class="col-6 col-sm-4 mb-2 d-flex align-items-center" *ngFor="let modules of course.Modules">
+            <img
+              style="width: 100%; height: auto"
+              [src]="modules.Cover"
+              [alt]="modules.Name"
+            />
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- ---------- -->
+</div>
+
+<ng-template #loadingData>
+  <div class="row h-100" style="height: 70vh !important">
+    <div
+      class="col-12 d-flex flex-column align-items-center align-items-center justify-content-center text-center text-danger h-100r"
+    >
+      <div class="spinner-border" role="status"></div>
+      <span class="h6">Carregando</span>
+    </div>
+  </div>
+</ng-template>
+
+<nz-modal
+  *ngIf="isVisibleMenuPay"
+  [(nzVisible)]="isVisibleMenuPay"
+  [nzTitle]="''"
+  [nzFooter]="null"
+  [nzCloseIcon]="closeIconTemplate"
+  [nzWidth]="800"
+  [nzCentered]="true"
+  (nzOnCancel)="handleCancel()"
+>
+  <ng-container *nzModalContent>
+    <div class="row justify-content-center g-4 px-2 p-2" *ngIf="!method">
+      <div class="col-12 text-center">
+        <span class="h2 text-danger">Selecione uma forma de pagamento!</span>
+      </div>
+      <div class="col-12 mt-5">
+        <div class="row">
+          <div class="col-6 d-flex justify-content-end pe-2">
+            <button class="btn btn-lg btn-outline-danger p-2 w-50 shadow" (click)="selectMethod('pix')">
+              <i class="fa-brands fa-pix fa-xl"></i><br>
+              PIX
+            </button>
+          </div>
+          <div class="col-6 d-flex justify-content-start ps-2">
+            
+            <button class="btn btn-lg btn-outline-danger p-2 w-50 shadow position-relative">
+              <span class="text-danger rounded bg-warning p-2 h4 position-absolute text-nowrap" style="top: -25px; right: -25px;">3X</span>
+              <i class="fa-solid fa-credit-card fa-xl"></i><br>
+              CRÉDITO
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row justify-content-center g-4 px-2 p-2" *ngIf="method === 'pix'">
+      <app-form-payment [course]="course" [method]="method" (paymentId)="watchPayment($event)"></app-form-payment>
+    </div>
+  </ng-container>
+  <ng-template #closeIconTemplate>
+    <i class="fa-solid fa-xmark-square text-danger fa-xl"></i>
+  </ng-template>
+  
+</nz-modal>

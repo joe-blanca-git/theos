@@ -10,10 +10,6 @@
   line-height: 64px;
 }
 
-nz-breadcrumb {
-  margin: 16px 0;
-}
-
 nz-content {
   padding: 5px;
 }
@@ -25,4 +21,23 @@ nz-footer {
 .inner-content {
   padding: 0px;
   min-height: 90vh;
+}
+
+// No arquivo .scss do componente
+::ng-deep .mobile-drawer .ant-drawer-header {
+    background-color: #212529 !important;
+    border-bottom: 1px solid #333;
+}
+
+::ng-deep .mobile-drawer .ant-drawer-title {
+    color: white !important;
+}
+
+::ng-deep .mobile-drawer .ant-drawer-close {
+    color: white !important;
+}
+
+::ng-deep .mobile-drawer .ant-drawer-body {
+    background-color: #212529 !important;
+    padding: 0 !important;
 }

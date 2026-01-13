@@ -1,0 +1,27 @@
+<div class="dropdown d-none d-sm-block">
+  <button class="btn btn-outline-danger" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+    <i class="fa fa-user" aria-hidden="true"></i>&nbsp;
+    <span>{{userName}}</span>
+  </button>
+  <div [ngTemplateOutlet]="menuList"></div>
+</div>
+
+<button class="btn btn-outline-danger" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+  <i class="fa fa-bars" aria-hidden="true"></i>
+</button>
+<div class="offcanvas offcanvas-end bg-dark" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+  <div class="offcanvas-header d-flex justify-content-end">
+    <button type="button" class="btn btn-sm btn-outline-danger text-danger" data-bs-dismiss="offcanvas" aria-label="Close">X</button>
+  </div>
+  <div class="offcanvas-body">
+    ...
+  </div>
+</div>
+
+<ng-template #menuList>
+  <ul class="dropdown-menu bg-black" aria-labelledby="dropdownMenuButton1">
+    <li><a class="dropdown-item text-light" href="#">Minha Conta</a></li>
+    <li><a class="dropdown-item text-light" href="#">Configurações</a></li>
+    <li><a class="dropdown-item text-light" (click)="logout()">Sair</a></li>
+  </ul>
+</ng-template>

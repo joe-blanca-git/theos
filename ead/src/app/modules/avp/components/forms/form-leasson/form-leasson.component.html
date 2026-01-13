@@ -37,7 +37,7 @@
           </label>
           <select class="form-select" id="ModuleId" formControlName="ModuleId" [ngClass]="{ 'is-invalid': formLesson.get('ModuleId')?.invalid && formLesson.get('ModuleId')?.touched }">
             <option [ngValue]="null" disabled>Selecione...</option>
-            <option *ngFor="let item of listModules" [value]="item.ordem">{{item.Name}}</option>
+            <option *ngFor="let item of listModules" [value]="item.ModuleOrder">{{item.Name}}</option>
           </select>
           <div *ngIf="formLesson.get('ModuleId')?.invalid && formLesson.get('ModuleId')?.touched" class="invalid-feedback">
             <div *ngIf="formLesson.get('ModuleId')?.hasError('required')">Selecione um módulo.</div>

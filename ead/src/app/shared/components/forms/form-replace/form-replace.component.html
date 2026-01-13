@@ -1,0 +1,82 @@
+<div class="card w-100" style="background-color: rgba(129, 129, 129, 0.288)">
+  <div class="card-header text-danger h2">Alterar Senha</div>
+  <div class="card-body text-light">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="row form">
+        <div class="col-12">
+          <div class="mb-3">
+            <label class="form-label">Nova Senha</label>
+            <input
+              type="password"
+              class="form-control"
+              formControlName="password"
+              [class.is-invalid]="
+                form.get('password')?.invalid && form.get('password')?.touched
+              "
+            />
+
+            <div
+              class="invalid-feedback"
+              *ngIf="form.get('password')?.errors?.['required']"
+            >
+              Senha obrigatória.
+            </div>
+            <div
+              class="invalid-feedback"
+              *ngIf="form.get('password')?.errors?.['weakPassword']"
+            >
+              <small>
+                A senha deve conter:
+                <ul class="mb-0 ps-3">
+                  <li>Uma letra maiúscula</li>
+                  <li>Um número</li>
+                  <li>Um caractere especial (&#64;, #, $, etc)</li>
+                </ul>
+              </small>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12">
+          <div class="mb-3">
+            <label class="form-label">Confirmar Senha</label>
+            <input
+              type="password"
+              class="form-control"
+              formControlName="passwordConfirm"
+              [class.is-invalid]="
+                form.get('passwordConfirm')?.invalid &&
+                form.get('passwordConfirm')?.touched
+              "
+            />
+
+            <div
+              class="invalid-feedback"
+              *ngIf="form.get('passwordConfirm')?.errors?.['mismatch']"
+            >
+              As senhas não conferem.
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12">
+          <button
+            type="submit"
+            class="btn btn-danger w-100"
+            [disabled]="form.invalid || isLoading"
+          >
+            {{ isLoading ? "Alterando..." : "Alterar Senha" }}
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <ng-template #loadingData>
+    <div class="col-12 text-center text-danger">
+      <div class="spinner-border" role="status"></div>
+      <br />
+      <span>Alterando sua senha. Aguarde!</span>
+    </div>
+  </ng-template>
+</div>
