@@ -39,8 +39,8 @@ export class AvaAppComponent implements OnInit {
 
   menu: Menu[] = [
     { name: 'Inicio', route: '/avat/home' },
-    { name: 'Meus Cursos', route: '/avat/my-courses' },
-    { name: 'Certificados', route: '/avat/certifieds' },
+    // { name: 'Meus Cursos', route: '/avat/my-courses' },
+    // { name: 'Certificados', route: '/avat/certifieds' },
   ];
 
   constructor(private router: Router) {}

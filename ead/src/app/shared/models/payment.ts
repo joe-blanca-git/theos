@@ -6,3 +6,11 @@ export class PaymentModel {
     Status!:  string;
     DateInc!:  string;
 }
+
+export class PaymentsModel {
+    PaymentId!: number;
+    Description!: string;
+    Method!: string;
+    Status!:  string;
+    Emition!:  string;
+}

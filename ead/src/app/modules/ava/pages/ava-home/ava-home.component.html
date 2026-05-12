@@ -2,9 +2,10 @@
   <span class="header-title">{{ titlePage }}</span>
   <span class="header-description">{{ descriptionPage }}</span>
 </div>
+
 <div class="dash">
   <div class="row ps-0">
-    <div class="col-12 mb-2 col-sm-3" *ngFor="let card of cards">
+    <div class="col-12 col-sm-4 col-lg-3 mb-2" *ngFor="let card of cards">
       <div class="card">
         <div class="card-body">
           <div class="row">
@@ -28,7 +29,9 @@
     </div>
   </div>
 </div>
+
 <div class="content" *ngIf="!loading; else loadingData">
+  
   <div class="last-updates">
     <hr class="border-danger-subtle" />
     <span class="h4 text-danger text-uppercase">Cursos Recentes</span>

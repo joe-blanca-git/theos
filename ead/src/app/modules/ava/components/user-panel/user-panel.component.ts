@@ -2,11 +2,12 @@ import { Component } from '@angular/core';
 import { LocalStorageUtils } from '../../../../shared/utils/localstorage';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../../shared/services/auth.service';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-user-panel',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule,],
   templateUrl: './user-panel.component.html',
   styleUrl: './user-panel.component.scss'
 })

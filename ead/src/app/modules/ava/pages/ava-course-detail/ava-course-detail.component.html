@@ -2,10 +2,10 @@
   <span class="header-title">{{ titlePage }}</span>
   <span class="header-description">{{ descriptionPage }}</span>
 </div>
-<div class="course-detail-header" *ngIf="!loading; else loadingData">
+<div class="course-detail-header mb-4" *ngIf="!loading; else loadingData">
   <!-- ---------- -->
-  <div class="row mt-4">
-    <div class="col-12 col-sm-5 d-flex justify-content-end">
+  <div class="row mt-4 mb-4">
+    <div class="col-12 col-sm-12 col-md-7 col-lg-5 d-flex justify-content-end">
       <svg
         style="width: 0; height: 0; position: absolute"
         aria-hidden="true"
@@ -87,7 +87,7 @@
             <div class="watch-btn" [ngClass]="{'bg-success': !course.AllowedCourse}" (click)="goToLearn()">
               <span class="watch-btn-text" *ngIf="course.AllowedCourse && course.PaymentStatus != 'pending'">
                 <i class="fa-solid fa-play text-light"></i>&nbsp;
-                ESTUDAR AGORA
+                CONTINUAR ESTUDANDO
               </span>
               <span class="watch-btn-text" *ngIf="!course.AllowedCourse && course.PaymentStatus != 'pending'">
                 <i class="fa-solid fa-shopping-cart text-light"></i>&nbsp;
@@ -97,7 +97,7 @@
                 <i class="fa-solid fa-shopping-cart text-light"></i>&nbsp;
                 FINALIZAR PAGAMENTO: 
               </span>
-              <span class="h4 text-warning">&nbsp;{{formatBrl(course.Price)}}</span>
+              <span class="h4 text-warning" *ngIf="!course.AllowedCourse">&nbsp;{{formatBrl(course.Price)}}</span>
             </div>
 
             <!-- <div class="action-btn">
@@ -121,16 +121,19 @@
         </div>
       </div>
     </div>
-    <div class="col-12 col-sm-7">
+    <div class="col-12 col-sm-12 col-md-5 col-lg-7">
       <div class="row ps-3">
         <div class="col-12">
           <span class="h4 text-danger">Aulas</span>
         </div>
-        <div class="col-6 col-sm-4 mb-2 d-flex align-items-center" *ngFor="let modules of course.Modules">
+        <div class="col-6 col-sm-4 d-flex align-items-center p-2" *ngFor="let modules of course.Modules">
             <img
-              style="width: 100%; height: auto"
+              class="img-hover-zoom"
+              style="width: 100%; height: auto; cursor: pointer;"
               [src]="modules.Cover"
               [alt]="modules.Name"
+              [routerLink]="['/avat/learn']"
+              [queryParams]="{ course: course.CourseId, module: modules.ModuleId, lesson: modules.LastLessonView}"
             />
         </div>
       </div>

@@ -33,6 +33,7 @@ export class CourseDetailModel {
   Method!: string;
   AllowedCourse!: boolean;
   Modules!: Modules[];
+  LastView!: LastViews;
 }
 
 class Modules {
@@ -43,6 +44,7 @@ class Modules {
   Status!: string;
   Cover!: string;
   Lessons!: Lessons[];
+  LastLessonView!: number; 
 }
 
 class Lessons {
@@ -54,4 +56,36 @@ class Lessons {
   VideoUrl!: string;
   Description!: string;
   DurationSeconds!: number;
+}
+
+class LastViews{
+  LastCourseView!: number;
+  LastModuleView!: number;
+  LastLessonView!: number;
+}
+
+export class LearnLesson{
+    LeessonName!: string;
+    LessonDescriptionLarge!: string;
+    LessonDescriptionSmall!: string;
+    LessonDurationSeconds!: number;
+    ModuleName!: string;
+    CourseName!: string;
+    CourseId!: number;
+    ModuleId!: number;
+    LessonId!: number;
+    EmbedUrl!: string;
+    Playlist!: playlist[];
+}
+
+export class playlist {
+  LessonId!: number;
+  ModuleId!: number;
+  CourseId!: number;
+  LessonName!: string;
+  LessonDescription!: string;
+  LessonDurationSeconds!: number;
+  View!: number;
+  Active!: boolean;
+  VideoHash!: string;
 }

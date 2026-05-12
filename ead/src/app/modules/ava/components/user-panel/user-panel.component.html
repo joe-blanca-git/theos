@@ -1,4 +1,4 @@
-<div class="dropdown d-none d-sm-block">
+<div class="dropdown d-none d-md-block">
   <button class="btn btn-outline-danger" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
     <i class="fa fa-user" aria-hidden="true"></i>&nbsp;
     <span>{{userName}}</span>
@@ -20,8 +20,7 @@
 
 <ng-template #menuList>
   <ul class="dropdown-menu bg-black" aria-labelledby="dropdownMenuButton1">
-    <li><a class="dropdown-item text-light" href="#">Minha Conta</a></li>
-    <li><a class="dropdown-item text-light" href="#">Configurações</a></li>
+    <li><a class="dropdown-item text-light" routerLink="/avat/payments">Meus Pagamentos</a></li>
     <li><a class="dropdown-item text-light" (click)="logout()">Sair</a></li>
   </ul>
 </ng-template>

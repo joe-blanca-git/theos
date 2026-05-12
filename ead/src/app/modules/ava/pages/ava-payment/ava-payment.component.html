@@ -1,0 +1,114 @@
+<div class="header">
+  <span class="header-title">{{ titlePage }}</span>
+  <span class="header-description">{{ descriptionPage }}</span>
+</div>
+<div class="course-detail-header" *ngIf="!loading; else loadingData">
+
+    <div class="row mt-4">
+      
+        <div class="col-12 d-none d-lg-block">
+            <nz-table
+              #filterTable
+              [nzData]="listOfData"
+              [nzLoading]="loading"
+              nzTableLayout="fixed"
+            >
+              <thead>
+                <tr>
+                  <th
+                    *ngFor="let column of listOfColumns; trackBy: trackByColumn"
+                    [nzSortOrder]="column.sortOrder"
+                    [nzSortFn]="column.sortFn"
+                    [nzSortDirections]="column.sortDirections"
+                    [nzFilterMultiple]="column.filterMultiple"
+                    [nzFilters]="column.listOfFilter"
+                    [nzFilterFn]="column.filterFn"
+                  >
+                    {{ column.name }}
+                  </th>
+                </tr>
+              </thead>
+
+              <tbody>
+
+                <tr *ngFor="let data of filterTable.data; trackBy: trackByData">
+                  <td *ngFor="let column of listOfColumns; trackBy: trackByColumn">
+
+                    <!-- DATA -->
+                    <ng-container *ngIf="column.name === 'Data Vencimento'">
+                      {{ data.date | date:'dd/MM/yyyy':'':'pt-BR' }}
+                    </ng-container>
+
+                    <!-- DESCRIÇÃO -->
+                    <ng-container *ngIf="column.name === 'Descrição'">
+                      {{ data.description }}
+                    </ng-container>
+
+                    <!-- FORMA DE PAGAMENTO -->
+                    <ng-container *ngIf="column.name === 'Forma de Pagamento'">
+                      {{ data.paymentMethod }}
+                    </ng-container>
+
+                    <!-- VALOR -->
+                    <ng-container *ngIf="column.name === 'Valor'">
+                      {{ data.value | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}
+                    </ng-container>
+
+                    <!-- STATUS -->
+                    <ng-container *ngIf="column.name === 'Status'">
+                      <span
+                        class="badge"
+                        [ngClass]="{
+                          'bg-success': data.status === 'Pago',
+                          'bg-warning text-dark': data.status === 'Pendente',
+                          'bg-danger': data.status === 'Cancelado'
+                        }"
+                      >
+                        {{ data.status }}
+                      </span>
+                    </ng-container>
+
+                    <!-- ACTION -->
+                    <ng-container *ngIf="column.name === 'Imprimir'">
+                     <div class="row">
+                      <!-- <div class="col-auto">
+                         <button
+                          type="button"
+                          class="btn btn-outline-primary btn-sm"
+                          title="Imprimir comprovante"
+                          (click)="printPayment(data)"
+                        >
+                          <i class="fa-solid fa-print"></i>
+                        </button>
+                      </div> -->
+                      <div class="col-auto" *ngIf="data.status === 'Pendente'">
+                         <button
+                          type="button"
+                          class="btn btn-outline-success btn-sm"
+                          title="Finalizar Pagamento"
+                        >
+                          <i class="fa-solid fa-money-bill"></i>&nbsp;
+                          Finalizar Pagamento
+                        </button>
+                      </div>
+                     </div>
+                    </ng-container>
+
+                  </td>
+                </tr>
+              </tbody>
+            </nz-table>
+        </div>
+    </div>
+</div>
+
+<ng-template #loadingData>
+  <div class="row h-100" style="height: 70vh !important">
+    <div
+      class="col-12 d-flex flex-column align-items-center align-items-center justify-content-center text-center text-danger h-100r"
+    >
+      <div class="spinner-border" role="status"></div>
+      <span class="h6">Carregando</span>
+    </div>
+  </div>
+</ng-template>

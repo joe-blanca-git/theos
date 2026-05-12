@@ -343,3 +343,15 @@ a {
     );
   }
 }
+
+.img-hover-zoom {
+  transition: transform 0.3s ease-in-out;
+  
+  border-radius: 8px; 
+}
+
+.img-hover-zoom:hover {
+  transform: scale(1.05);
+  
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}

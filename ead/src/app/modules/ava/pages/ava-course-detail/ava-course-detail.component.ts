@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CoursesService } from '../../services/courses.service';
 import { CourseDetailModel } from '../../models/courses.model';
 import { NzRateModule } from 'ng-zorro-antd/rate';
@@ -17,6 +17,7 @@ import { FormPaymentComponent } from '../../../../shared/components/forms/form-p
     NzRateModule,
     NzModalModule,
     FormPaymentComponent,
+    RouterLink,
   ],
   templateUrl: './ava-course-detail.component.html',
   styleUrls: [
@@ -26,7 +27,7 @@ import { FormPaymentComponent } from '../../../../shared/components/forms/form-p
 })
 export class AvaCourseDetailComponent {
   titlePage = 'AVAT - Área Virtual do Aluno Theos';
-  descriptionPage = 'Detalhes do Curso';
+  descriptionPage = 'ÁREA VIRTUAL DO ALUNO THEOS - Detalhes do Curso';
   loading = false;
   isVisibleMenuPay = false;
   course!: CourseDetailModel;
@@ -37,7 +38,7 @@ export class AvaCourseDetailComponent {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private courseService: CoursesService
+    private courseService: CoursesService,
   ) {}
 
   ngOnInit(): void {
@@ -71,8 +72,6 @@ export class AvaCourseDetailComponent {
 
       this.loading = true;
       this.course = await this.courseService.getCourseDetail(courseId);
-      console.log(this.course);
-
       this.loading = false;
     });
   }
@@ -80,10 +79,24 @@ export class AvaCourseDetailComponent {
   goToLearn() {
     if (this.course.PaymentStatus === 'pending') {
       this.router.navigate(['avat/payments']);
+      return;
     }
 
     if (this.course.AllowedCourse) {
-      this.router.navigate(['avat/learn/course']);
+      const queryParams: any = {
+        course: this.course.CourseId,
+      };
+
+      if (
+        this.course.LastView?.LastModuleView != null &&
+        this.course.LastView?.LastLessonView != null
+      ) {
+        queryParams.module = this.course.LastView.LastModuleView;
+        queryParams.lesson = this.course.LastView.LastLessonView;
+      }
+
+      this.router.navigate(['avat/learn'], { queryParams });
+      return;
     }
 
     this.isVisibleMenuPay = true;
