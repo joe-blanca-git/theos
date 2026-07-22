@@ -341,7 +341,7 @@ export class FinancialHomeComponent implements OnInit, OnDestroy {
       doc.setFont('helvetica', 'normal');
       doc.text('Este documento é um comprovante de pagamento válido e gerado eletronicamente.', 105, 275, { align: 'center' });
       doc.text('Plataforma Educacional Theos - CNPJ: 00.000.000/0001-00', 105, 280, { align: 'center' });
-      doc.text(window.location.origin, 105, 285, { align: 'center' });
+      doc.text((typeof window !== 'undefined' ? window.location.origin : ''), 105, 285, { align: 'center' });
 
       doc.save(`Comprovante_${tx.transactionCode}.pdf`);
       this.closeDetail();
@@ -367,7 +367,7 @@ export class FinancialHomeComponent implements OnInit, OnDestroy {
   continuePayment(tx: ITransaction): void {
     if (tx.relatedCourseId) {
       this.closeDetail();
-      window.location.href = `http://localhost:4200/portal-pan/financial/payment/${tx.relatedCourseId}?plan=single`;
+      window.location.href = `http://localhost:4200/portal-pat/financial/payment/${tx.relatedCourseId}?plan=single`;
     } else {
       this.triggerToast('ID do curso não encontrado para continuar o pagamento.');
     }

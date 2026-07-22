@@ -1,5 +1,5 @@
 {
-  "name": "portal-pan",
+  "name": "portal-pat",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -7,7 +7,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:portal-pan": "node dist/portal-pan/server/server.mjs"
+    "serve:ssr:portal-pat": "node dist/portal-pat/server/server.mjs"
   },
   "private": true,
   "dependencies": {

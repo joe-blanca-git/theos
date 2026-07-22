@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "portal-pop": {
+    "portal-popt": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,8 +17,8 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/portal-pop",
-            "baseHref": "/portal-pop/",
+            "outputPath": "dist/portal-popt",
+            "baseHref": "/portal-popt/",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -74,10 +74,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "portal-pop:build:production"
+              "buildTarget": "portal-popt:build:production"
             },
             "development": {
-              "buildTarget": "portal-pop:build:development"
+              "buildTarget": "portal-popt:build:development"
             }
           },
           "defaultConfiguration": "development"

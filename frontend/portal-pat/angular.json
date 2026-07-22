@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "portal-pan": {
+    "portal-pat": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,8 +17,8 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/portal-pan",
-            "baseHref": "/portal-pan/",
+            "outputPath": "dist/portal-pat",
+            "baseHref": "/portal-pat/",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -74,10 +74,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "portal-pan:build:production"
+              "buildTarget": "portal-pat:build:production"
             },
             "development": {
-              "buildTarget": "portal-pan:build:development"
+              "buildTarget": "portal-pat:build:development"
             }
           },
           "defaultConfiguration": "development"

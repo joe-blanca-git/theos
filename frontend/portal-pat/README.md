@@ -214,8 +214,8 @@ O projeto Angular 18 é iniciado primariamente via CLI.
 - **Scripts do `package.json`:**
   - `npm start`: Inicia o servidor local CSR (Client-Side) (`ng serve`).
   - `npm run watch`: Modo contínuo de build para desenvolvimento SSR.
-  - `npm run serve:ssr:portal-pan`: Executa a compilação universal no lado do servidor via Node.
-- **Processo de Deploy:** Envolve o build estático somado ao bundle de servidor SSR (`dist/portal-pan/server/server.mjs`), que deve ser invocado via host PM2 ou contêiner (Dockerfile incluído no root).
+  - `npm run serve:ssr:portal-pat`: Executa a compilação universal no lado do servidor via Node.
+- **Processo de Deploy:** Envolve o build estático somado ao bundle de servidor SSR (`dist/portal-pat/server/server.mjs`), que deve ser invocado via host PM2 ou contêiner (Dockerfile incluído no root).
 
 ---
 
