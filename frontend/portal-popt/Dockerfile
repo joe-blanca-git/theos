@@ -5,7 +5,7 @@ COPY package*.json ./
 RUN npm install
 COPY . .
 # O build compila a aplicação com a base correta
-RUN npm run build -- --base-href /portal-poptt/
+RUN npm run build -- --base-href /portal-popt/
 
 # Estágio 2: Servidor Node (SSR)
 FROM node:20-alpine
