@@ -1,0 +1,5 @@
+using MediatR;
+
+namespace Theos.Application.Portal.Forum.Topics.Commands.CreateForumTopic;
+
+public record CreateForumTopicCommand(int CategoryId, int? LessonId, string Title, string Subject, string Content) : IRequest<int>;

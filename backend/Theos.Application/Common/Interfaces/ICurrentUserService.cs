@@ -1,0 +1,9 @@
+namespace Theos.Application.Common.Interfaces
+{
+    public interface ICurrentUserService
+    {
+        string? ExternalId { get; }
+        string? Email { get; }
+        string? FullName { get; }
+    }
+}

@@ -1,0 +1,28 @@
+namespace Theos.Application.Common.Interfaces;
+
+public interface IBunnyNetService
+{
+    /// <summary>
+    /// Generates a signed URL for a Bunny.net stream video using Token Authentication.
+    /// </summary>
+    /// <param name="libraryId">The Bunny.net Library ID.</param>
+    /// <param name="videoId">The Bunny.net Video ID.</param>
+    /// <param name="expirationMinutes">Expiration time in minutes (default 180).</param>
+    /// <returns>A signed URL string, or null if parameters are invalid.</returns>
+    string? GenerateSignedVideoUrl(string? libraryId, string? videoId, int expirationMinutes = 180);
+
+    /// <summary>
+    /// Creates a new Video Library in Bunny.net.
+    /// </summary>
+    /// <param name="name">The name of the new library.</param>
+    /// <returns>The ID of the newly created library, or null if it failed.</returns>
+    Task<string?> CreateVideoLibraryAsync(string name);
+
+    /// <summary>
+    /// Creates a new Collection inside a Video Library in Bunny.net.
+    /// </summary>
+    /// <param name="libraryId">The ID of the video library.</param>
+    /// <param name="name">The name of the new collection (module).</param>
+    /// <returns>The ID (guid) of the newly created collection, or null if it failed.</returns>
+    Task<string?> CreateCollectionAsync(string libraryId, string name);
+}

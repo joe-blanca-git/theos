@@ -1,0 +1,47 @@
+using Microsoft.EntityFrameworkCore;
+using Theos.Application.Common.Interfaces;
+using Theos.Domain.Entities;
+
+namespace Theos.Application.Common.Services
+{
+    public class UserContextService : IUserContextService
+    {
+        private readonly ITheosDbContext _context;
+        private readonly ICurrentUserService _currentUserService;
+
+        public UserContextService(ITheosDbContext context, ICurrentUserService currentUserService)
+        {
+            _context = context;
+            _currentUserService = currentUserService;
+        }
+
+        public async Task<User> GetCurrentUserAsync()
+        {
+            var externalId = _currentUserService.ExternalId;
+
+            if (string.IsNullOrEmpty(externalId))
+            {
+                throw new UnauthorizedAccessException("User is not authenticated or external ID is missing in token.");
+            }
+
+            var user = await _context.Users
+                .FirstOrDefaultAsync(u => u.ExternalId == externalId);
+
+            if (user == null)
+            {
+                var email = _currentUserService.Email ?? "unknown@theos.com"; // Default if missing
+                var fullName = _currentUserService.FullName;
+                user = User.Create(externalId, email, fullName);
+                _context.Users.Add(user);
+                await _context.SaveChangesAsync(default);
+            }
+            else if (!string.IsNullOrWhiteSpace(_currentUserService.FullName) && user.FullName != _currentUserService.FullName)
+            {
+                user.UpdateProfile(_currentUserService.FullName, user.CpfCnpj);
+                await _context.SaveChangesAsync(default);
+            }
+
+            return user;
+        }
+    }
+}

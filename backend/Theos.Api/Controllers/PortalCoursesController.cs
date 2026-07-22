@@ -1,0 +1,63 @@
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Theos.Application.Portal.Courses.Queries.GetMyCourses;
+
+namespace Theos.Api.Controllers;
+
+[Authorize]
+[Route("api/v1/portal/courses")]
+[Tags("Portal Pan - Cursos")]
+public class PortalCoursesController : ApiControllerBase
+{
+    private readonly IMediator _mediator;
+
+    public PortalCoursesController(IMediator mediator)
+    {
+        _mediator = mediator;
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetMyCourses()
+    {
+        var result = await _mediator.Send(new GetMyCoursesQuery());
+        return Ok(result);
+    }
+
+    [HttpGet("course-detail/{id}")]
+    public async Task<IActionResult> GetCourseDetail(int id)
+    {
+        var result = await _mediator.Send(new Theos.Application.Portal.Courses.Queries.GetCourseDetail.GetCourseDetailQuery(id));
+        if (result == null)
+            return NotFound(new { message = "Curso não encontrado ou inativo." });
+
+        return Ok(result);
+    }
+    [HttpGet("{id}/checkout-summary")]
+    public async Task<IActionResult> GetCourseCheckoutSummary(int id)
+    {
+        var result = await _mediator.Send(new Theos.Application.Portal.Courses.Queries.GetCourseCheckoutSummary.GetCourseCheckoutSummaryQuery(id));
+        if (result == null)
+            return NotFound(new { message = "Curso não encontrado ou inativo." });
+            
+        return Ok(result);
+    }
+
+    [HttpPost("{courseId}/rate")]
+    public async Task<IActionResult> RateCourse(int courseId, [FromBody] RateCourseRequest request)
+    {
+        var command = new Theos.Application.Portal.Courses.Commands.RateCourse.RateCourseCommand
+        {
+            CourseId = courseId,
+            Rate = request.Rate
+        };
+        
+        var result = await _mediator.Send(command);
+        return Ok(result);
+    }
+}
+
+public class RateCourseRequest
+{
+    public int Rate { get; set; }
+}

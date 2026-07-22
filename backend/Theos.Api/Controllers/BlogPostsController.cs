@@ -1,0 +1,34 @@
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Theos.Application.BlogPosts.Queries.GetBlogPostById;
+using Theos.Application.BlogPosts.Queries.GetBlogPosts;
+using Theos.Application.BlogPosts.DTOs;
+using Swashbuckle.AspNetCore.Annotations;
+using Microsoft.AspNetCore.Http;
+
+namespace Theos.Api.Controllers;
+
+[Authorize(Roles = "Teacher")]
+[Route("api/v1/[controller]")]
+public class BlogPostsController : ApiControllerBase
+{
+
+    [HttpGet("{id}")]
+    [SwaggerOperation(Summary = "Obter um blog post pelo ID", Description = "Retorna os detalhes de um post específico pelo seu ID.")]
+    [ProducesResponseType(typeof(BlogPostDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetById(int id)
+    {
+        var result = await Mediator.Send(new GetBlogPostByIdQuery(id));
+        return Ok(result);
+    }
+
+    [HttpGet]
+    [SwaggerOperation(Summary = "Listar todos os blog posts", Description = "Retorna uma lista contendo todos os posts do blog ordenados do mais recente para o mais antigo.")]
+    [ProducesResponseType(typeof(List<BlogPostDto>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetAll()
+    {
+        var result = await Mediator.Send(new GetBlogPostsQuery());
+        return Ok(result);
+    }
+}

@@ -1,0 +1,29 @@
+using Microsoft.EntityFrameworkCore;
+using Theos.Domain.Entities;
+
+namespace Theos.Application.Common.Interfaces
+{
+    public interface ITheosDbContext
+    {
+        DbSet<User> Users { get; }
+        DbSet<Course> Courses { get; }
+        DbSet<Module> Modules { get; }
+        DbSet<Lesson> Lessons { get; }
+        DbSet<Enrollment> Enrollments { get; }
+        DbSet<Purchase> Purchases { get; }
+        DbSet<CourseDomain> CourseDomains { get; }
+        DbSet<Teacher> Teachers { get; }
+        DbSet<CourseTeacher> CourseTeachers { get; }
+        DbSet<BlogPost> BlogPosts { get; }
+        DbSet<CourseCategory> CourseCategories { get; }
+        DbSet<CourseCourseCategory> CourseCourseCategories { get; }
+        DbSet<LessonView> LessonViews { get; }
+        DbSet<ForumCategory> ForumCategories { get; }
+        DbSet<ForumTopic> ForumTopics { get; }
+        DbSet<ForumMessage> ForumMessages { get; }
+        DbSet<CourseRate> CourseRates { get; }
+        DbSet<Certificate> Certificates { get; }
+
+        Task<int> SaveChangesAsync(CancellationToken cancellationToken);
+    }
+}

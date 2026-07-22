@@ -1,0 +1,61 @@
+using MediatR;
+using Microsoft.EntityFrameworkCore;
+using Theos.Application.Common.Interfaces;
+
+namespace Theos.Application.Portal.Forum.Topics.Queries.GetForumTopicById;
+
+public class GetForumTopicByIdQueryHandler : IRequestHandler<GetForumTopicByIdQuery, ForumTopicDetailDto>
+{
+    private readonly ITheosDbContext _context;
+    private readonly IUserContextService _userContextService;
+
+    public GetForumTopicByIdQueryHandler(ITheosDbContext context, IUserContextService userContextService)
+    {
+        _context = context;
+        _userContextService = userContextService;
+    }
+
+    public async Task<ForumTopicDetailDto> Handle(GetForumTopicByIdQuery request, CancellationToken cancellationToken)
+    {
+        var topic = await _context.ForumTopics
+            .Include(t => t.Category)
+            .Include(t => t.Author)
+            .Include(t => t.Lesson)
+            .Include(t => t.Messages)
+                .ThenInclude(m => m.Author)
+            .AsNoTracking()
+            .FirstOrDefaultAsync(t => t.Id == request.Id, cancellationToken);
+
+        if (topic == null)
+            throw new Exception("Tópico não encontrado.");
+
+        var dto = new ForumTopicDetailDto
+        {
+            Id = topic.Id,
+            Title = topic.Title,
+            Subject = topic.Subject,
+            Content = topic.Content,
+            Status = topic.Status.ToString(),
+            CategoryName = topic.Category.Name,
+            AuthorName = topic.Author.FullName ?? "Anônimo",
+            LessonName = topic.Lesson?.Name,
+            CreatedAt = topic.CreatedAt,
+            Messages = topic.Messages.Select(m => new ForumMessageDto
+            {
+                Id = m.Id,
+                Content = m.Content,
+                AuthorName = m.Author.FullName ?? "Anônimo",
+                CreatedAt = m.CreatedAt
+            }).ToList(),
+            IsOwn = false // To be filled below
+        };
+        
+        var currentUser = await _userContextService.GetCurrentUserAsync();
+        if (currentUser != null && topic.AuthorId == currentUser.Id)
+        {
+            dto.IsOwn = true;
+        }
+        
+        return dto;
+    }
+}
