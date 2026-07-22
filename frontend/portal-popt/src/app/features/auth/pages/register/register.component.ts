@@ -99,7 +99,7 @@ export class RegisterComponent {
     }
 
     const payload = {
-      idSystem: 1,
+      idSystem: 2,
       name: formVal.name,
       email: formVal.email,
       password: formVal.password,

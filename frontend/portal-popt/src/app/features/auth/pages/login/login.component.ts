@@ -55,9 +55,9 @@ export class LoginComponent {
     
     try{
       const isTeacher = responseLogin.user?.roles?.some((r: any) => r.value === 'Teacher');
-      const hasSystem1 = responseLogin.systemIds?.includes(1);
+      const hasSystem2 = responseLogin.systemIds?.includes(2);
 
-      if (!isTeacher || !hasSystem1) {
+      if (!isTeacher || !hasSystem2) {
         this.toastService.error('Acesso não permitido. Portal exclusivo para professores.');
         this.isLoading = false;
         this.loginForm.enable();

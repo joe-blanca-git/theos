@@ -3,7 +3,7 @@ $card-transition: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
 /* Hero Featured Card */
 .blog-card-featured {
   min-height: 400px;
-  background-color: #0f172a;
+  background-color: #1B1B1B;
   cursor: pointer;
   box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.08) !important;
 
@@ -36,7 +36,7 @@ $card-transition: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
     }
 
     .blog-title-hover {
-      color: #818cf8 !important;
+      color: #EF5350 !important;
     }
   }
 

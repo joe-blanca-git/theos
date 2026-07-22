@@ -25,7 +25,7 @@
         max-width: 600px;
         min-height: 50vh !important;
         border-radius: 2rem;
-        background: rgba(255, 255, 255, 0.95);
+        background: rgba(15, 15, 15, 0.85);
         backdrop-filter: blur(10px);
     }
 }
@@ -48,15 +48,15 @@
             width: 45px;
             height: 45px;
             border-radius: 50%;
-            background-color: #f8f9fa;
-            border: 2px solid #dee2e6;
-            color: #6c757d;
+            background-color: #202020;
+            border: 2px solid #2C2C2C;
+            color: #7A7A7A;
             font-size: 1.1rem;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .step-label {
-            color: #6c757d;
+            color: #7A7A7A;
             font-size: 0.85rem;
             transition: all 0.3s ease;
         }
@@ -64,14 +64,14 @@
         /* Active Step */
         &.active {
             .step-circle {
-                background-color: #212529;
-                border-color: #212529;
+                background-color: #C62828;
+                border-color: #C62828;
                 color: #ffffff;
                 box-shadow: 0 0 0 4px rgba(33, 37, 41, 0.15);
                 transform: scale(1.1);
             }
             .step-label {
-                color: #212529;
+                color: #C62828;
                 font-weight: 700 !important;
             }
         }
@@ -92,7 +92,7 @@
     .step-connector {
         flex-grow: 1;
         height: 3px;
-        background-color: #dee2e6;
+        background-color: #2C2C2C;
         margin: 0 -20px;
         margin-top: -20px; /* Align line vertically with center of circles */
         z-index: 1;
@@ -107,7 +107,7 @@
 /* --- Input Enhancements --- */
 .form-control, .form-select {
     border-radius: 0.6rem; /* Arredondamento padrão para inputs normais */
-    border-color: #ced4da;
+    border-color: #2C2C2C;
     transition: all 0.2s ease-in-out;
     
     &.is-invalid {
@@ -128,8 +128,8 @@
     
     &:focus {
         box-shadow: none;
-        border-color: #212529;
-        background-color: #ffffff !important;
+        border-color: #C62828;
+        background-color: #202020 !important;
     }
 }
 
@@ -137,7 +137,7 @@
     border-radius: 0; /* Desativa arredondamento no container pai */
     
     .input-group-text, .form-control, .form-select {
-        border-color: #ced4da;
+        border-color: #2C2C2C;
     }
     
     /* Arredonda apenas os cantos esquerdos do primeiro filho do input-group */

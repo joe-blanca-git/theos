@@ -1,9 +1,10 @@
-/* Custom Variable Design System for Portal Aluno Theos (PAN) */
-$bg-light-modern: #f8fafc;
-$bg-dark-sidebar: #0f172a;
-$sidebar-widget-bg: #1e293b;
-$primary-glow: #6366f1;
-$success-glow: #10b981;
+/* ═══════════════════════════════════════════════════════
+   home.component.scss — Theos Portal Professor Layout
+   Todas as cores referenciam a paleta central em _variables.scss
+   ═══════════════════════════════════════════════════════ */
+
+@import '../../../../../styles/variables';
+
 $transition-speed: 0.3s;
 $cubic-bezier: cubic-bezier(0.4, 0, 0.2, 1);
 
@@ -11,27 +12,24 @@ $cubic-bezier: cubic-bezier(0.4, 0, 0.2, 1);
   display: block;
   min-height: 100vh;
   width: 100%;
-  overflow-x: hidden; /* Enforce screen containment */
-  background-color: $bg-light-modern;
+  overflow-x: hidden;
+  background-color: $bg-principal;
   font-family: 'Outfit', 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
-.bg-light-modern {
-  background-color: $bg-light-modern !important;
-}
-
-/* --- Layout Structure & Sidebar --- */
+/* ─── Layout Structure ─────────────────────────── */
 #wrapper {
-  overflow-x: hidden; /* Contain all child layouts horizontally */
+  overflow-x: hidden;
   position: relative;
   width: 100%;
   max-width: 100%;
 }
 
+/* ─── Sidebar ──────────────────────────────────── */
 .sidebar {
   width: 260px;
   min-height: 100vh;
-  background-color: $bg-dark-sidebar !important;
+  background-color: $bg-navbar-sidebar !important;
   transition: width $transition-speed $cubic-bezier;
   display: flex;
   flex-direction: column;
@@ -41,6 +39,7 @@ $cubic-bezier: cubic-bezier(0.4, 0, 0.2, 1);
   bottom: 0;
   z-index: 1000;
   overflow: hidden;
+  border-right: 1px solid $border-subtle;
 
   &.collapsed {
     width: 80px;
@@ -76,7 +75,6 @@ $cubic-bezier: cubic-bezier(0.4, 0, 0.2, 1);
   overflow-y: auto;
   overflow-x: hidden;
 
-  /* Custom scrollbar inside sidebar menu */
   &::-webkit-scrollbar {
     width: 4px;
   }
@@ -84,38 +82,38 @@ $cubic-bezier: cubic-bezier(0.4, 0, 0.2, 1);
     background: transparent;
   }
   &::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.08);
     border-radius: 2px;
   }
 }
 
 .bg-dark-widget {
-  background-color: $sidebar-widget-bg;
+  background-color: $bg-surface;
 }
 
 .progress-bar.bg-success-glow {
-  background-color: $success-glow !important;
-  box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+  background-color: $success !important;
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
 }
 
 .sidebar-collapse-trigger {
-  color: rgba(248, 250, 252, 0.4) !important;
+  color: $text-secondary !important;
   transition: all 0.2s ease;
 
   &:hover {
-    color: #ffffff !important;
+    color: $text-title !important;
   }
 }
 
-/* --- Main Layout Wrapper & Header --- */
+/* ─── Main Layout & Navbar ─────────────────────── */
 .main-layout-wrapper {
   margin-left: 260px;
   transition: margin-left $transition-speed $cubic-bezier;
   min-height: 100vh;
-  background-color: $bg-light-modern;
+  background-color: $bg-principal;
   width: calc(100% - 260px);
   max-width: 100%;
-  min-width: 0; /* Flexbox item horizontal boundary protection */
+  min-width: 0;
 
   &.shifted {
     margin-left: 80px;
@@ -125,34 +123,32 @@ $cubic-bezier: cubic-bezier(0.4, 0, 0.2, 1);
   @media (max-width: 768px) {
     margin-left: 0 !important;
     width: 100% !important;
-    overflow-x: hidden; /* Contain elements internally, let tables scroll locally */
+    overflow-x: hidden;
   }
 }
 
+/* Navbar — MESMA COR da Sidebar (#151515) */
 .navbar {
   height: 70px;
-  background: rgba(255, 255, 255, 0.8) !important;
-  backdrop-filter: blur(10px);
+  background-color: $bg-navbar-sidebar !important;
+  backdrop-filter: none;
   z-index: 999;
-}
-
-.bg-light-gray {
-  background-color: #f1f5f9 !important;
+  border-bottom: 1px solid $border-subtle !important;
 }
 
 .header-menu-toggle {
   &:hover {
-    background-color: #f1f5f9;
+    background-color: $hover-bg;
   }
 }
 
 .header-icon-btn {
   &:hover {
-    background-color: #f1f5f9 !important;
+    background-color: $hover-bg !important;
   }
 }
 
-/* --- Custom Avatars --- */
+/* ─── Avatars ──────────────────────────────────── */
 .avatar-circle-sm {
   width: 34px;
   height: 34px;
@@ -166,28 +162,28 @@ $cubic-bezier: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .bg-gradient-avatar {
-  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  background: linear-gradient(135deg, $theos-red 0%, darken($theos-red, 15%) 100%);
 }
 
-/* --- Dropdown Menus --- */
+/* ─── Dropdowns ────────────────────────────────── */
 .dropdown-menu-custom {
   display: block;
   pointer-events: auto;
   border-radius: 1rem !important;
-  border: 1px solid rgba(0, 0, 0, 0.05) !important;
-  background-color: #ffffff;
+  border: 1px solid $border-subtle !important;
+  background-color: $bg-modais-dropdowns !important;
 }
 
 .notification-item-card {
   border-left: 3px solid transparent;
 
   &.unread-bg {
-    background-color: rgba(99, 102, 241, 0.03);
-    border-left-color: $primary-glow;
+    background-color: $theos-red-light;
+    border-left-color: $theos-red;
   }
 
   &:hover {
-    background-color: #f8fafc;
+    background-color: $hover-bg;
   }
 }
 
@@ -199,44 +195,42 @@ $cubic-bezier: cubic-bezier(0.4, 0, 0.2, 1);
     background: transparent;
   }
   &::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
+    background: $border-subtle;
     border-radius: 3px;
   }
 }
 
 .dropdown-item {
   &.text-muted-hover:hover {
-    background-color: #f1f5f9;
-    color: #0f172a !important;
+    background-color: $hover-bg;
+    color: $text-title !important;
   }
 
   &.transition-bg-danger:hover {
-    background-color: rgba(220, 53, 69, 0.08);
-    color: #dc3545 !important;
+    background-color: rgba($danger, 0.1);
+    color: $danger !important;
   }
 }
 
-
-
-/* --- Metric Summary Cards --- */
+/* ─── Metric Cards ─────────────────────────────── */
 .metric-card {
   transition: all 0.25s ease-in-out;
-  border: 1px solid rgba(0, 0, 0, 0.03) !important;
+  border: 1px solid $border-subtle !important;
 
   &:hover {
     transform: translateY(-4px);
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02) !important;
+    box-shadow: $box-shadow !important;
   }
 }
 
-/* --- Course Interaction Grid Cards --- */
+/* ─── Course Cards ─────────────────────────────── */
 .course-interactive-card {
-  border: 1px solid rgba(0, 0, 0, 0.04) !important;
+  border: 1px solid $border-subtle !important;
   transition: all 0.3s ease-in-out;
 
   &:hover {
     transform: translateY(-5px);
-    box-shadow: 0 12px 20px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.03) !important;
+    box-shadow: $box-shadow-lg !important;
   }
 }
 
@@ -251,17 +245,16 @@ $cubic-bezier: cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
 }
 
-/* --- Tables Styling (Boletim, Financeiro, Secretaria) --- */
+/* ─── Tables ───────────────────────────────────── */
 .table-dark-header {
   th {
-    background-color: #0f172a !important;
-    color: #f8fafc !important;
+    background-color: $bg-navbar-sidebar !important;
+    color: $text-title !important;
     font-weight: 600 !important;
     font-size: 0.78rem !important;
-    text-uppercase: true;
     letter-spacing: 0.02rem;
     padding: 1rem 0.75rem !important;
-    border-bottom: none !important;
+    border-bottom: 1px solid $border-subtle !important;
 
     &:first-child {
       border-top-left-radius: 0.75rem !important;
@@ -275,10 +268,10 @@ $cubic-bezier: cubic-bezier(0.4, 0, 0.2, 1);
 .custom-grades-table, .custom-financial-table, .custom-secretaria-table {
   tbody tr {
     transition: background-color 0.2s ease;
-    border-bottom: 1px solid #f1f5f9 !important;
+    border-bottom: 1px solid $border-subtle !important;
 
     &:hover {
-      background-color: rgba(99, 102, 241, 0.01) !important;
+      background-color: $hover-bg !important;
     }
 
     td {
@@ -289,38 +282,38 @@ $cubic-bezier: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .bg-warning-light {
-  background-color: rgba(245, 158, 11, 0.1) !important;
-  color: #d97706 !important;
+  background-color: rgba($warning, 0.1) !important;
+  color: $warning !important;
 }
 
 .bg-success-light {
-  background-color: rgba(16, 185, 129, 0.08) !important;
-  color: #10b981 !important;
+  background-color: rgba($success, 0.08) !important;
+  color: $success !important;
 }
 
-/* --- FAQ Accordion --- */
+/* ─── FAQ Accordion ────────────────────────────── */
 .faq-accordion-item {
-  border: 1px solid rgba(0, 0, 0, 0.05) !important;
+  border: 1px solid $border-subtle !important;
   overflow: hidden;
 
   &.faq-open {
-    border-color: rgba(99, 102, 241, 0.2) !important;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05) !important;
+    border-color: rgba($theos-red, 0.3) !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2) !important;
 
     button {
-      background-color: rgba(99, 102, 241, 0.02) !important;
+      background-color: $theos-red-light !important;
     }
   }
 }
 
-/* --- Modals and Wizards (Secretaria creation request) --- */
+/* ─── Modals ───────────────────────────────────── */
 .custom-modal-backdrop {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(15, 23, 42, 0.6);
+  background-color: rgba(0, 0, 0, 0.7);
   backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
@@ -332,19 +325,19 @@ $cubic-bezier: cubic-bezier(0.4, 0, 0.2, 1);
 .custom-modal-box {
   width: 100%;
   max-width: 500px;
-  background-color: #ffffff;
-  border: 1px solid rgba(0,0,0,0.05);
+  background-color: $bg-modais-dropdowns;
+  border: 1px solid $border-subtle;
 }
 
-/* --- Floating Toasts feedback --- */
+/* ─── Toasts ───────────────────────────────────── */
 .custom-floating-toast {
   position: fixed;
   bottom: 2rem;
   right: 2rem;
   z-index: 3000;
   min-width: 250px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 10px 10px -5px rgba(0, 0, 0, 0.05) !important;
+  border: 1px solid $border-subtle;
+  box-shadow: $box-shadow-lg !important;
 
   @media (max-width: 576px) {
     left: 1rem;
@@ -355,7 +348,7 @@ $cubic-bezier: cubic-bezier(0.4, 0, 0.2, 1);
   }
 }
 
-/* Ensure mobile header dropdowns scale appropriately */
+/* Mobile dropdown */
 @media (max-width: 576px) {
   .dropdown-menu-custom {
     width: calc(100vw - 2rem) !important;
@@ -364,7 +357,7 @@ $cubic-bezier: cubic-bezier(0.4, 0, 0.2, 1);
   }
 }
 
-/* --- Animations Keyframes --- */
+/* ─── Animations ───────────────────────────────── */
 .animated-fade-in {
   animation: fadeIn 0.3s ease-out forwards;
 }
@@ -378,53 +371,37 @@ $cubic-bezier: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @keyframes slideInUp {
-  from {
-    transform: translateY(30px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
+  from { transform: translateY(30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
 }
 
 @keyframes scaleUp {
-  from {
-    transform: scale(0.92);
-    opacity: 0;
-  }
-  to {
-    transform: scale(1);
-    opacity: 1;
-  }
+  from { transform: scale(0.92); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
 }
 
-/* Responsive side drawer on mobile */
+/* ─── Responsive Sidebar Drawer ────────────────── */
 @media (max-width: 768px) {
   .sidebar {
-    transform: translateX(0); /* Expanded drawer on mobile when sidebarCollapsed is false */
+    transform: translateX(0);
     width: 280px !important;
-    box-shadow: 0 0 24px rgba(0, 0, 0, 0.25) !important;
+    box-shadow: 0 0 24px rgba(0, 0, 0, 0.4) !important;
 
     .brand-text, .menu-nav-text, .sidebar-widget, .sidebar-collapse-trigger span {
       display: inline-block !important;
     }
-    
+
     .sidebar-logo {
       width: 100px;
     }
 
     &.collapsed {
-      transform: translateX(-100%); /* Hidden drawer offscreen when sidebarCollapsed is true */
+      transform: translateX(-100%);
       width: 280px !important;
       box-shadow: none !important;
     }

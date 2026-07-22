@@ -1,6 +1,6 @@
 .login-right {
     padding: 10rem;
-    background-image: url('../../../../../../public/backgrounds/header-light.jpeg');
+    background-image: url('../../../../../../public/backgrounds/header-dark.jpeg');
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
@@ -16,41 +16,49 @@
     min-height: 100vh;
     padding-top: 2rem;
     padding-bottom: 4rem;
+    background-color: #0B0B0B;
 
     .card {
         max-width: 500px;
         border-radius: 2rem;
-        background: rgba(255, 255, 255, 0.95);
+        background: rgba(15, 15, 15, 0.85);
         backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.05) !important;
     }
 }
 
 /* --- Input Enhancements --- */
 .form-control, .form-select {
     border-radius: 0.6rem; /* Standard rounded edges for plain inputs */
-    border-color: #ced4da;
+    border-color: rgba(255, 255, 255, 0.15);
+    background-color: rgba(0, 0, 0, 0.2) !important;
+    color: #fff !important;
     transition: all 0.2s ease-in-out;
     
     &.is-invalid {
-        border-color: #dc3545 !important;
+        border-color: #C62828 !important;
         &:focus {
-            border-color: #dc3545 !important;
-            box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.15) !important;
+            border-color: #C62828 !important;
+            box-shadow: 0 0 0 0.25rem rgba(227, 59, 59, 0.15) !important;
         }
     }
     
     &.is-valid {
-        border-color: #198754 !important;
+        border-color: #10b981 !important;
         &:focus {
-            border-color: #198754 !important;
-            box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.15) !important;
+            border-color: #10b981 !important;
+            box-shadow: 0 0 0 0.25rem rgba(16, 185, 129, 0.15) !important;
         }
     }
     
     &:focus {
         box-shadow: none;
-        border-color: #212529;
-        background-color: #ffffff !important;
+        border-color: #C62828;
+        background-color: rgba(0, 0, 0, 0.4) !important;
+    }
+
+    &::placeholder {
+        color: #B0B0B0;
     }
 }
 
@@ -58,7 +66,9 @@
     border-radius: 0; /* Disable rounded container on parent */
     
     .input-group-text, .form-control, .form-select {
-        border-color: #ced4da;
+        border-color: rgba(255, 255, 255, 0.15);
+        background-color: rgba(0, 0, 0, 0.2) !important;
+        color: #B0B0B0;
     }
     
     /* Rounded corners on the first child of the input-group */
@@ -86,27 +96,36 @@
 /* Valid / Invalid input group styling (icon + border coloring together) */
 .input-group:has(.is-invalid) {
     .input-group-text, .form-control, .form-select {
-        border-color: #dc3545 !important;
+        border-color: #C62828 !important;
     }
     .form-control:focus, .form-select:focus {
-        box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.15) !important;
+        box-shadow: 0 0 0 0.25rem rgba(227, 59, 59, 0.15) !important;
     }
 }
 
 .input-group:has(.is-valid) {
     .input-group-text, .form-control, .form-select {
-        border-color: #198754 !important;
+        border-color: #10b981 !important;
     }
     .form-control:focus, .form-select:focus {
-        box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.15) !important;
+        box-shadow: 0 0 0 0.25rem rgba(16, 185, 129, 0.15) !important;
     }
+}
+
+/* Eye button icon fix */
+.input-group-text.bg-light {
+    border-color: rgba(255, 255, 255, 0.15);
+}
+button.input-group-text {
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    background-color: rgba(0, 0, 0, 0.2) !important;
 }
 
 /* Link Hover */
 .hover-link {
     transition: color 0.2s ease-in-out;
     &:hover {
-        color: #212529 !important;
+        color: #C62828 !important;
         text-decoration: underline !important;
     }
 }

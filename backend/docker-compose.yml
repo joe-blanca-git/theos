@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  # 1. Theos Admin API (POPT) - Porta 5012
+  theos-admin-api:
+    build:
+      context: .
+      dockerfile: Theos.Admin.Api/Dockerfile
+    container_name: theos-admin-api-container
+    ports:
+      - "5012:8080"
+    restart: always
+
+  # 2. Theos API (PAT) - Porta 5011
+  theos-api:
+    build:
+      context: .
+      dockerfile: Theos.Api/Dockerfile
+    container_name: theos-api-container
+    ports:
+      - "5011:8080"
+    restart: always
+
+  # 3. Theos Landing API - Porta 5013
+  theos-landing-api:
+    build:
+      context: .
+      dockerfile: Theos.Landing.Api/Dockerfile
+    container_name: theos-landing-api-container
+    ports:
+      - "5013:8080"
+    restart: always

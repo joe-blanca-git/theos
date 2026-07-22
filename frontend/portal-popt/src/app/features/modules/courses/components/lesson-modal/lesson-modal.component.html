@@ -1,9 +1,9 @@
 <div class="custom-modal-backdrop lesson-backdrop animated-fade-in d-flex align-items-center justify-content-center">
-  <div class="custom-modal-dialog bg-white rounded-4 shadow-lg overflow-hidden d-flex flex-column" style="width: 90%; max-width: 600px;">
+  <div class="custom-modal-dialog bg-dark rounded-4 shadow-lg overflow-hidden d-flex flex-column" style="width: 90%; max-width: 600px;">
     
     <!-- Modal Header -->
-    <div class="modal-header px-4 py-3 border-bottom d-flex justify-content-between align-items-center bg-light">
-      <h5 class="mb-0 fw-bold text-dark"><i class="fas fa-play-circle text-success me-2"></i>{{ lessonData.id && lessonData.name !== '' ? 'Editar Aula' : 'Nova Aula' }}</h5>
+    <div class="modal-header px-4 py-3 border-bottom d-flex justify-content-between align-items-center bg-secondary bg-opacity-10">
+      <h5 class="mb-0 fw-bold text-light"><i class="fas fa-play-circle text-success me-2"></i>{{ lessonData.id && lessonData.name !== '' ? 'Editar Aula' : 'Nova Aula' }}</h5>
       <button type="button" class="btn-close" aria-label="Close" (click)="cancel()"></button>
     </div>
 
@@ -37,7 +37,7 @@
     </div>
 
     <!-- Modal Footer -->
-    <div class="modal-footer px-4 py-3 border-top bg-light">
+    <div class="modal-footer px-4 py-3 border-top bg-secondary bg-opacity-10">
       <button type="button" class="btn btn-outline-secondary rounded-pill px-4" (click)="cancel()">Cancelar</button>
       <button type="button" class="btn btn-success rounded-pill px-4 text-white" (click)="save()">Salvar Aula</button>
     </div>

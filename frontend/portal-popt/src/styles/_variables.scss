@@ -1,62 +1,128 @@
-// _variables.scss
+// _variables.scss — Theos Dark Theme Design System
+// ═══════════════════════════════════════════════════
+// Fonte única de verdade para todas as cores do projeto.
+// Nenhum componente deve definir cores diretamente.
 
-// 1. Tipografia
+// ─── 1. Tipografia ───────────────────────────────
 $font-family-sans-serif: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !default;
 $headings-font-family: 'Outfit', $font-family-sans-serif;
 $headings-font-weight: 700;
 
-// 2. Paleta de Cores
-$indigo-50: #eef2ff;
-$indigo-100: #e0e7ff;
-$indigo-200: #c7d2fe;
-$indigo-300: #a5b4fc;
-$indigo-400: #818cf8;
-$indigo-500: #6366f1;
-$indigo-600: #4f46e5;
-$indigo-700: #4338ca;
-$indigo-800: #3730a3;
-$indigo-900: #312e81;
+// ─── 2. Paleta de Superfícies (Dark Theme) ───────
+$bg-principal:          #0B0B0B;  // Body / fundo geral
+$bg-secundario:         #121212;  // Fundo alternativo
+$bg-navbar-sidebar:     #151515;  // Navbar + Sidebar (mesma cor, sempre)
+$bg-surface:            #1B1B1B;  // Cards
+$bg-modais-dropdowns:   #1A1A1A;  // Modais, dropdowns, popovers
+$bg-inputs:             #202020;  // Campos de formulário
+$hover-bg:              #252525;  // Hover state genérico
+$border-subtle:         #2C2C2C;  // Bordas de componentes
 
-$cyan-50: #ecfeff;
-$cyan-400: #22d3ee;
-$cyan-500: #06b6d4;
-$cyan-600: #0891b2;
+// ─── 3. Cor Primária (Marca Theos) ───────────────
+$theos-red:             #C62828;  // Primária institucional
+$theos-red-hover:       #B71C1C;  // Hover em elementos primários
+$theos-red-light:       rgba(198, 40, 40, 0.15); // Fundo sutil p/ badges/alerts
+$theos-red-glow:        rgba(198, 40, 40, 0.35); // Glow do foco
 
-$slate-50: #f8fafc;
-$slate-100: #f1f5f9;
-$slate-200: #e2e8f0;
-$slate-300: #cbd5e1;
-$slate-400: #94a3b8;
-$slate-500: #64748b;
-$slate-600: #475569;
-$slate-700: #334155;
-$slate-800: #1e293b;
-$slate-900: #0f172a;
+// ─── 4. Cores Funcionais ─────────────────────────
+$success:  #10b981;
+$warning:  #f59e0b;
+$danger:   #ef4444;
+$info:     #06b6d4;
 
-// Mapeamento Bootstrap
-$primary: $indigo-500;
-$secondary: $slate-500;
-$success: #10b981;
-$info: $cyan-500;
-$warning: #f59e0b;
-$danger: #ef4444;
-$light: $slate-50;
-$dark: $slate-900;
-$body-color: $slate-700;
-$body-bg: #f8fafc; // Fundo suave global
+// ─── 5. Tipografia / Texto ───────────────────────
+$text-title:       #FFFFFF;  // Títulos (h1-h6)
+$text-main:        #E0E0E0;  // Corpo de texto
+$text-secondary:   #B0B0B0;  // Texto auxiliar / muted
+$text-placeholder: #7A7A7A;  // Placeholders de inputs
 
-// 3. Sombras e Bordas
-$border-radius: 0.5rem;
+// ─── 6. Mapeamento Bootstrap ─────────────────────
+// Essas variáveis são lidas pelo @import 'bootstrap/scss/bootstrap'
+// e propagadas automaticamente para os componentes do framework.
+$primary:   $theos-red;
+$secondary: $text-secondary;
+$light:     $bg-surface;
+$dark:      $bg-navbar-sidebar;
+
+$body-bg:    $bg-principal;
+$body-color: $text-main;
+
+$card-bg:           $bg-surface;
+$card-border-color: $border-subtle;
+$card-cap-bg:       $bg-surface;
+
+$input-bg:                $bg-inputs;
+$input-color:             $text-main;
+$input-border-color:      $border-subtle;
+$input-placeholder-color: $text-placeholder;
+$input-focus-border-color: $theos-red;
+$input-focus-box-shadow:   0 0 0 0.2rem $theos-red-glow;
+$input-focus-bg:           $bg-inputs;
+$input-focus-color:        $text-title;
+
+$modal-content-bg:            $bg-modais-dropdowns;
+$modal-content-border-color:  $border-subtle;
+$modal-backdrop-bg:           #000;
+$modal-backdrop-opacity:      0.7;
+
+$dropdown-bg:           $bg-modais-dropdowns;
+$dropdown-border-color: $border-subtle;
+$dropdown-link-color:   $text-main;
+$dropdown-link-hover-bg:   $hover-bg;
+$dropdown-link-hover-color: $text-title;
+$dropdown-divider-bg:   $border-subtle;
+
+$navbar-dark-color:           $text-main;
+$navbar-dark-hover-color:     $text-title;
+$navbar-dark-active-color:    $text-title;
+$navbar-dark-toggler-border-color: $border-subtle;
+
+$table-bg:        transparent;
+$table-color:     $text-main;
+$table-border-color: $border-subtle;
+$table-striped-bg:   rgba(255, 255, 255, 0.02);
+$table-hover-bg:     $hover-bg;
+
+$tooltip-bg:    $bg-modais-dropdowns;
+$tooltip-color: $text-main;
+
+$pagination-bg:          $bg-surface;
+$pagination-border-color: $border-subtle;
+$pagination-color:       $text-main;
+$pagination-hover-bg:    $hover-bg;
+$pagination-hover-color: $text-title;
+$pagination-active-bg:   $theos-red;
+$pagination-active-border-color: $theos-red;
+
+$breadcrumb-divider-color: $text-secondary;
+$breadcrumb-active-color:  $text-secondary;
+
+$alert-border-radius: 0.75rem;
+
+$list-group-bg:           $bg-surface;
+$list-group-border-color: $border-subtle;
+$list-group-hover-bg:     $hover-bg;
+$list-group-action-color: $text-main;
+$list-group-action-hover-color: $text-title;
+
+$accordion-bg:           $bg-surface;
+$accordion-border-color: $border-subtle;
+$accordion-button-bg:    $bg-surface;
+$accordion-button-active-bg: $hover-bg;
+$accordion-button-active-color: $text-title;
+
+// ─── 7. Sombras e Bordas ─────────────────────────
+$border-radius:    0.5rem;
 $border-radius-sm: 0.25rem;
 $border-radius-lg: 1rem;
 $border-radius-xl: 1.5rem;
 $border-radius-2xl: 2rem;
 
-$box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-$box-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-$box-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+$box-shadow:    0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+$box-shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.3);
+$box-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
 
-// Sobrescrita do grid
+// ─── 8. Grid (sem alteração) ─────────────────────
 $grid-breakpoints: (
   xs: 0,
   sm: 576px,
