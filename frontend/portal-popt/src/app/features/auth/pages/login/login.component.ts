@@ -66,7 +66,7 @@ export class LoginComponent {
 
       await this.authUtil.saveCookieAuth(responseLogin);
       await this.stateUtil.saveUser(responseLogin);
-      sessionStorage.setItem('theos_user', JSON.stringify(responseLogin));
+      sessionStorage.setItem('popt_user', JSON.stringify(responseLogin));
       this.router.navigate(['/home']);
 
     }catch(error){

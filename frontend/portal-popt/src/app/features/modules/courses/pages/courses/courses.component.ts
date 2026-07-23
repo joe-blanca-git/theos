@@ -39,11 +39,15 @@ export class CoursesComponent implements OnInit {
 
   selectedCourseId: number | null = null;
   selectedCourseForLesson: Course | null = null;
+  selectedCourseForModules: Course | null = null;
+  moduleToEdit: any | null = null;
+  moduleToDelete: any | null = null;
   
   isSubmittingCourse = false;
   isSubmittingModule = false;
   isSavingLesson = false;
   isTogglingStatus = false;
+  isDeletingModule = false;
 
   categories: any[] = [];
 
@@ -65,11 +69,15 @@ export class CoursesComponent implements OnInit {
   @ViewChild('moduleModal') moduleModalRef!: ElementRef;
   @ViewChild('lessonModal') lessonModalRef!: ElementRef;
   @ViewChild('confirmToggleModal') confirmToggleModalRef!: ElementRef;
+  @ViewChild('moduleListModal') moduleListModalRef!: ElementRef;
+  @ViewChild('confirmDeleteModuleModal') confirmDeleteModuleModalRef!: ElementRef;
 
   private courseModalInstance: any;
   private moduleModalInstance: any;
   private lessonModalInstance: any;
   private confirmToggleModalInstance: any;
+  private moduleListModalInstance: any;
+  private confirmDeleteModuleModalInstance: any;
 
   courseToToggle: any = null;
 
@@ -91,6 +99,8 @@ export class CoursesComponent implements OnInit {
     this.moduleModalInstance = new bootstrap.Modal(this.moduleModalRef.nativeElement);
     this.lessonModalInstance = new bootstrap.Modal(this.lessonModalRef.nativeElement);
     this.confirmToggleModalInstance = new bootstrap.Modal(this.confirmToggleModalRef.nativeElement);
+    this.moduleListModalInstance = new bootstrap.Modal(this.moduleListModalRef.nativeElement);
+    this.confirmDeleteModuleModalInstance = new bootstrap.Modal(this.confirmDeleteModuleModalRef.nativeElement);
   }
 
   initForms() {
@@ -154,6 +164,10 @@ export class CoursesComponent implements OnInit {
         this.totalModules = modulesCount;
         this.totalLessons = lessonsCount;
         this.averageWorkload = this.totalCourses > 0 ? Math.round(totalWorkload / this.totalCourses) : 0;
+
+        if (this.selectedCourseForModules) {
+          this.selectedCourseForModules = this.courses.find(c => c.id === this.selectedCourseForModules?.id) || null;
+        }
 
         this.isLoading = false;
         this.cdr.detectChanges();
@@ -284,8 +298,43 @@ export class CoursesComponent implements OnInit {
 
   openAddModuleModal(courseId: number) {
     this.selectedCourseId = courseId;
+    this.moduleToEdit = null;
     this.moduleForm.reset();
-    this.moduleModalInstance.show();
+    
+    if (this.selectedCourseForModules) {
+      this.moduleListModalInstance.hide();
+      setTimeout(() => this.moduleModalInstance.show(), 400);
+    } else {
+      this.moduleModalInstance.show();
+    }
+  }
+
+  openEditModuleModal(module: any, courseId: number) {
+    this.selectedCourseId = courseId;
+    this.moduleToEdit = module;
+    this.moduleForm.patchValue({
+      name: module.name,
+      description: module.description,
+      descriptionSub: module.descriptionSub,
+      imgCoverLink: module.imgCoverLink
+    });
+
+    if (this.selectedCourseForModules) {
+      this.moduleListModalInstance.hide();
+      setTimeout(() => this.moduleModalInstance.show(), 400);
+    } else {
+      this.moduleModalInstance.show();
+    }
+  }
+
+  openModuleListModal(course: Course) {
+    this.selectedCourseForModules = course;
+    this.moduleListModalInstance.show();
+  }
+
+  closeModuleListModal() {
+    this.moduleListModalInstance.hide();
+    this.selectedCourseForModules = null;
   }
 
   saveModule() {
@@ -295,26 +344,86 @@ export class CoursesComponent implements OnInit {
     }
 
     this.isSubmittingModule = true;
-    const modulePayload = {
-      ...this.moduleForm.value,
-      courseId: this.selectedCourseId
-    };
 
-    this.coursesService.createModule(modulePayload).subscribe({
-      next: (moduleId) => {
-        this.finishModuleCreation();
-      },
-      error: (err) => {
-        console.error('Error creating module', err);
-        this.isSubmittingModule = false;
-      }
-    });
+    if (this.moduleToEdit) {
+      const modulePayload = {
+        ...this.moduleForm.value,
+        id: this.moduleToEdit.id
+      };
+
+      this.coursesService.updateModule(modulePayload).subscribe({
+        next: () => {
+          this.toastService.success('Módulo atualizado com sucesso!');
+          this.finishModuleCreation();
+        },
+        error: (err) => {
+          console.error('Error updating module', err);
+          this.toastService.error('Erro ao atualizar módulo.');
+          this.isSubmittingModule = false;
+        }
+      });
+    } else {
+      const modulePayload = {
+        ...this.moduleForm.value,
+        courseId: this.selectedCourseId
+      };
+
+      this.coursesService.createModule(modulePayload).subscribe({
+        next: (moduleId) => {
+          this.toastService.success('Módulo criado com sucesso!');
+          this.finishModuleCreation();
+        },
+        error: (err) => {
+          console.error('Error creating module', err);
+          this.toastService.error('Erro ao criar módulo.');
+          this.isSubmittingModule = false;
+        }
+      });
+    }
   }
 
   private finishModuleCreation() {
     this.isSubmittingModule = false;
     this.moduleModalInstance.hide();
     this.loadCourses(); // Refresh list to update module counts
+    
+    if (this.selectedCourseForModules) {
+      setTimeout(() => this.moduleListModalInstance.show(), 400);
+    }
+  }
+
+  confirmDeleteModule(module: any) {
+    this.moduleToDelete = module;
+    if (this.selectedCourseForModules) {
+      this.moduleListModalInstance.hide();
+      setTimeout(() => this.confirmDeleteModuleModalInstance.show(), 400);
+    } else {
+      this.confirmDeleteModuleModalInstance.show();
+    }
+  }
+
+  executeDeleteModule() {
+    if (!this.moduleToDelete) return;
+
+    this.isDeletingModule = true;
+    this.coursesService.deleteModule(this.moduleToDelete.id).subscribe({
+      next: () => {
+        this.toastService.success('Módulo excluído com sucesso!');
+        this.confirmDeleteModuleModalInstance.hide();
+        this.isDeletingModule = false;
+        this.moduleToDelete = null;
+        this.loadCourses();
+        
+        if (this.selectedCourseForModules) {
+          setTimeout(() => this.moduleListModalInstance.show(), 400);
+        }
+      },
+      error: (err) => {
+        console.error('Error deleting module', err);
+        this.toastService.error('Erro ao excluir módulo.');
+        this.isDeletingModule = false;
+      }
+    });
   }
 
   getCourseLessonsCount(course: Course): number {

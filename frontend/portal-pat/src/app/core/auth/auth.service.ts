@@ -40,7 +40,7 @@ export class AuthService extends BaseService {
     this.authUtil.removeCookieAuth();
     this.stateUtil.clearState();
     if (isPlatformBrowser(this.platformId)) {
-      sessionStorage.removeItem('theos_user');
+      sessionStorage.removeItem('pat_user');
       await this.router.navigate(['/auth/login']);
     }
     this.user = null;
@@ -61,7 +61,7 @@ export class AuthService extends BaseService {
       const payload = this.authUtil.decodeToken(token);
       if (!payload) return false;
 
-      const cachedUser = sessionStorage.getItem('theos_user');
+      const cachedUser = sessionStorage.getItem('pat_user');
 
       if (cachedUser) {
         const hydrateUser = JSON.parse(cachedUser);
@@ -80,7 +80,7 @@ export class AuthService extends BaseService {
       };
 
       this.stateUtil.saveUser(hydratedUser);
-      sessionStorage.setItem('theos_user', JSON.stringify(hydratedUser));
+      sessionStorage.setItem('pat_user', JSON.stringify(hydratedUser));
       this.user = hydratedUser;
       return true;
     } catch (error) {

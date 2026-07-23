@@ -15,7 +15,7 @@ export class AuthUtil {
                 expiresStr = `; expires=${expDate.toUTCString()}`;
             }
         } catch (e) {}
-        document.cookie = `accessToken=${token}; path=/${expiresStr}; samesite=strict; secure`;
+        document.cookie = `popt_accessToken=${token}; path=/${expiresStr}; samesite=strict; secure`;
     }
 
     public getCookieAuth(): string {
@@ -24,13 +24,13 @@ export class AuthUtil {
   }
         const token = document.cookie
             .split('; ')
-            .find(row => row.startsWith('accessToken='))
+            .find(row => row.startsWith('popt_accessToken='))
             ?.split('=')[1];
         return token || '';
     }
 
     public removeCookieAuth(): void {
-        document.cookie = "accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        document.cookie = "popt_accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     }
 
     public decodeToken(token: string): any {

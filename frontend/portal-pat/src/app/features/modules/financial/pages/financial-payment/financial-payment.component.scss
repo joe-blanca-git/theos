@@ -1,10 +1,10 @@
 .method-wrapper {
   background-color: transparent;
-  border-color: #e2e8f0 !important;
+  border-color: #2C2C2C!important;
 
   &:hover {
-    background-color: #f8fafc;
-    border-color: #cbd5e1 !important;
+    background-color: #0B0B0B;
+    border-color: #2C2C2C!important;
   }
 }
 
@@ -12,12 +12,12 @@
   &.active {
     .method-wrapper {
       background-color: #eef2ff !important;
-      border-color: #6366f1 !important;
+      border-color: #C62828 !important;
       box-shadow: 0 4px 6px -1px rgba(99, 102, 241, 0.1), 0 2px 4px -1px rgba(99, 102, 241, 0.06);
 
       .form-check-input {
-        background-color: #6366f1;
-        border-color: #6366f1;
+        background-color: #C62828;
+        border-color: #C62828;
       }
     }
   }
@@ -29,8 +29,8 @@
   height: 1.25em;
   
   &:checked {
-    background-color: #6366f1;
-    border-color: #6366f1;
+    background-color: #C62828;
+    border-color: #C62828;
   }
 }
 

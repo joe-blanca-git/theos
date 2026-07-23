@@ -108,7 +108,7 @@ export const errorInterceptor: HttpInterceptorFn = (
             toastService.error(msg, 5000);
             stateUtil.clearState();
             authUtil.removeCookieAuth();
-            sessionStorage.removeItem('theos_user');
+            sessionStorage.removeItem('pat_user');
             router.navigate(['/auth/login']);
           }
         }

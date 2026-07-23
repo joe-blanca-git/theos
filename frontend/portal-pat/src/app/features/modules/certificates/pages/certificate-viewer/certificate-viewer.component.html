@@ -15,7 +15,7 @@
     <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
       <span class="visually-hidden">Carregando...</span>
     </div>
-    <h5 class="mt-3 text-muted">Buscando certificado...</h5>
+    <h5 class="mt-3 text-white-50">Buscando certificado...</h5>
   </div>
 
   <div *ngIf="errorMessage && !isLoading" class="alert alert-danger text-center shadow-sm rounded-4 p-4">
@@ -32,7 +32,7 @@
   </div>
 
   <div class="certificate-container d-flex justify-content-center overflow-auto" *ngIf="certData && !isLoading">
-    <div id="certificate-content" class="certificate-wrapper position-relative bg-white shadow-lg">
+    <div id="certificate-content" class="certificate-wrapper position-relative bg-dark shadow-lg">
       <div class="certificate-border">
         
         <div class="watermark-icon position-absolute start-50 translate-middle z-2" style="top: 75%;">
@@ -65,7 +65,7 @@
               <div class="mt-2 text-end">
                 <img [src]="'https://api.qrserver.com/v1/create-qr-code/?size=120x120&margin=0&data=' + validationUrl" 
                      alt="QR Code" 
-                     class="bg-white p-1 rounded" 
+                     class="bg-dark p-1 rounded" 
                      style="width: 75px; height: 75px;" 
                      crossorigin="anonymous">
               </div>

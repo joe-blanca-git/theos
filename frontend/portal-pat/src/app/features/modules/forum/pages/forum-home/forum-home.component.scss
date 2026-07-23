@@ -3,7 +3,7 @@
    Theos Portal do Aluno (PAN) Design System
    ═══════════════════════════════════════════════════════ */
 
-$primary: #6366f1;
+$primary: #C62828;
 $dark-base: #0f172a;
 $transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 $card-border: 1px solid rgba(0, 0, 0, 0.035);
@@ -56,7 +56,7 @@ $card-border: 1px solid rgba(0, 0, 0, 0.035);
 
 .forum-tab-btn {
   font-size: 0.82rem;
-  color: #64748b;
+  color: #B0B0B0;
   background: #f8fafc;
   transition: $transition-smooth;
   white-space: nowrap;
@@ -121,7 +121,7 @@ $card-border: 1px solid rgba(0, 0, 0, 0.035);
 
 .topic-list-item {
   transition: all 0.2s ease;
-  background: #ffffff;
+  background: #1B1B1B;
   border-bottom: 1px solid rgba(0,0,0,0.06);
 
   &:hover {
@@ -172,7 +172,7 @@ $card-border: 1px solid rgba(0, 0, 0, 0.035);
   width: 34px;
   height: 34px;
   background: #f8fafc;
-  color: #64748b;
+  color: #B0B0B0;
   font-size: 0.78rem;
   transition: $transition-smooth;
 

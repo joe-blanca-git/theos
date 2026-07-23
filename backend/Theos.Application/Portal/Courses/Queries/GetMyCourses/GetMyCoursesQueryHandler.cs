@@ -30,7 +30,7 @@ public class GetMyCoursesQueryHandler : IRequestHandler<GetMyCoursesQuery, List<
             .Select(c => new {
                 Course = c,
                 Categories = c.CourseCategories.Select(cc => cc.Category).ToList(),
-                Released = enrolledCourseIds.Contains(c.Id),
+                Released = enrolledCourseIds.Contains(c.Id) || c.PriceSingle == 0,
                 TotalLessons = c.Modules.SelectMany(m => m.Lessons).Count(l => l.Active),
                 CompletedLessons = c.Modules.SelectMany(m => m.Lessons).SelectMany(l => l.LessonViews).Count(lv => lv.UserId == user.Id),
                 AverageRating = c.CourseRates.Any() ? c.CourseRates.Average(r => (double)r.Rate) : 0.0

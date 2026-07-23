@@ -365,7 +365,7 @@ $shadow-md: 0 4px 6px rgba(0,0,0,0.08);
       button {
         align-self: flex-end;
         padding: 8px 20px;
-        background: white;
+        background: #1B1B1B;
         border: 1px solid $primary;
         color: $primary;
         border-radius: $border-radius-md;
@@ -612,7 +612,7 @@ $shadow-md: 0 4px 6px rgba(0,0,0,0.08);
         display: flex;
         justify-content: center;
         border-top: 1px solid $border;
-        background: #fff;
+        background: #1B1B1B;
         
         .btn-rate {
           width: 100%;

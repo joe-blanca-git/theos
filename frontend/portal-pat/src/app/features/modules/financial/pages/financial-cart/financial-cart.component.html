@@ -14,7 +14,7 @@
 
     <!-- LEFT: Course Info -->
     <div class="col-12 col-lg-7">
-      <div class="card border-0 rounded-4 shadow-sm overflow-hidden bg-white">
+      <div class="card border-0 rounded-4 shadow-sm overflow-hidden bg-dark">
 
         <!-- Course Image -->
         <div class="position-relative hero-image-wrapper">
@@ -32,7 +32,7 @@
 
         <!-- Course Details -->
         <div class="card-body p-4">
-          <p class="text-muted mb-4" style="font-size: 0.92rem; line-height: 1.7; text-align: justify;">
+          <p class="text-white-50 mb-4" style="font-size: 0.92rem; line-height: 1.7; text-align: justify;">
             {{ course.description }}
           </p>
 
@@ -42,8 +42,8 @@
                 <i class="fas fa-play-circle" style="color: #6366f1; font-size: 0.85rem;"></i>
               </div>
               <div>
-                <span class="d-block fw-bold text-dark" style="font-size: 0.82rem;">{{ course.totalLessons }} aulas</span>
-                <span class="text-muted" style="font-size: 0.68rem;">Conteúdo completo</span>
+                <span class="d-block fw-bold text-white" style="font-size: 0.82rem;">{{ course.totalLessons }} aulas</span>
+                <span class="text-white-50" style="font-size: 0.68rem;">Conteúdo completo</span>
               </div>
             </div>
             <div class="d-flex align-items-center gap-2">
@@ -51,8 +51,8 @@
                 <i class="fas fa-clock" style="color: #10b981; font-size: 0.85rem;"></i>
               </div>
               <div>
-                <span class="d-block fw-bold text-dark" style="font-size: 0.82rem;">{{ course.totalHours }} horas</span>
-                <span class="text-muted" style="font-size: 0.68rem;">Carga horária</span>
+                <span class="d-block fw-bold text-white" style="font-size: 0.82rem;">{{ course.totalHours }} horas</span>
+                <span class="text-white-50" style="font-size: 0.68rem;">Carga horária</span>
               </div>
             </div>
             <div class="d-flex align-items-center gap-2">
@@ -60,8 +60,8 @@
                 <i class="fas fa-infinity" style="color: #f59e0b; font-size: 0.85rem;"></i>
               </div>
               <div>
-                <span class="d-block fw-bold text-dark" style="font-size: 0.82rem;">Vitalício</span>
-                <span class="text-muted" style="font-size: 0.68rem;">Acesso ilimitado</span>
+                <span class="d-block fw-bold text-white" style="font-size: 0.82rem;">Vitalício</span>
+                <span class="text-white-50" style="font-size: 0.68rem;">Acesso ilimitado</span>
               </div>
             </div>
           </div>
@@ -74,7 +74,7 @@
       <div class="position-lg-sticky" style="top: 2rem;">
 
         <!-- Purchase Options -->
-        <div class="card border-0 rounded-4 shadow-sm bg-white mb-4">
+        <div class="card border-0 rounded-4 shadow-sm bg-dark mb-4">
           <div class="card-body p-4">
             <h5 class="fw-bold mb-1 d-flex align-items-center gap-2">
               <i class="fas fa-shopping-cart" style="color: #6366f1;"></i> Produto
@@ -88,8 +88,8 @@
                     <div class="option-radio-inner"></div>
                   </div>
                   <div>
-                    <span class="d-block fw-bold text-dark" style="font-size: 0.9rem;">Compra Avulsa</span>
-                    <span class="text-muted" style="font-size: 0.72rem;">Acesso vitalício a este curso</span>
+                    <span class="d-block fw-bold text-white" style="font-size: 0.9rem;">Compra Avulsa</span>
+                    <span class="text-white-50" style="font-size: 0.72rem;">Acesso vitalício a este curso</span>
                   </div>
                 </div>
                 <span class="fw-extrabold" style="font-size: 1.15rem; color: #0f172a;">
@@ -101,21 +101,21 @@
         </div>
 
         <!-- Order Summary -->
-        <div class="card border-0 rounded-4 shadow-sm bg-white">
+        <div class="card border-0 rounded-4 shadow-sm bg-dark">
           <div class="card-body p-4">
-            <h6 class="fw-bold mb-3 text-dark">
+            <h6 class="fw-bold mb-3 text-white">
               <i class="fas fa-receipt me-2" style="color: #6366f1;"></i>Resumo do Pedido
             </h6>
             <div class="d-flex justify-content-between align-items-center mb-2" style="font-size: 0.85rem;">
-              <span class="text-muted">{{ course.title }}</span>
+              <span class="text-white-50">{{ course.title }}</span>
             </div>
             <div class="d-flex justify-content-between align-items-center mb-2" style="font-size: 0.82rem;">
-              <span class="text-muted">Plano</span>
-              <span class="fw-semibold text-dark font-monospace" style="font-size: 0.78rem;">{{ selectedLabel }}</span>
+              <span class="text-white-50">Plano</span>
+              <span class="fw-semibold text-white font-monospace" style="font-size: 0.78rem;">{{ selectedLabel }}</span>
             </div>
             <hr class="border-secondary border-opacity-15 my-3">
             <div class="d-flex justify-content-between align-items-center mb-4">
-              <span class="fw-bold text-dark" style="font-size: 1rem;">Total</span>
+              <span class="fw-bold text-white" style="font-size: 1rem;">Total</span>
               <span class="fw-extrabold" style="font-size: 1.35rem; color: #0f172a;">
                 {{ formatPrice(selectedPrice) }}
               </span>
@@ -125,7 +125,7 @@
               <i class="fas fa-lock me-2"></i>Finalizar Compra
             </button>
             <div class="text-center mt-3">
-              <span class="text-muted d-flex align-items-center justify-content-center gap-1" style="font-size: 0.68rem;">
+              <span class="text-white-50 d-flex align-items-center justify-content-center gap-1" style="font-size: 0.68rem;">
                 <i class="fas fa-shield-alt" style="color: #10b981;"></i> Pagamento 100% seguro · 7 dias de garantia
               </span>
             </div>
@@ -134,7 +134,7 @@
 
         <!-- Back link -->
         <div class="text-center mt-3">
-          <a class="btn btn-link text-decoration-none text-muted small fw-semibold d-inline-flex align-items-center gap-1 transition"
+          <a class="btn btn-link text-decoration-none text-white-50 small fw-semibold d-inline-flex align-items-center gap-1 transition"
              (click)="goBack()" style="cursor: pointer; font-size: 0.78rem;">
             <i class="fas fa-arrow-left"></i> Voltar para Cursos
           </a>

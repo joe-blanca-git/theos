@@ -3,7 +3,7 @@
    Theos Portal do Aluno (PAN) Design System
    ═══════════════════════════════════════════════════════ */
 
-$primary: #6366f1;
+$primary: #C62828;
 $dark-base: #0f172a;
 $transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 $card-border: 1px solid rgba(0, 0, 0, 0.035);
@@ -145,13 +145,13 @@ $card-border: 1px solid rgba(0, 0, 0, 0.035);
   }
 
   &.inactive-pill {
-    background-color: #f8fafc !important;
-    color: #64748b !important;
+    background-color: #0B0B0B !important;
+    color: #B0B0B0!important;
     border: 1px solid rgba(0, 0, 0, 0.03) !important;
 
     &:hover {
-      background-color: #f1f5f9 !important;
-      color: #0f172a !important;
+      background-color: #121212 !important;
+      color: #FFFFFF!important;
       transform: translateY(-1px);
     }
   }

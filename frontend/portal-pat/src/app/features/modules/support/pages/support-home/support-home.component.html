@@ -22,7 +22,7 @@
 
       <div class="col-12 col-lg-5">
         <div class="position-relative">
-          <span class="position-absolute start-0 top-50 translate-middle-y ps-3 text-muted" style="font-size: 0.88rem; z-index: 2;">
+          <span class="position-absolute start-0 top-50 translate-middle-y ps-3 text-white-50" style="font-size: 0.88rem; z-index: 2;">
             <i class="fas fa-search"></i>
           </span>
           <input type="text"
@@ -67,7 +67,7 @@
             <i class="fas" [ngClass]="channel.id !== 'whatsapp' ? channel.icon : ''" [style.color]="channel.color" style="font-size: 1.2rem;" *ngIf="channel.id !== 'whatsapp'"></i>
           </div>
           <div>
-            <h6 class="fw-extrabold text-dark mb-0" style="font-size: 0.9rem;">{{ channel.name }}</h6>
+            <h6 class="fw-extrabold text-white mb-0" style="font-size: 0.9rem;">{{ channel.name }}</h6>
             <div class="d-flex align-items-center gap-1.5 mt-0.5">
               <span class="pulse-dot" [style.background]="channel.isOnline ? '#10b981' : '#94a3b8'"></span>
               <span style="font-size: 0.68rem;" [style.color]="channel.isOnline ? '#10b981' : '#94a3b8'" class="fw-semibold">
@@ -76,7 +76,7 @@
             </div>
           </div>
         </div>
-        <p class="text-muted mb-3" style="font-size: 0.8rem; line-height: 1.55; flex-grow: 1;">{{ channel.description }}</p>
+        <p class="text-white-50 mb-3" style="font-size: 0.8rem; line-height: 1.55; flex-grow: 1;">{{ channel.description }}</p>
         <div class="d-flex align-items-center gap-1.5 mb-3" style="font-size: 0.73rem; color: #64748b;">
           <i class="fas fa-clock" style="font-size: 0.65rem;"></i>
           <span>{{ channel.responseTime }}</span>
@@ -109,18 +109,18 @@
   </div>
 
   <div class="card border-0 rounded-4 shadow-sm overflow-hidden mb-4">
-    <div class="card-header bg-white border-bottom border-secondary border-opacity-10 px-4 py-3 d-flex align-items-center justify-content-between">
+    <div class="card-header bg-dark border-bottom border-secondary border-opacity-10 px-4 py-3 d-flex align-items-center justify-content-between">
       <div>
-        <h5 class="fw-extrabold text-dark mb-0" style="font-size: 1rem;">
+        <h5 class="fw-extrabold text-white mb-0" style="font-size: 1rem;">
           <i class="fas fa-question-circle me-2" style="color: #6366f1; font-size: 0.9rem;"></i>Perguntas Frequentes
         </h5>
-        <p class="text-muted mb-0 mt-0.5" style="font-size: 0.75rem;">
+        <p class="text-white-50 mb-0 mt-0.5" style="font-size: 0.75rem;">
           {{ filteredFaqs.length }} pergunta{{ filteredFaqs.length !== 1 ? 's' : '' }} encontrada{{ filteredFaqs.length !== 1 ? 's' : '' }}
         </p>
       </div>
     </div>
 
-    <div class="px-4 py-3 border-bottom border-secondary border-opacity-10 bg-white">
+    <div class="px-4 py-3 border-bottom border-secondary border-opacity-10 bg-dark">
       <div class="d-flex flex-wrap gap-2 scroll-x-mobile">
         <button *ngFor="let cat of faqCategories"
                 class="btn btn-sm rounded-pill px-3 py-1.5 fw-semibold border-0 filter-pill"
@@ -145,10 +145,10 @@
       <div class="py-3">
         <div class="mx-auto mb-3 d-flex align-items-center justify-content-center rounded-circle"
              style="width:72px; height:72px; background: rgba(99,102,241,0.07);">
-          <i class="fas fa-search text-muted" style="font-size: 1.8rem; opacity: 0.4;"></i>
+          <i class="fas fa-search text-white-50" style="font-size: 1.8rem; opacity: 0.4;"></i>
         </div>
-        <h6 class="fw-bold text-dark mb-1">Nenhuma pergunta encontrada</h6>
-        <p class="text-muted small mb-3" style="font-size: 0.82rem;">Tente buscar por outras palavras ou mude a categoria selecionada.</p>
+        <h6 class="fw-bold text-white mb-1">Nenhuma pergunta encontrada</h6>
+        <p class="text-white-50 small mb-3" style="font-size: 0.82rem;">Tente buscar por outras palavras ou mude a categoria selecionada.</p>
         <button class="btn btn-outline-dark btn-sm rounded-pill px-4 py-2" (click)="searchTerm = ''; selectedCategory = 'Todas'">
           <i class="fas fa-undo me-1"></i> Limpar Busca
         </button>
@@ -166,18 +166,18 @@
                   style="font-size: 0.62rem; background: rgba(99,102,241,0.1); color: #6366f1;">
               {{ item.category }}
             </span>
-            <span class="fw-semibold text-dark" style="font-size: 0.88rem; line-height: 1.4;">
+            <span class="fw-semibold text-white" style="font-size: 0.88rem; line-height: 1.4;">
               {{ item.question }}
             </span>
           </div>
           <div class="faq-toggle-icon flex-shrink-0" [class.rotated]="item.isOpen">
-            <i class="fas fa-chevron-down text-muted" style="font-size: 0.78rem;"></i>
+            <i class="fas fa-chevron-down text-white-50" style="font-size: 0.78rem;"></i>
           </div>
         </div>
 
         <div class="faq-answer px-4 pb-3" [class.open]="item.isOpen">
           <div class="faq-answer-content pt-1 border-top border-secondary border-opacity-10">
-            <p class="text-muted mb-0 mt-3" style="font-size: 0.85rem; line-height: 1.65;">
+            <p class="text-white-50 mb-0 mt-3" style="font-size: 0.85rem; line-height: 1.65;">
               {{ item.answer }}
             </p>
           </div>
@@ -223,22 +223,22 @@
         <form (submit)="submitContactForm($event)">
           <div class="row g-3">
             <div class="col-12 col-sm-6">
-              <label class="form-label fw-semibold text-muted mb-1" style="font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04rem;">Nome *</label>
-              <input type="text" class="form-control rounded-3 bg-light border-0 shadow-none py-2"
+              <label class="form-label fw-semibold text-white-50 mb-1" style="font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04rem;">Nome *</label>
+              <input type="text" class="form-control rounded-3 bg-secondary bg-opacity-10 border-0 shadow-none py-2"
                      placeholder="Seu nome completo"
                      [(ngModel)]="contactName" name="cName"
                      style="font-size: 0.85rem;">
             </div>
             <div class="col-12 col-sm-6">
-              <label class="form-label fw-semibold text-muted mb-1" style="font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04rem;">E-mail *</label>
-              <input type="email" class="form-control rounded-3 bg-light border-0 shadow-none py-2"
+              <label class="form-label fw-semibold text-white-50 mb-1" style="font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04rem;">E-mail *</label>
+              <input type="email" class="form-control rounded-3 bg-secondary bg-opacity-10 border-0 shadow-none py-2"
                      placeholder="seu@email.com"
                      [(ngModel)]="contactEmail" name="cEmail"
                      style="font-size: 0.85rem;">
             </div>
             <div class="col-12">
-              <label class="form-label fw-semibold text-muted mb-1" style="font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04rem;">Categoria</label>
-              <select class="form-select rounded-3 bg-light border-0 shadow-none py-2"
+              <label class="form-label fw-semibold text-white-50 mb-1" style="font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04rem;">Categoria</label>
+              <select class="form-select rounded-3 bg-secondary bg-opacity-10 border-0 shadow-none py-2"
                       [(ngModel)]="contactCategory" name="cCategory"
                       style="font-size: 0.85rem;">
                 <option>Dúvida Geral</option>
@@ -251,15 +251,15 @@
               </select>
             </div>
             <div class="col-12">
-              <label class="form-label fw-semibold text-muted mb-1" style="font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04rem;">Assunto</label>
-              <input type="text" class="form-control rounded-3 bg-light border-0 shadow-none py-2"
+              <label class="form-label fw-semibold text-white-50 mb-1" style="font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04rem;">Assunto</label>
+              <input type="text" class="form-control rounded-3 bg-secondary bg-opacity-10 border-0 shadow-none py-2"
                      placeholder="Descreva brevemente seu problema..."
                      [(ngModel)]="contactSubject" name="cSubject"
                      style="font-size: 0.85rem;">
             </div>
             <div class="col-12">
-              <label class="form-label fw-semibold text-muted mb-1" style="font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04rem;">Mensagem *</label>
-              <textarea class="form-control rounded-3 bg-light border-0 shadow-none py-2"
+              <label class="form-label fw-semibold text-white-50 mb-1" style="font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04rem;">Mensagem *</label>
+              <textarea class="form-control rounded-3 bg-secondary bg-opacity-10 border-0 shadow-none py-2"
                         rows="4"
                         placeholder="Descreva detalhadamente o que está acontecendo..."
                         [(ngModel)]="contactMessage" name="cMessage"

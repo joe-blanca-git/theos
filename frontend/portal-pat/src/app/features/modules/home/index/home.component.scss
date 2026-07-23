@@ -1,8 +1,8 @@
 /* Custom Variable Design System for Portal Aluno Theos (PAN) */
-$bg-light-modern: #f8fafc;
-$bg-dark-sidebar: #0f172a;
-$sidebar-widget-bg: #1e293b;
-$primary-glow: #6366f1;
+$bg-light-modern: #0B0B0B;
+$bg-dark-sidebar: #151515;
+$sidebar-widget-bg: #1B1B1B;
+$primary-glow: #C62828;
 $success-glow: #10b981;
 $transition-speed: 0.3s;
 $cubic-bezier: cubic-bezier(0.4, 0, 0.2, 1);
@@ -131,24 +131,24 @@ $cubic-bezier: cubic-bezier(0.4, 0, 0.2, 1);
 
 .navbar {
   height: 70px;
-  background: rgba(255, 255, 255, 0.8) !important;
+  background: rgba(21, 21, 21, 0.95) !important;
   backdrop-filter: blur(10px);
   z-index: 999;
 }
 
 .bg-light-gray {
-  background-color: #f1f5f9 !important;
+  background-color: #121212 !important;
 }
 
 .header-menu-toggle {
   &:hover {
-    background-color: #f1f5f9;
+    background-color: #121212;
   }
 }
 
 .header-icon-btn {
   &:hover {
-    background-color: #f1f5f9 !important;
+    background-color: #121212 !important;
   }
 }
 
@@ -166,7 +166,7 @@ $cubic-bezier: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .bg-gradient-avatar {
-  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  background: linear-gradient(135deg, #B71C1C 0%, #B71C1C 100%);
 }
 
 /* --- Dropdown Menus --- */
@@ -175,7 +175,7 @@ $cubic-bezier: cubic-bezier(0.4, 0, 0.2, 1);
   pointer-events: auto;
   border-radius: 1rem !important;
   border: 1px solid rgba(0, 0, 0, 0.05) !important;
-  background-color: #ffffff;
+  background-color: #1B1B1B;
 }
 
 .notification-item-card {
@@ -187,7 +187,7 @@ $cubic-bezier: cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   &:hover {
-    background-color: #f8fafc;
+    background-color: #0B0B0B;
   }
 }
 
@@ -199,15 +199,15 @@ $cubic-bezier: cubic-bezier(0.4, 0, 0.2, 1);
     background: transparent;
   }
   &::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
+    background: #2C2C2C;
     border-radius: 3px;
   }
 }
 
 .dropdown-item {
   &.text-muted-hover:hover {
-    background-color: #f1f5f9;
-    color: #0f172a !important;
+    background-color: #121212;
+    color: #FFFFFF!important;
   }
 
   &.transition-bg-danger:hover {
@@ -254,7 +254,7 @@ $cubic-bezier: cubic-bezier(0.4, 0, 0.2, 1);
 /* --- Tables Styling (Boletim, Financeiro, Secretaria) --- */
 .table-dark-header {
   th {
-    background-color: #0f172a !important;
+    background-color: #1B1B1B!important;
     color: #f8fafc !important;
     font-weight: 600 !important;
     font-size: 0.78rem !important;
@@ -332,7 +332,7 @@ $cubic-bezier: cubic-bezier(0.4, 0, 0.2, 1);
 .custom-modal-box {
   width: 100%;
   max-width: 500px;
-  background-color: #ffffff;
+  background-color: #1B1B1B;
   border: 1px solid rgba(0,0,0,0.05);
 }
 

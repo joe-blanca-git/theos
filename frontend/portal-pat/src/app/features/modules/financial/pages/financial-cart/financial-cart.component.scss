@@ -1,5 +1,5 @@
 /* Theos Portal — Cart Page Styles */
-$primary-glow: #6366f1;
+$primary-glow: #C62828;
 $success-glow: #10b981;
 $bg-light-modern: #f8fafc;
 $transition-speed: 0.3s;
@@ -8,7 +8,7 @@ $cubic-bezier: cubic-bezier(0.4, 0, 0.2, 1);
 :host {
   display: block;
   font-family: 'Outfit', 'Inter', sans-serif;
-  color: #0f172a;
+  color: #FFFFFF;
 }
 
 /* --- Page Entrance Animation --- */
@@ -94,7 +94,7 @@ $cubic-bezier: cubic-bezier(0.4, 0, 0.2, 1);
 
 /* --- Checkout Button --- */
 .checkout-btn {
-  background: linear-gradient(135deg, $primary-glow 0%, #4f46e5 100%);
+  background: linear-gradient(135deg, $primary-glow 0%, #B71C1C 100%);
   color: #ffffff;
   font-size: 0.92rem;
   letter-spacing: 0.02rem;

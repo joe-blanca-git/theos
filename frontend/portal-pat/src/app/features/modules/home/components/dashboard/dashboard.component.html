@@ -1,7 +1,7 @@
 <div class="row g-4 mb-4">
   <!-- Card 3: Novo Curso Promo Banner (Full Responsive) -->
   <div class="col-12 col-lg-6">
-    <div class="card h-100 border-0 rounded-4 shadow-sm overflow-hidden promo-interactive-card bg-white position-relative transition-all">
+    <div class="card h-100 border-0 rounded-4 shadow-sm overflow-hidden promo-interactive-card bg-dark position-relative transition-all">
       
       <!-- Skeleton State -->
       <div class="d-flex flex-column flex-sm-row h-100" *ngIf="isLoadingPage">
@@ -37,21 +37,21 @@
         <!-- Text content body layout -->
         <div class="col-12 col-sm-8 p-4 d-flex flex-column justify-content-between flex-grow-1">
           <div>
-            <h5 class="fw-extrabold text-dark text-uppercase leading-snug mb-2 promo-title-hover" style="font-size: 0.95rem;">
+            <h5 class="fw-extrabold text-white text-uppercase leading-snug mb-2 promo-title-hover" style="font-size: 0.95rem;">
               {{info.lastCourse.title}}
             </h5>
-            <p class="text-muted small mb-3 line-clamp-2" style="font-size: 0.78rem; line-height: 1.45;">
+            <p class="text-white-50 small mb-3 line-clamp-2" style="font-size: 0.78rem; line-height: 1.45;">
               {{info.lastCourse.description}}
             </p>
           </div>
 
           <!-- Bottom bar rating and CTA button -->
           <div class="d-flex align-items-center justify-content-between pt-3 border-top border-secondary border-opacity-10 mt-2">
-            <div class="d-flex align-items-center gap-1.5 text-muted" style="font-size: 0.72rem;">
+            <div class="d-flex align-items-center gap-1.5 text-white-50" style="font-size: 0.72rem;">
               <div class="d-flex text-warning">
                 <i class="fas fa-star"></i>
               </div>
-              <span class="fw-bold text-dark">{{info.lastCourse.rating}}</span>&nbsp;
+              <span class="fw-bold text-white">{{info.lastCourse.rating}}</span>&nbsp;
               <span class="d-none d-md-inline">({{info.lastCourse.reviews}} avaliações)</span>
             </div>
             <button class="btn btn-dark btn-sm rounded-pill fw-bold px-3.5 py-1.5 text-uppercase transition shadow-sm" 
@@ -85,8 +85,8 @@
       <ng-container *ngIf="!isLoadingPage">
         <div class="d-flex align-items-center justify-content-between">
           <div>
-            <span class="text-muted fw-bold text-uppercase small-title font-monospace" style="font-size: 0.72rem; letter-spacing: 0.05rem;">Meus Cursos</span>
-            <h3 class="fw-extrabold text-dark mt-2 mb-0">{{info.myCourses || 0}} Curso{{(info.myCourses || 0) !== 1 ? 's' : ''}}</h3>
+            <span class="text-white-50 fw-bold text-uppercase small-title font-monospace" style="font-size: 0.72rem; letter-spacing: 0.05rem;">Meus Cursos</span>
+            <h3 class="fw-extrabold text-white mt-2 mb-0">{{info.myCourses || 0}} Curso{{(info.myCourses || 0) !== 1 ? 's' : ''}}</h3>
           </div>
           <div class="metric-icon-box bg-indigo-light text-primary-emphasis rounded-4 d-flex align-items-center justify-content-center shadow-sm"
                style="width: 48px; height: 48px;">
@@ -106,8 +106,8 @@
          (click)="setActiveTab('support')"  [ngClass]="{'bg-loading': isLoadingPage}">
       <div class="d-flex align-items-center justify-content-between" *ngIf="!isLoadingPage">
         <div>
-          <span class="text-muted fw-bold text-uppercase small-title font-monospace" style="font-size: 0.72rem; letter-spacing: 0.05rem;">Fóruns</span>
-          <h3 class="fw-extrabold text-dark mt-2 mb-0">{{info.myForums}} Novas</h3>
+          <span class="text-white-50 fw-bold text-uppercase small-title font-monospace" style="font-size: 0.72rem; letter-spacing: 0.05rem;">Fóruns</span>
+          <h3 class="fw-extrabold text-white mt-2 mb-0">{{info.myForums}} Novas</h3>
         </div>
         <div class="metric-icon-box bg-indigo-light text-primary-emphasis rounded-4 d-flex align-items-center justify-content-center shadow-sm"
              style="width: 48px; height: 48px;">

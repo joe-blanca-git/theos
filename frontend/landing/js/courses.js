@@ -49,7 +49,7 @@ async function fetchCursos() {
                         <div>
                             <span class="course-tag">${curso.level || 'Intermediário'}</span>
                             <h4 class="card-title">${curso.name}</h4>
-                            <p class="card-text text-muted small text-justify">${curso.description.length > 150 ? curso.description.substring(0, 150) + '...' : curso.description}</p>
+                            <p class="card-text text-white small text-justify">${curso.description.length > 150 ? curso.description.substring(0, 150) + '...' : curso.description}</p>
                         </div>
                         <div>
                             <hr class="my-4 opacity-10">

@@ -1,7 +1,7 @@
 .avatar-profile {
   width: 120px;
   height: 120px;
-  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+  background: linear-gradient(135deg, #C62828 0%, #B71C1C 100%);
   color: white;
   font-size: 3rem;
   font-weight: bold;
@@ -13,7 +13,7 @@
 }
 
 .profile-card {
-  background: #fff;
+  background: #1B1B1B;
   border-radius: 1rem;
   box-shadow: 0 4px 20px rgba(0,0,0,0.05);
   border: 1px solid rgba(0,0,0,0.05);
@@ -40,16 +40,16 @@
 .form-control {
   border-radius: 0.5rem;
   padding: 0.75rem 1rem;
-  border: 1px solid #e2e8f0;
+  border: 1px solid #2C2C2C;
   &:focus {
     box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
-    border-color: #6366f1;
+    border-color: #C62828;
   }
 }
 
 .input-group-text {
   border-radius: 0.5rem 0 0 0.5rem;
-  border: 1px solid #e2e8f0;
+  border: 1px solid #2C2C2C;
 }
 
 .form-control.border-start-0 {

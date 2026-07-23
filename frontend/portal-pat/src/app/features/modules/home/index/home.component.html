@@ -1,4 +1,4 @@
-<div class="d-flex min-vh-100 bg-light-modern" id="wrapper" (click)="closeDropdowns()">
+<div class="d-flex min-vh-100 bg-dark" id="wrapper" (click)="closeDropdowns()">
   <!-- Left Collapsible Sidebar -->
   <aside class="bg-dark-sidebar text-white sidebar shadow-lg" [class.collapsed]="sidebarCollapsed" (click)="$event.stopPropagation()">
 
@@ -6,7 +6,7 @@
     <div class="sidebar-brand-container d-flex align-items-center justify-content-between p-3 border-bottom border-secondary border-opacity-25">
       <div class="d-flex justify-content-center align-items-center overflow-hidden w-100">
         <div class="logo-wrapper">
-          <img src="logos/logo-nobg.png" alt="Theos Logo" class="sidebar-logo" [class.collapsed-logo]="sidebarCollapsed">
+          <img src="logos/logo.png" alt="Theos Logo" class="sidebar-logo" [class.collapsed-logo]="sidebarCollapsed">
         </div>
       </div>
       <button class="btn btn-outline-light btn-sm border-0 d-md-none p-1" (click)="toggleSidebar()">
@@ -21,7 +21,7 @@
 
     <!-- Bottom Sidebar Collapse Toggle button -->
     <div class="border-top border-secondary border-opacity-25 p-2 text-center">
-      <button class="btn btn-sm btn-link text-muted text-decoration-none w-100 sidebar-collapse-trigger" (click)="toggleSidebar()">
+      <button class="btn btn-sm btn-link text-white-50 text-decoration-none w-100 sidebar-collapse-trigger" (click)="toggleSidebar()">
         <i class="fas" [class.fa-chevron-left]="!sidebarCollapsed" [class.fa-chevron-right]="sidebarCollapsed"></i>
         <span class="ms-2 small fw-semibold" *ngIf="!sidebarCollapsed">Ocultar Menu</span>
       </button>
@@ -31,14 +31,14 @@
   <!-- Main View Container -->
   <div class="main-layout-wrapper d-flex flex-column flex-grow-1" [class.shifted]="sidebarCollapsed">
     <!-- Header -->
-    <header class="navbar navbar-expand navbar-light bg-white border-bottom shadow-sm px-3 px-md-4 py-2 sticky-top justify-content-between">
+    <header class="navbar navbar-expand navbar-dark bg-dark border-bottom shadow-sm px-3 px-md-4 py-2 sticky-top justify-content-between">
       <div class="d-flex align-items-center gap-2">
         <!-- Sidebar Toggle Hamburger -->
         <button class="btn btn-none border-0 rounded-circle bg-transparent p-2 d-flex align-items-center justify-content-center header-menu-toggle" (click)="toggleSidebar(); $event.stopPropagation()">
           <i class="bi fs-5" [ngClass]="sidebarCollapsed ? 'bi-layout-sidebar-inset' : 'bi-layout-sidebar-inset-reverse'"></i>
         </button>
         <!-- Page Title Context -->
-        <h5 class="fw-bold mb-0 text-dark ms-2">{{ pageTitle }}</h5>
+        <h5 class="fw-bold mb-0 text-white ms-2">{{ pageTitle }}</h5>
       </div>
       <!-- Right Header Navigation Items -->
       <div class="d-flex align-items-center gap-3">
@@ -55,13 +55,13 @@
             </div>
 
             <div class="text-start d-none d-md-block" style="line-height: 1.1;">
-              <div class="fw-bold text-dark small" [ngClass]="{'skeleton skeleton-sm mt-1': isLoadingPage}">
+              <div class="fw-bold text-white small" [ngClass]="{'skeleton skeleton-sm mt-1': isLoadingPage}">
                 <span *ngIf="!isLoadingPage">{{ studentName }}</span>
                 <span *ngIf="isLoadingPage">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
               </div>
             </div>
 
-            <i class="fas fa-chevron-down text-muted small d-none d-md-inline ms-1" style="font-size: 0.7rem;"></i>
+            <i class="fas fa-chevron-down text-white-50 small d-none d-md-inline ms-1" style="font-size: 0.7rem;"></i>
 
           </button>
 
@@ -72,23 +72,23 @@
               <div [ngClass]="{'skeleton': isLoadingPage, 'bg-gradient-avatar': !isLoadingPage}" class="avatar-circle-lg text-white fw-bold d-flex align-items-center justify-content-center rounded-circle mx-auto mb-2 fs-3 shadow">
                 <span *ngIf="!isLoadingPage">{{ getInitials(studentName) }}</span>
               </div>
-              <h6 class="mb-1 fw-bold text-dark text-truncate" [ngClass]="{'skeleton skeleton-sm w-75 mx-auto': isLoadingPage}">
+              <h6 class="mb-1 fw-bold text-white text-truncate" [ngClass]="{'skeleton skeleton-sm w-75 mx-auto': isLoadingPage}">
                  <span *ngIf="!isLoadingPage">{{ studentName }}</span>
                  <span *ngIf="isLoadingPage">&nbsp;</span>
               </h6>
             </div>
 
             <div class="py-1">
-              <!-- <button class="dropdown-item py-2 px-3 rounded-3 d-flex align-items-center gap-2.5 cursor-pointer text-muted-hover transition" [disabled]="isLoadingPage">
-                <i class="me-4 fa-regular fa-id-card text-muted" style="width: 16px;"></i>
+              <!-- <button class="dropdown-item py-2 px-3 rounded-3 d-flex align-items-center gap-2.5 cursor-pointer text-white-50-hover transition" [disabled]="isLoadingPage">
+                <i class="me-4 fa-regular fa-id-card text-white-50" style="width: 16px;"></i>
                 <span class="small font-medium">Carteirinha Digital</span>
               </button> -->
-              <button class="dropdown-item py-2 px-3 rounded-3 d-flex align-items-center gap-2.5 cursor-pointer text-muted-hover transition" [disabled]="isLoadingPage" (click)="setActiveTab('profile')">
-                <i class="me-4 fa-regular fa-user text-muted" style="width: 16px;"></i>
+              <button class="dropdown-item py-2 px-3 rounded-3 d-flex align-items-center gap-2.5 cursor-pointer text-white-50-hover transition" [disabled]="isLoadingPage" (click)="setActiveTab('profile')">
+                <i class="me-4 fa-regular fa-user text-white-50" style="width: 16px;"></i>
                 <span class="small font-medium">Dados Cadastrais</span>
               </button>
-              <button class="dropdown-item py-2 px-3 rounded-3 d-flex align-items-center gap-2.5 cursor-pointer text-muted-hover transition" [disabled]="isLoadingPage" (click)="setActiveTab('support')">
-                <i class="me-4 fa-regular fa-question-circle text-muted" style="width: 16px;"></i>
+              <button class="dropdown-item py-2 px-3 rounded-3 d-flex align-items-center gap-2.5 cursor-pointer text-white-50-hover transition" [disabled]="isLoadingPage" (click)="setActiveTab('support')">
+                <i class="me-4 fa-regular fa-question-circle text-white-50" style="width: 16px;"></i>
                 <span class="small font-medium">Central de Ajuda</span>
               </button>
               <div class="dropdown-divider border-opacity-10 my-1"></div>

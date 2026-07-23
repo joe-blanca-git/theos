@@ -1,13 +1,13 @@
 <div class="animated-fade-in">
   <!-- <div class="mb-4">
-    <button class="btn btn-link text-decoration-none text-muted p-0 d-flex align-items-center gap-2 mb-3"
+    <button class="btn btn-link text-decoration-none text-white-50 p-0 d-flex align-items-center gap-2 mb-3"
             style="font-size: 0.85rem;" (click)="goBack()">
       <i class="fas fa-arrow-left"></i> Voltar para o Fórum
     </button>
   </div> -->
 
   <div *ngIf="isLoading" class="d-flex justify-content-center align-items-center py-5">
-    <div class="spinner-border text-dark" role="status" style="width: 3rem; height: 3rem;">
+    <div class="spinner-border text-white" role="status" style="width: 3rem; height: 3rem;">
       <span class="visually-hidden">Carregando...</span>
     </div>
   </div>
@@ -23,7 +23,7 @@
   <div *ngIf="!isLoading && topic">
     <!-- Topic Header Card -->
     <div class="card border-0 rounded-4 shadow-sm overflow-hidden mb-4">
-      <div class="card-header bg-white border-bottom border-secondary border-opacity-10 px-4 pt-4 pb-3">
+      <div class="card-header bg-dark border-bottom border-secondary border-opacity-10 px-4 pt-4 pb-3">
         <div class="d-flex flex-column flex-md-row justify-content-between align-items-start gap-3">
           <div>
             <div class="d-flex align-items-center gap-2 flex-wrap mb-2">
@@ -40,10 +40,10 @@
                 <i class="fas fa-play-circle me-1"></i> Aula: {{ topic.lessonName }}
               </span>
             </div>
-            <h3 class="fw-extrabold text-dark mb-1" style="font-size: 1.5rem; letter-spacing: -0.02rem;">
+            <h3 class="fw-extrabold text-white mb-1" style="font-size: 1.5rem; letter-spacing: -0.02rem;">
               {{ topic.title }}
             </h3>
-            <h6 class="fw-semibold text-muted mb-0 mt-2" *ngIf="topic.subject" style="font-size: 0.9rem;">
+            <h6 class="fw-semibold text-white-50 mb-0 mt-2" *ngIf="topic.subject" style="font-size: 0.9rem;">
               Assunto: {{ topic.subject }}
             </h6>
           </div>
@@ -72,10 +72,10 @@
           </div>
           <div class="flex-grow-1 min-w-0">
             <div class="d-flex align-items-center gap-2 mb-3">
-              <span class="fw-bold text-dark" style="font-size: 0.95rem;">{{ topic.authorName }}</span>
-              <span class="text-muted" style="font-size: 0.75rem;"><i class="fas fa-circle mx-1" style="font-size: 0.25rem; vertical-align: middle;"></i>{{ formatDate(topic.createdAt) }}</span>
+              <span class="fw-bold text-white" style="font-size: 0.95rem;">{{ topic.authorName }}</span>
+              <span class="text-white-50" style="font-size: 0.75rem;"><i class="fas fa-circle mx-1" style="font-size: 0.25rem; vertical-align: middle;"></i>{{ formatDate(topic.createdAt) }}</span>
             </div>
-            <div class="topic-content text-dark" style="font-size: 0.92rem; line-height: 1.6; white-space: pre-wrap;">
+            <div class="topic-content text-white" style="font-size: 0.92rem; line-height: 1.6; white-space: pre-wrap;">
               {{ topic.content }}
             </div>
           </div>
@@ -85,8 +85,8 @@
 
     <!-- Replies Header -->
     <div class="d-flex justify-content-between align-items-end mb-3 px-1">
-      <h5 class="fw-bold text-dark mb-0 d-flex align-items-center gap-2" style="font-size: 1.1rem;">
-        <i class="fas fa-comments text-muted fs-6"></i>
+      <h5 class="fw-bold text-white mb-0 d-flex align-items-center gap-2" style="font-size: 1.1rem;">
+        <i class="fas fa-comments text-white-50 fs-6"></i>
         {{ topic.messages.length }} {{ topic.messages.length === 1 ? 'Resposta' : 'Respostas' }}
       </h5>
     </div>
@@ -103,10 +103,10 @@
             </div>
             <div class="flex-grow-1 min-w-0">
               <div class="d-flex align-items-center gap-2 mb-2">
-                <span class="fw-bold text-dark" style="font-size: 0.9rem;">{{ msg.authorName }}</span>
-                <span class="text-muted" style="font-size: 0.7rem;"><i class="fas fa-circle mx-1" style="font-size: 0.25rem; vertical-align: middle;"></i>{{ formatDate(msg.createdAt) }}</span>
+                <span class="fw-bold text-white" style="font-size: 0.9rem;">{{ msg.authorName }}</span>
+                <span class="text-white-50" style="font-size: 0.7rem;"><i class="fas fa-circle mx-1" style="font-size: 0.25rem; vertical-align: middle;"></i>{{ formatDate(msg.createdAt) }}</span>
               </div>
-              <div class="text-dark" style="font-size: 0.88rem; line-height: 1.5; white-space: pre-wrap;">
+              <div class="text-white" style="font-size: 0.88rem; line-height: 1.5; white-space: pre-wrap;">
                 {{ msg.content }}
               </div>
             </div>
@@ -119,11 +119,11 @@
     <div class="card border-0 rounded-4 shadow-sm p-4 mt-4" *ngIf="topic.status !== 'Closed'">
       <div class="d-flex align-items-center gap-2 mb-3">
         <i class="fas fa-reply text-primary"></i>
-        <h6 class="fw-bold text-dark mb-0">Deixe sua resposta</h6>
+        <h6 class="fw-bold text-white mb-0">Deixe sua resposta</h6>
       </div>
       <form (submit)="$event.preventDefault(); submitReply()">
         <div class="mb-3">
-          <textarea class="form-control rounded-4 bg-light border-0 shadow-none p-3"
+          <textarea class="form-control rounded-4 bg-secondary bg-opacity-10 border-0 shadow-none p-3"
                     rows="4"
                     placeholder="Escreva sua resposta ou solução..."
                     [(ngModel)]="newReplyContent"
@@ -143,10 +143,10 @@
     </div>
 
     <!-- Closed Topic Notice -->
-    <div class="card border-0 rounded-4 bg-light p-4 text-center mt-4" *ngIf="topic.status === 'Closed'">
-      <i class="fas fa-lock text-muted mb-2 fs-3"></i>
-      <h6 class="fw-bold text-dark">Tópico Fechado</h6>
-      <p class="text-muted small mb-0">Este tópico não aceita mais novas respostas.</p>
+    <div class="card border-0 rounded-4 bg-secondary bg-opacity-10 p-4 text-center mt-4" *ngIf="topic.status === 'Closed'">
+      <i class="fas fa-lock text-white-50 mb-2 fs-3"></i>
+      <h6 class="fw-bold text-white">Tópico Fechado</h6>
+      <p class="text-white-50 small mb-0">Este tópico não aceita mais novas respostas.</p>
     </div>
 
   </div>

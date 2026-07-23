@@ -25,7 +25,7 @@
         max-width: 600px;
         min-height: 50vh !important;
         border-radius: 2rem;
-        background: rgba(255, 255, 255, 0.95);
+        background: rgba(27, 27, 27, 0.95);
         backdrop-filter: blur(10px);
     }
 }
@@ -129,7 +129,7 @@
     &:focus {
         box-shadow: none;
         border-color: #212529;
-        background-color: #ffffff !important;
+        background-color: #1B1B1B !important;
     }
 }
 

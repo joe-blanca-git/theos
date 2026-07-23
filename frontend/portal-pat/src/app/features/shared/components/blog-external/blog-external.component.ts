@@ -40,7 +40,7 @@ export class BlogExternalComponent implements OnChanges {
         id: 0,
         title: 'Nenhuma publicação',
         excerpt: 'Aguarde novas publicações.',
-        image: 'https://s2.glbimg.com/Deg8YEkSphxP1LqSUr0QBH_O82c=/780x440/e.glbimg.com/og/ed/f/original/2022/04/20/r4f167447_rrd_1x.jpg',
+        image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlzgb1b_n31TF86o9o091sQ3XSuhmIVdNUXbhKZRjOJauSTSVxv2-pSoU&s=10',
         category: 'Blog',
         date: ''
       };
@@ -53,7 +53,7 @@ export class BlogExternalComponent implements OnChanges {
       id: n.id,
       title: n.title,
       excerpt: n.subject || 'Sem resumo',
-      image: n.headerImageUrl || 'https://d2yghbees9788u.cloudfront.net/futurecom/2023/03/Tratores-Autnomos-Saiba-como-funciona-essa-tecnologia.jpg',
+      image: n.headerImageUrl || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlzgb1b_n31TF86o9o091sQ3XSuhmIVdNUXbhKZRjOJauSTSVxv2-pSoU&s=10',
       category: n.tags ? n.tags.split(',')[0].trim() : 'Geral',
       date: new Date(n.publishDate).toLocaleDateString()
     });

@@ -15,9 +15,9 @@
       <div class="card border-0 rounded-4 shadow-sm financial-summary-card p-4 h-100">
         <div class="d-flex align-items-start justify-content-between">
           <div class="flex-grow-1">
-            <span class="text-muted fw-semibold text-uppercase font-monospace"
+            <span class="text-white-50 fw-semibold text-uppercase font-monospace"
                   style="font-size: 0.68rem; letter-spacing: 0.04rem;">Total Investido</span>
-            <h4 class="fw-extrabold text-dark mt-2 mb-0" style="font-size: 1.35rem; letter-spacing: -0.02rem;">
+            <h4 class="fw-extrabold text-white mt-2 mb-0" style="font-size: 1.35rem; letter-spacing: -0.02rem;">
               {{ formatCurrency(summary.totalInvested) }}
             </h4>
           </div>
@@ -27,7 +27,7 @@
         </div>
         <div class="mt-3 pt-2 border-top border-secondary border-opacity-10 d-flex align-items-center gap-1">
           <i class="fas fa-check-circle text-success" style="font-size: 0.7rem;"></i>
-          <span class="text-muted" style="font-size: 0.72rem;">em compras concluídas</span>
+          <span class="text-white-50" style="font-size: 0.72rem;">em compras concluídas</span>
         </div>
       </div>
     </div>
@@ -36,9 +36,9 @@
       <div class="card border-0 rounded-4 shadow-sm financial-summary-card p-4 h-100">
         <div class="d-flex align-items-start justify-content-between">
           <div class="flex-grow-1">
-            <span class="text-muted fw-semibold text-uppercase font-monospace"
+            <span class="text-white-50 fw-semibold text-uppercase font-monospace"
                   style="font-size: 0.68rem; letter-spacing: 0.04rem;">Cursos Adquiridos</span>
-            <h4 class="fw-extrabold text-dark mt-2 mb-0" style="font-size: 1.35rem; letter-spacing: -0.02rem;">
+            <h4 class="fw-extrabold text-white mt-2 mb-0" style="font-size: 1.35rem; letter-spacing: -0.02rem;">
               {{ summary.coursesAcquired }} cursos
             </h4>
           </div>
@@ -47,8 +47,8 @@
           </div>
         </div>
         <div class="mt-3 pt-2 border-top border-secondary border-opacity-10 d-flex align-items-center gap-1">
-          <i class="fas fa-book-open text-muted" style="font-size: 0.7rem;"></i>
-          <span class="text-muted" style="font-size: 0.72rem;">disponíveis para acesso</span>
+          <i class="fas fa-book-open text-white-50" style="font-size: 0.7rem;"></i>
+          <span class="text-white-50" style="font-size: 0.72rem;">disponíveis para acesso</span>
         </div>
       </div>
     </div>
@@ -60,11 +60,11 @@
 
       <div class="col-12 col-md-8">
         <div class="position-relative">
-          <span class="position-absolute start-0 top-50 translate-middle-y ps-3 text-muted" style="font-size: 0.82rem;">
+          <span class="position-absolute start-0 top-50 translate-middle-y ps-3 text-white-50" style="font-size: 0.82rem;">
             <i class="fas fa-search"></i>
           </span>
           <input type="text"
-                 class="form-control rounded-pill ps-5 bg-light border-0 shadow-none py-2"
+                 class="form-control rounded-pill ps-5 bg-secondary bg-opacity-10 border-0 shadow-none py-2"
                  placeholder="Buscar por nome ou código de transação..."
                  [(ngModel)]="searchTerm"
                  (ngModelChange)="currentPage = 1"
@@ -73,7 +73,7 @@
       </div>
 
       <div class="col-12 col-md-3">
-        <select class="form-select rounded-pill bg-light border-0 shadow-none py-2"
+        <select class="form-select rounded-pill bg-secondary bg-opacity-10 border-0 shadow-none py-2"
                 [(ngModel)]="selectedStatus"
                 (ngModelChange)="currentPage = 1"
                 style="font-size: 0.83rem;">
@@ -95,10 +95,10 @@
 
   <div class="card border-0 rounded-4 shadow-sm overflow-hidden">
 
-    <div class="card-header bg-white border-bottom border-secondary border-opacity-10 px-4 py-3 d-flex align-items-center justify-content-between">
-      <span class="fw-bold text-dark small">
+    <div class="card-header bg-dark border-bottom border-secondary border-opacity-10 px-4 py-3 d-flex align-items-center justify-content-between">
+      <span class="fw-bold text-white small">
         Histórico de Pagamentos
-        <span class="text-muted fw-normal ms-1" style="font-size: 0.78rem;">
+        <span class="text-white-50 fw-normal ms-1" style="font-size: 0.78rem;">
           ({{ filteredTransactions.length }} {{ filteredTransactions.length === 1 ? 'registro' : 'registros' }})
         </span>
       </span>
@@ -123,7 +123,7 @@
     </div>
 
     <!-- Skeleton Cards (Mobile) -->
-    <div *ngIf="isLoading" class="p-3 d-block d-md-none bg-light">
+    <div *ngIf="isLoading" class="p-3 d-block d-md-none bg-secondary bg-opacity-10">
       <div class="card mb-3 border-0 shadow-sm rounded-4" *ngFor="let i of [1,2,3,4]">
         <div class="card-body p-3">
           <div class="d-flex justify-content-between align-items-start mb-2">
@@ -147,10 +147,10 @@
       <div class="py-3">
         <div class="empty-state-icon mx-auto mb-3 d-flex align-items-center justify-content-center rounded-circle"
              style="width:72px; height:72px; background: rgba(99,102,241,0.07);">
-          <i class="fas fa-receipt text-muted" style="font-size: 1.8rem; opacity: 0.4;"></i>
+          <i class="fas fa-receipt text-white-50" style="font-size: 1.8rem; opacity: 0.4;"></i>
         </div>
-        <h6 class="fw-bold text-dark mb-1">Nenhuma transação encontrada</h6>
-        <p class="text-muted small mb-3" style="font-size: 0.82rem;">
+        <h6 class="fw-bold text-white mb-1">Nenhuma transação encontrada</h6>
+        <p class="text-white-50 small mb-3" style="font-size: 0.82rem;">
           Tente ajustar os filtros ou termo de busca para encontrar o que procura.
         </p>
         <button class="btn btn-outline-dark btn-sm rounded-pill px-4 py-2" (click)="clearFilters()">
@@ -164,22 +164,22 @@
       <table class="table transaction-table mb-0 align-middle">
         <thead class="table-header">
           <tr>
-            <th class="ps-4 py-3 fw-semibold text-muted" style="font-size: 0.73rem; text-transform: uppercase; letter-spacing: 0.04rem;">
+            <th class="ps-4 py-3 fw-semibold text-white-50" style="font-size: 0.73rem; text-transform: uppercase; letter-spacing: 0.04rem;">
               Descrição
             </th>
-            <th class="py-3 fw-semibold text-muted sortable-col" style="font-size: 0.73rem; text-transform: uppercase; letter-spacing: 0.04rem;" (click)="sortBy('value')">
+            <th class="py-3 fw-semibold text-white-50 sortable-col" style="font-size: 0.73rem; text-transform: uppercase; letter-spacing: 0.04rem;" (click)="sortBy('value')">
               Valor <i class="fas ms-1" [class.fa-sort-up]="sortField==='value' && sortDirection==='asc'" [class.fa-sort-down]="sortField==='value' && sortDirection==='desc'" [class.fa-sort]="sortField!=='value'"></i>
             </th>
-            <th class="py-3 fw-semibold text-muted d-none d-lg-table-cell" style="font-size: 0.73rem; text-transform: uppercase; letter-spacing: 0.04rem;">
+            <th class="py-3 fw-semibold text-white-50 d-none d-lg-table-cell" style="font-size: 0.73rem; text-transform: uppercase; letter-spacing: 0.04rem;">
               Pagamento
             </th>
-            <th class="py-3 fw-semibold text-muted" style="font-size: 0.73rem; text-transform: uppercase; letter-spacing: 0.04rem;">
+            <th class="py-3 fw-semibold text-white-50" style="font-size: 0.73rem; text-transform: uppercase; letter-spacing: 0.04rem;">
               Status
             </th>
-            <th class="py-3 fw-semibold text-muted sortable-col d-none d-md-table-cell" style="font-size: 0.73rem; text-transform: uppercase; letter-spacing: 0.04rem;" (click)="sortBy('chargeDate')">
+            <th class="py-3 fw-semibold text-white-50 sortable-col d-none d-md-table-cell" style="font-size: 0.73rem; text-transform: uppercase; letter-spacing: 0.04rem;" (click)="sortBy('chargeDate')">
               Data <i class="fas ms-1" [class.fa-sort-up]="sortField==='chargeDate' && sortDirection==='asc'" [class.fa-sort-down]="sortField==='chargeDate' && sortDirection==='desc'" [class.fa-sort]="sortField!=='chargeDate'"></i>
             </th>
-            <th class="pe-4 py-3 fw-semibold text-muted text-end d-none d-md-table-cell" style="font-size: 0.73rem; text-transform: uppercase; letter-spacing: 0.04rem;">
+            <th class="pe-4 py-3 fw-semibold text-white-50 text-end d-none d-md-table-cell" style="font-size: 0.73rem; text-transform: uppercase; letter-spacing: 0.04rem;">
               Ações
             </th>
           </tr>
@@ -193,8 +193,8 @@
                   <i class="fas" [ngClass]="tx.icon" [style.color]="tx.color" style="font-size: 0.9rem;"></i>
                 </div>
                 <div>
-                  <div class="fw-semibold text-dark" style="font-size: 0.85rem; line-height: 1.3;">{{ tx.name }}</div>
-                  <div class="text-muted font-monospace mt-0.5" style="font-size: 0.67rem;">{{ tx.transactionCode }}</div>
+                  <div class="fw-semibold text-white" style="font-size: 0.85rem; line-height: 1.3;">{{ tx.name }}</div>
+                  <div class="text-white-50 font-monospace mt-0.5" style="font-size: 0.67rem;">{{ tx.transactionCode }}</div>
                   <span class="badge rounded-pill mt-1 px-2 py-1 fw-semibold badge-type-course"
                         style="font-size: 0.62rem;">
                     <i class="fas me-1 fa-book"></i>
@@ -204,10 +204,10 @@
               </div>
             </td>
             <td class="py-3" data-label="Valor">
-              <span class="fw-extrabold text-dark" style="font-size: 0.92rem;">{{ formatCurrency(tx.value) }}</span>
+              <span class="fw-extrabold text-white" style="font-size: 0.92rem;">{{ formatCurrency(tx.value) }}</span>
             </td>
             <td class="py-3 d-none d-lg-table-cell" data-label="Pagamento">
-              <div class="d-flex align-items-center gap-2 text-muted" style="font-size: 0.8rem;">
+              <div class="d-flex align-items-center gap-2 text-white-50" style="font-size: 0.8rem;">
                 <i class="fas" [ngClass]="getPaymentMethodIcon(tx.paymentMethod)"></i>
                 <span>{{ tx.paymentMethod }}</span>
               </div>
@@ -221,8 +221,8 @@
               </span>
             </td>
             <td class="py-3 d-none d-md-table-cell" data-label="Data">
-              <div class="text-dark" style="font-size: 0.82rem;">{{ tx.chargeDate }}</div>
-              <div class="text-muted" style="font-size: 0.7rem;" *ngIf="tx.nextRenewal">
+              <div class="text-white" style="font-size: 0.82rem;">{{ tx.chargeDate }}</div>
+              <div class="text-white-50" style="font-size: 0.7rem;" *ngIf="tx.nextRenewal">
                 <i class="fas fa-redo me-1"></i> {{ tx.nextRenewal }}
               </div>
             </td>
@@ -238,7 +238,7 @@
     </div>
 
     <!-- Cards Mobile -->
-    <div class="d-block d-md-none p-3 bg-light" *ngIf="!isLoading && filteredTransactions.length > 0">
+    <div class="d-block d-md-none p-3 bg-secondary bg-opacity-10" *ngIf="!isLoading && filteredTransactions.length > 0">
       <div class="card mb-3 border-0 shadow-sm rounded-4 transaction-row" *ngFor="let tx of paginatedTransactions" (click)="openDetail(tx)">
         <div class="card-body p-3">
           <div class="d-flex justify-content-between align-items-start mb-2">
@@ -249,7 +249,7 @@
               </div>
               <div>
                 <h6 class="mb-0 fw-bold" style="font-size: 0.85rem;">{{ tx.name }}</h6>
-                <small class="text-muted font-monospace" style="font-size: 0.65rem;">{{ tx.transactionCode }}</small>
+                <small class="text-white-50 font-monospace" style="font-size: 0.65rem;">{{ tx.transactionCode }}</small>
               </div>
             </div>
           </div>
@@ -263,17 +263,17 @@
               </span>
             </div>
             <div class="text-end">
-              <div class="fw-extrabold text-dark" style="font-size: 0.95rem;">{{ formatCurrency(tx.value) }}</div>
-              <small class="text-muted" style="font-size: 0.7rem;">{{ tx.chargeDate }}</small>
+              <div class="fw-extrabold text-white" style="font-size: 0.95rem;">{{ formatCurrency(tx.value) }}</div>
+              <small class="text-white-50" style="font-size: 0.7rem;">{{ tx.chargeDate }}</small>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="card-footer bg-white border-top border-secondary border-opacity-10 px-4 py-3 d-flex align-items-center justify-content-between"
+    <div class="card-footer bg-dark border-top border-secondary border-opacity-10 px-4 py-3 d-flex align-items-center justify-content-between"
          *ngIf="!isLoading && totalPages > 1">
-      <span class="text-muted" style="font-size: 0.78rem;">
+      <span class="text-white-50" style="font-size: 0.78rem;">
         Página {{ currentPage }} de {{ totalPages }}
       </span>
       <div class="d-flex gap-1">
@@ -300,7 +300,7 @@
 </div>
 
 <div class="custom-modal-backdrop animated-fade-in" *ngIf="showDetailModal && selectedTransaction" (click)="closeDetail()">
-  <div class="custom-modal-box rounded-5 bg-white p-4 shadow-2xl animate-scale-up"
+  <div class="custom-modal-box rounded-5 bg-dark p-4 shadow-2xl animate-scale-up"
        style="max-width: 500px; width: 94vw;"
        (click)="$event.stopPropagation()">
 
@@ -312,8 +312,8 @@
           <i class="fas" [ngClass]="selectedTransaction.icon" [style.color]="selectedTransaction.color" style="font-size: 1.1rem;"></i>
         </div>
         <div>
-          <h6 class="fw-extrabold text-dark mb-0" style="font-size: 0.95rem;">Detalhes da Transação</h6>
-          <span class="text-muted font-monospace" style="font-size: 0.67rem;">{{ selectedTransaction.transactionCode }}</span>
+          <h6 class="fw-extrabold text-white mb-0" style="font-size: 0.95rem;">Detalhes da Transação</h6>
+          <span class="text-white-50 font-monospace" style="font-size: 0.67rem;">{{ selectedTransaction.transactionCode }}</span>
         </div>
       </div>
       <button class="btn btn-outline-dark border-0 rounded-circle p-1.5" (click)="closeDetail()">
@@ -342,7 +342,7 @@
       <div class="detail-row">
         <span class="detail-label">Forma de Pagamento</span>
         <span class="detail-value">
-          <i class="fas me-1 text-muted" [ngClass]="getPaymentMethodIcon(selectedTransaction.paymentMethod)"></i>
+          <i class="fas me-1 text-white-50" [ngClass]="getPaymentMethodIcon(selectedTransaction.paymentMethod)"></i>
           {{ selectedTransaction.paymentMethod }}
         </span>
       </div>

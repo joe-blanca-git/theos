@@ -1,5 +1,5 @@
 /* Custom Variables matching Theos Portal Aluno Identity */
-$primary-glow: #6366f1;
+$primary-glow: #C62828;
 $bg-light-modern: #f8fafc;
 $transition-speed: 0.3s;
 $cubic-bezier: cubic-bezier(0.4, 0, 0.2, 1);
@@ -7,14 +7,14 @@ $cubic-bezier: cubic-bezier(0.4, 0, 0.2, 1);
 :host {
   display: block;
   font-family: 'Outfit', 'Inter', sans-serif;
-  color: #0f172a;
+  color: #FFFFFF;
 }
 
 /* --- Search input layout configurations --- */
 .search-wrapper {
   .form-control {
     border: 1px solid rgba(0, 0, 0, 0.05);
-    background-color: #ffffff;
+    background-color: #1B1B1B;
     transition: all 0.25s ease;
 
     &:focus {
@@ -43,13 +43,13 @@ $cubic-bezier: cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   &.inactive-pill {
-    background-color: #ffffff !important;
-    color: #64748b !important;
+    background-color: #1B1B1B !important;
+    color: #B0B0B0!important;
     border: 1px solid rgba(0,0,0,0.03) !important;
 
     &:hover {
-      background-color: #f1f5f9 !important;
-      color: #0f172a !important;
+      background-color: #121212 !important;
+      color: #FFFFFF!important;
       transform: translateY(-1px);
     }
   }

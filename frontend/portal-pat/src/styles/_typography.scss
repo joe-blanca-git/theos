@@ -1,9 +1,10 @@
-// _typography.scss
+// _typography.scss — Theos Dark Theme Typography
+// ═══════════════════════════════════════════════════
 
 body {
   font-family: $font-family-sans-serif;
-  color: $body-color;
-  background-color: $body-bg;
+  color: $text-main;
+  background-color: $bg-principal;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -13,7 +14,7 @@ h1, h2, h3, h4, h5, h6,
 .h1, .h2, .h3, .h4, .h5, .h6 {
   font-family: $headings-font-family;
   font-weight: $headings-font-weight;
-  color: $dark;
+  color: $text-title;
   margin-bottom: 0.5rem;
 }
 
@@ -24,10 +25,6 @@ h4, .h4 { font-size: 1.5rem; letter-spacing: -0.025em; }
 h5, .h5 { font-size: 1.25rem; letter-spacing: -0.01em; }
 h6, .h6 { font-size: 1rem; letter-spacing: -0.01em; }
 
-.text-muted {
-  color: $slate-500 !important;
-}
-
 .small, small {
   font-size: 0.875rem;
   line-height: 1.25rem;
@@ -36,11 +33,30 @@ h6, .h6 { font-size: 1rem; letter-spacing: -0.01em; }
 p {
   margin-top: 0;
   margin-bottom: 1rem;
+  color: $text-main;
 }
 
 label {
   font-weight: 500;
-  color: $slate-700;
+  color: $text-secondary;
   font-size: 0.875rem;
   margin-bottom: 0.25rem;
+}
+
+a {
+  color: $theos-red;
+  text-decoration: none;
+
+  &:hover {
+    color: lighten($theos-red, 10%);
+  }
+}
+
+// Utilitários de texto
+.fw-extrabold {
+  font-weight: 800;
+}
+
+.text-indigo {
+  color: $theos-red !important; // Redireciona referência legada
 }

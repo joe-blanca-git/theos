@@ -34,6 +34,14 @@ export class CoursesService extends BaseService {
     return this.http.post<number>(`${this.urlApiTheos}courses/modules`, moduleData, this.GetAuthHeaderJson());
   }
 
+  updateModule(moduleData: any): Observable<any> {
+    return this.http.put<any>(`${this.urlApiTheos}courses/modules`, moduleData, this.GetAuthHeaderJson());
+  }
+
+  deleteModule(id: number): Observable<any> {
+    return this.http.delete<any>(`${this.urlApiTheos}courses/modules/${id}`, this.GetAuthHeaderJson());
+  }
+
   createLesson(lessonData: any): Observable<number> {
     return this.http.post<number>(`${this.urlApiTheos}courses/lessons`, lessonData, this.GetAuthHeaderJson());
   }
