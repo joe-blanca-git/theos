@@ -1,13 +1,13 @@
 // --- Variables ---
-$primary: #0056b3;
-$primary-hover: #004494;
-$secondary: #6c757d;
-$background: #f8f9fa;
-$surface: #ffffff;
-$text-main: #333333;
-$text-muted: #6c757d;
-$border: #e9ecef;
-$success: #28a745;
+$primary: #C62828;
+$primary-hover: #B71C1C;
+$secondary: #2C2C2C;
+$background: #0B0B0B;
+$surface: #1B1B1B;
+$text-main: #FFFFFF;
+$text-muted: rgba(255, 255, 255, 0.5);
+$border: rgba(255, 255, 255, 0.05);
+$success: #10b981;
 
 $border-radius-lg: 12px;
 $border-radius-md: 8px;
@@ -152,7 +152,7 @@ $shadow-md: 0 4px 6px rgba(0,0,0,0.08);
     font-size: 1.4rem;
     font-weight: 700;
     margin: 0 0 8px 0;
-    color: #1a1a1a;
+    color: #ffffff;
     
     @media (min-width: 768px) {
       font-size: 1.8rem;
@@ -180,7 +180,7 @@ $shadow-md: 0 4px 6px rgba(0,0,0,0.08);
 
   .lesson-description {
     line-height: 1.6;
-    color: #4a4a4a;
+    color: #cccccc;
     margin: 0;
   }
 }
@@ -237,10 +237,10 @@ $shadow-md: 0 4px 6px rgba(0,0,0,0.08);
   }
 
   .btn-secondary {
-    background: #e9ecef;
+    background: #252525;
     color: $text-main;
     &:hover:not(:disabled) {
-      background: #dee2e6;
+      background: #333333;
     }
   }
 
@@ -438,7 +438,7 @@ $shadow-md: 0 4px 6px rgba(0,0,0,0.08);
           
           .author {
             font-weight: 600;
-            color: #1a1a1a;
+            color: #ffffff;
           }
           .date {
             font-size: 0.85rem;
@@ -449,7 +449,7 @@ $shadow-md: 0 4px 6px rgba(0,0,0,0.08);
         .text {
           margin: 0;
           line-height: 1.5;
-          color: #4a4a4a;
+          color: #cccccc;
         }
 
         .topic-link {
@@ -512,7 +512,7 @@ $shadow-md: 0 4px 6px rgba(0,0,0,0.08);
       }
       
       &:hover {
-        background: #fdfdfd;
+        background: #252525;
       }
       
       .module-info {
@@ -523,7 +523,7 @@ $shadow-md: 0 4px 6px rgba(0,0,0,0.08);
         .module-title {
           font-weight: 700;
           font-size: 1.05rem;
-          color: #2c3e50;
+          color: #ffffff;
         }
         
         .module-progress {
@@ -540,12 +540,12 @@ $shadow-md: 0 4px 6px rgba(0,0,0,0.08);
     }
 
     &.expanded .module-header {
-      background: #f8faff;
+      background: #121212;
       border-bottom: 1px solid $border;
     }
     
     .module-body {
-      background: #fafafa;
+      background: #0F0F0F;
       padding: 0;
       animation: slideDown 0.3s ease-out forwards;
       
@@ -568,11 +568,11 @@ $shadow-md: 0 4px 6px rgba(0,0,0,0.08);
           }
           
           &:hover {
-            background: #f0f0f0;
+            background: #252525;
           }
           
           &.active {
-            background: #eff6ff;
+            background: rgba(198, 40, 40, 0.1);
             border-left-color: $primary;
             
             .lesson-name {
@@ -593,7 +593,7 @@ $shadow-md: 0 4px 6px rgba(0,0,0,0.08);
             
             .lesson-name {
               font-size: 0.95rem;
-              color: #444;
+              color: #ffffff;
             }
             
             .lesson-duration {

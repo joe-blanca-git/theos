@@ -11,9 +11,9 @@
 .payment-card {
   &.active {
     .method-wrapper {
-      background-color: #eef2ff !important;
+      background-color: rgba(198, 40, 40, 0.1) !important;
       border-color: #C62828 !important;
-      box-shadow: 0 4px 6px -1px rgba(99, 102, 241, 0.1), 0 2px 4px -1px rgba(99, 102, 241, 0.06);
+      box-shadow: 0 4px 6px -1px rgba(198, 40, 40, 0.1), 0 2px 4px -1px rgba(198, 40, 40, 0.06);
 
       .form-check-input {
         background-color: #C62828;
