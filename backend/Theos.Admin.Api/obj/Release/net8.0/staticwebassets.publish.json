@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "iRRDMWTcjBbMwFeMYCqFvcLX42H7IO/Cb0TEcAVexoI=",
+  "Source": "Theos.Admin.Api",
+  "BasePath": "_content/Theos.Admin.Api",
+  "Mode": "Default",
+  "ManifestType": "Publish",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}

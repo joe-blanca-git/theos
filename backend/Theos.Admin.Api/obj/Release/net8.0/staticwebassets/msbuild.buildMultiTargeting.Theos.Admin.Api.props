@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="../build/Theos.Admin.Api.props" />
+</Project>

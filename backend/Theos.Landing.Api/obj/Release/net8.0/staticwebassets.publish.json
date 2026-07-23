@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "fPcm/dIIyJLdoBH4fw8yXJY8ziGCoJL3mFgCILZDTAQ=",
+  "Source": "Theos.Landing.Api",
+  "BasePath": "_content/Theos.Landing.Api",
+  "Mode": "Default",
+  "ManifestType": "Publish",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
