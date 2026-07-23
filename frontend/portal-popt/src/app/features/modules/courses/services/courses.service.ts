@@ -26,6 +26,10 @@ export class CoursesService extends BaseService {
     return this.http.post<number>(`${this.urlApiTheos}courses`, courseData, this.GetAuthHeaderJson());
   }
 
+  updateCourse(courseData: Partial<Course>): Observable<any> {
+    return this.http.put<any>(`${this.urlApiTheos}courses`, courseData, this.GetAuthHeaderJson());
+  }
+
   toggleCourseStatus(id: number): Observable<{ active: boolean }> {
     return this.http.patch<{ active: boolean }>(`${this.urlApiTheos}courses/${id}/toggle-status`, {}, this.GetAuthHeaderJson());
   }
@@ -44,6 +48,14 @@ export class CoursesService extends BaseService {
 
   createLesson(lessonData: any): Observable<number> {
     return this.http.post<number>(`${this.urlApiTheos}courses/lessons`, lessonData, this.GetAuthHeaderJson());
+  }
+
+  updateLesson(lessonData: any): Observable<any> {
+    return this.http.put<any>(`${this.urlApiTheos}courses/lessons`, lessonData, this.GetAuthHeaderJson());
+  }
+
+  deleteLesson(id: number): Observable<any> {
+    return this.http.delete<any>(`${this.urlApiTheos}courses/lessons/${id}`, this.GetAuthHeaderJson());
   }
 
   uploadImage(file: File): Observable<{ url: string }> {

@@ -147,3 +147,49 @@
     background-position: 300px;
   }
 }
+
+/* Custom Modal Scroll and Height */
+.modal-content {
+  max-height: 90vh;
+}
+
+.modal-body {
+  overflow-y: auto;
+  
+  /* Custom Scrollbar for Webkit */
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    
+    &:hover {
+      background: rgba(255, 255, 255, 0.4);
+    }
+  }
+}
+
+/* Custom Accordion override */
+.custom-accordion .accordion-button::after {
+  filter: invert(1) grayscale(100%) brightness(200%);
+}
+.custom-accordion .accordion-button:not(.collapsed) {
+  background-color: #212529;
+  color: white;
+  box-shadow: none;
+}
+.custom-accordion .accordion-button:focus {
+  box-shadow: none;
+}
+
+/* Fix for stacked modals backdrops in Bootstrap 5 */
+::ng-deep .modal-backdrop ~ .modal-backdrop {
+  z-index: 1056 !important;
+}

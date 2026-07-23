@@ -40,14 +40,19 @@ export class CoursesComponent implements OnInit {
   selectedCourseId: number | null = null;
   selectedCourseForLesson: Course | null = null;
   selectedCourseForModules: Course | null = null;
+  courseToEdit: any | null = null;
   moduleToEdit: any | null = null;
   moduleToDelete: any | null = null;
+  lessonToEdit: any | null = null;
+  lessonToDelete: any | null = null;
+  selectedCourseForLessons: Course | null = null;
   
   isSubmittingCourse = false;
   isSubmittingModule = false;
   isSavingLesson = false;
   isTogglingStatus = false;
   isDeletingModule = false;
+  isDeletingLesson = false;
 
   categories: any[] = [];
 
@@ -71,6 +76,8 @@ export class CoursesComponent implements OnInit {
   @ViewChild('confirmToggleModal') confirmToggleModalRef!: ElementRef;
   @ViewChild('moduleListModal') moduleListModalRef!: ElementRef;
   @ViewChild('confirmDeleteModuleModal') confirmDeleteModuleModalRef!: ElementRef;
+  @ViewChild('lessonListModal') lessonListModalRef!: ElementRef;
+  @ViewChild('confirmDeleteLessonModal') confirmDeleteLessonModalRef!: ElementRef;
 
   private courseModalInstance: any;
   private moduleModalInstance: any;
@@ -78,6 +85,8 @@ export class CoursesComponent implements OnInit {
   private confirmToggleModalInstance: any;
   private moduleListModalInstance: any;
   private confirmDeleteModuleModalInstance: any;
+  private lessonListModalInstance: any;
+  private confirmDeleteLessonModalInstance: any;
 
   courseToToggle: any = null;
 
@@ -101,6 +110,8 @@ export class CoursesComponent implements OnInit {
     this.confirmToggleModalInstance = new bootstrap.Modal(this.confirmToggleModalRef.nativeElement);
     this.moduleListModalInstance = new bootstrap.Modal(this.moduleListModalRef.nativeElement);
     this.confirmDeleteModuleModalInstance = new bootstrap.Modal(this.confirmDeleteModuleModalRef.nativeElement);
+    this.lessonListModalInstance = new bootstrap.Modal(this.lessonListModalRef.nativeElement);
+    this.confirmDeleteLessonModalInstance = new bootstrap.Modal(this.confirmDeleteLessonModalRef.nativeElement);
   }
 
   initForms() {
@@ -145,28 +156,38 @@ export class CoursesComponent implements OnInit {
     this.coursesService.getCourses().subscribe({
       next: (data) => {
         this.courses = data;
-        this.totalCourses = data.length;
+        this.totalCourses = data.filter(c => c.active).length;
         
         let modulesCount = 0;
         let lessonsCount = 0;
-        let totalWorkload = 0;
+        let totalSeconds = 0;
 
         data.forEach(course => {
           modulesCount += course.modules ? course.modules.length : 0;
-          totalWorkload += course.workloadHours || 0;
           if (course.modules) {
             course.modules.forEach(module => {
               lessonsCount += module.lessons ? module.lessons.length : 0;
+              if (module.lessons) {
+                module.lessons.forEach(lesson => {
+                  totalSeconds += lesson.durationSeconds || 0;
+                });
+              }
             });
           }
         });
 
         this.totalModules = modulesCount;
         this.totalLessons = lessonsCount;
-        this.averageWorkload = this.totalCourses > 0 ? Math.round(totalWorkload / this.totalCourses) : 0;
+        
+        // Convert seconds to hours
+        this.averageWorkload = Math.round(totalSeconds / 3600);
 
         if (this.selectedCourseForModules) {
           this.selectedCourseForModules = this.courses.find(c => c.id === this.selectedCourseForModules?.id) || null;
+        }
+
+        if (this.selectedCourseForLessons) {
+          this.selectedCourseForLessons = this.courses.find(c => c.id === this.selectedCourseForLessons?.id) || null;
         }
 
         this.isLoading = false;
@@ -192,6 +213,7 @@ export class CoursesComponent implements OnInit {
     this.coursesService.toggleCourseStatus(this.courseToToggle.id).subscribe({
       next: (res) => {
         this.courseToToggle.active = res.active;
+        this.totalCourses = this.courses.filter(c => c.active).length;
         this.confirmToggleModalInstance.hide();
         this.toastService.success(`Curso ${res.active ? 'ativado' : 'desativado'} com sucesso!`);
         this.courseToToggle = null;
@@ -209,9 +231,27 @@ export class CoursesComponent implements OnInit {
   }
 
   openNewCourseModal() {
+    this.courseToEdit = null;
     this.courseForm.reset({ level: 'Iniciante', priceSingle: 0, categoryId: '' });
     this.selectedCoverImage = null;
     this.coverImagePreview = null;
+    this.coverImageError = null;
+    this.courseModalInstance.show();
+  }
+
+  openEditCourseModal(course: Course) {
+    this.courseToEdit = course;
+    this.courseForm.patchValue({
+      name: course.name,
+      description: course.description,
+      descriptionSub: course.descriptionSub,
+      level: course.level || 'Iniciante',
+      priceSingle: course.priceSingle || 0,
+      imgCoverLink: course.imgCoverLink,
+      categoryId: course.categories && course.categories.length > 0 ? course.categories[0].id : ''
+    });
+    this.selectedCoverImage = null;
+    this.coverImagePreview = course.imgCoverLink || null;
     this.coverImageError = null;
     this.courseModalInstance.show();
   }
@@ -283,17 +323,36 @@ export class CoursesComponent implements OnInit {
     }
     delete payload.categoryId;
 
-    this.coursesService.createCourse(payload).subscribe({
-      next: (id) => {
-        this.isSubmittingCourse = false;
-        this.courseModalInstance.hide();
-        this.loadCourses(); // Reload list to show the new course
-      },
-      error: (err) => {
-        console.error('Error creating course', err);
-        this.isSubmittingCourse = false;
-      }
-    });
+    if (this.courseToEdit) {
+      payload.id = this.courseToEdit.id;
+      this.coursesService.updateCourse(payload).subscribe({
+        next: () => {
+          this.toastService.success('Curso atualizado com sucesso!');
+          this.isSubmittingCourse = false;
+          this.courseModalInstance.hide();
+          this.loadCourses(); // Reload list to show updates
+        },
+        error: (err) => {
+          console.error('Error updating course', err);
+          this.toastService.error('Erro ao atualizar curso.');
+          this.isSubmittingCourse = false;
+        }
+      });
+    } else {
+      this.coursesService.createCourse(payload).subscribe({
+        next: (id) => {
+          this.toastService.success('Curso criado com sucesso!');
+          this.isSubmittingCourse = false;
+          this.courseModalInstance.hide();
+          this.loadCourses(); // Reload list to show the new course
+        },
+        error: (err) => {
+          console.error('Error creating course', err);
+          this.toastService.error('Erro ao criar curso.');
+          this.isSubmittingCourse = false;
+        }
+      });
+    }
   }
 
   openAddModuleModal(courseId: number) {
@@ -301,12 +360,7 @@ export class CoursesComponent implements OnInit {
     this.moduleToEdit = null;
     this.moduleForm.reset();
     
-    if (this.selectedCourseForModules) {
-      this.moduleListModalInstance.hide();
-      setTimeout(() => this.moduleModalInstance.show(), 400);
-    } else {
-      this.moduleModalInstance.show();
-    }
+    this.moduleModalInstance.show();
   }
 
   openEditModuleModal(module: any, courseId: number) {
@@ -319,12 +373,7 @@ export class CoursesComponent implements OnInit {
       imgCoverLink: module.imgCoverLink
     });
 
-    if (this.selectedCourseForModules) {
-      this.moduleListModalInstance.hide();
-      setTimeout(() => this.moduleModalInstance.show(), 400);
-    } else {
-      this.moduleModalInstance.show();
-    }
+    this.moduleModalInstance.show();
   }
 
   openModuleListModal(course: Course) {
@@ -386,20 +435,11 @@ export class CoursesComponent implements OnInit {
     this.isSubmittingModule = false;
     this.moduleModalInstance.hide();
     this.loadCourses(); // Refresh list to update module counts
-    
-    if (this.selectedCourseForModules) {
-      setTimeout(() => this.moduleListModalInstance.show(), 400);
-    }
   }
 
   confirmDeleteModule(module: any) {
     this.moduleToDelete = module;
-    if (this.selectedCourseForModules) {
-      this.moduleListModalInstance.hide();
-      setTimeout(() => this.confirmDeleteModuleModalInstance.show(), 400);
-    } else {
-      this.confirmDeleteModuleModalInstance.show();
-    }
+    this.confirmDeleteModuleModalInstance.show();
   }
 
   executeDeleteModule() {
@@ -413,10 +453,6 @@ export class CoursesComponent implements OnInit {
         this.isDeletingModule = false;
         this.moduleToDelete = null;
         this.loadCourses();
-        
-        if (this.selectedCourseForModules) {
-          setTimeout(() => this.moduleListModalInstance.show(), 400);
-        }
       },
       error: (err) => {
         console.error('Error deleting module', err);
@@ -431,15 +467,75 @@ export class CoursesComponent implements OnInit {
     return course.modules.reduce((acc, mod) => acc + (mod.lessons?.length || 0), 0);
   }
 
-  openAddLessonModal(course: Course) {
-    this.selectedCourseForLesson = course;
+  openLessonListModal(course: Course) {
+    this.selectedCourseForLessons = course;
+    this.lessonListModalInstance.show();
+  }
+
+  closeLessonListModal() {
+    this.lessonListModalInstance.hide();
+    this.selectedCourseForLessons = null;
+  }
+
+  openAddLessonModal(course?: Course) {
+    if (course) {
+      this.selectedCourseForLesson = course;
+    } else if (this.selectedCourseForLessons) {
+      this.selectedCourseForLesson = this.selectedCourseForLessons;
+    }
+    this.lessonToEdit = null;
     this.lessonForm.reset({ moduleId: '', durationSeconds: 0 });
     this.selectedLessonVideo = null;
     this.lessonVideoError = null;
     this.uploadProgress = 0;
     this.uploadStatusMessage = '';
     this.tusUploadInstance = null;
+    
     this.lessonModalInstance.show();
+  }
+
+  openEditLessonModal(lesson: any, moduleId: number, courseId: number) {
+    if (this.courses) {
+       this.selectedCourseForLesson = this.courses.find(c => c.id === courseId) || null;
+    }
+    this.lessonToEdit = lesson;
+    this.lessonForm.patchValue({
+      moduleId: moduleId,
+      name: lesson.name,
+      description: lesson.description,
+      durationSeconds: lesson.durationSeconds
+    });
+    this.selectedLessonVideo = null;
+    this.lessonVideoError = null;
+    this.uploadProgress = 0;
+    this.uploadStatusMessage = '';
+    this.tusUploadInstance = null;
+    
+    this.lessonModalInstance.show();
+  }
+
+  confirmDeleteLesson(lesson: any) {
+    this.lessonToDelete = lesson;
+    this.confirmDeleteLessonModalInstance.show();
+  }
+
+  executeDeleteLesson() {
+    if (!this.lessonToDelete) return;
+
+    this.isDeletingLesson = true;
+    this.coursesService.deleteLesson(this.lessonToDelete.id).subscribe({
+      next: () => {
+        this.toastService.success('Aula excluída com sucesso!');
+        this.isDeletingLesson = false;
+        this.lessonToDelete = null;
+        this.loadCourses();
+      },
+      error: (err) => {
+        console.error('Error deleting lesson', err);
+        this.toastService.error('Erro ao excluir aula.');
+        this.isDeletingLesson = false;
+      }
+    });
   }
 
   onLessonVideoSelected(event: any) {
@@ -480,27 +576,43 @@ export class CoursesComponent implements OnInit {
     }
 
     this.isSavingLesson = true;
-    this.uploadStatusMessage = 'Criando aula...';
     
     const payload = this.lessonForm.value;
     payload.moduleId = parseInt(payload.moduleId, 10);
 
-    this.coursesService.createLesson(payload).subscribe({
-      next: (response: any) => {
-        const lessonId = typeof response === 'object' ? response.id : response;
-        if (!this.selectedLessonVideo) {
-          // If no video, we are done
+    if (this.lessonToEdit) {
+      this.uploadStatusMessage = 'Atualizando aula...';
+      payload.id = this.lessonToEdit.id;
+      this.coursesService.updateLesson(payload).subscribe({
+        next: () => {
+          this.toastService.success('Aula atualizada com sucesso!');
           this.finishLessonUpload();
-          return;
+        },
+        error: (err) => {
+          console.error('Error updating lesson', err);
+          this.uploadStatusMessage = 'Falha ao atualizar a aula.';
+          this.isSavingLesson = false;
         }
-        this.startVideoUpload(lessonId, this.selectedLessonVideo);
-      },
-      error: (err) => {
-        console.error('Error creating lesson', err);
-        this.uploadStatusMessage = 'Falha ao criar rascunho da aula.';
-        this.isSavingLesson = false;
-      }
-    });
+      });
+    } else {
+      this.uploadStatusMessage = 'Criando aula...';
+      this.coursesService.createLesson(payload).subscribe({
+        next: (response: any) => {
+          const lessonId = typeof response === 'object' ? response.id : response;
+          if (!this.selectedLessonVideo) {
+            // If no video, we are done
+            this.finishLessonUpload();
+            return;
+          }
+          this.startVideoUpload(lessonId, this.selectedLessonVideo);
+        },
+        error: (err) => {
+          console.error('Error creating lesson', err);
+          this.uploadStatusMessage = 'Falha ao criar rascunho da aula.';
+          this.isSavingLesson = false;
+        }
+      });
+    }
   }
 
   private startVideoUpload(lessonId: number, file: File) {
