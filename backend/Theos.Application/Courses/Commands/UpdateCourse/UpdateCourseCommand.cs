@@ -1,5 +1,6 @@
 using MediatR;
 using Theos.Application.Common.Interfaces;
+using System;
 
 namespace Theos.Application.Courses.Commands.UpdateCourse
 {
@@ -41,11 +42,13 @@ namespace Theos.Application.Courses.Commands.UpdateCourse
     {
         private readonly ITheosDbContext _context;
         private readonly IUserContextService _userContextService;
+        private readonly ICloudflareStorageService _cloudflareStorageService;
 
-        public UpdateCourseCommandHandler(ITheosDbContext context, IUserContextService userContextService)
+        public UpdateCourseCommandHandler(ITheosDbContext context, IUserContextService userContextService, ICloudflareStorageService cloudflareStorageService)
         {
             _context = context;
             _userContextService = userContextService;
+            _cloudflareStorageService = cloudflareStorageService;
         }
 
         public async Task<Unit> Handle(UpdateCourseCommand request, CancellationToken cancellationToken)
@@ -55,6 +58,22 @@ namespace Theos.Application.Courses.Commands.UpdateCourse
             var course = await _context.Courses.FindAsync(new object[] { request.Id }, cancellationToken: cancellationToken);
             if (course == null)
                 throw new InvalidOperationException($"Curso com ID {request.Id} não encontrado.");
+
+            // Se a imagem de capa foi alterada, exclui a antiga do Cloudflare
+            if (!string.Equals(course.ImgCoverLink, request.ImgCoverLink, StringComparison.OrdinalIgnoreCase))
+            {
+                if (!string.IsNullOrEmpty(course.ImgCoverLink))
+                {
+                    try
+                    {
+                        await _cloudflareStorageService.DeleteImageAsync(course.ImgCoverLink);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Erro ao excluir imagem antiga do Cloudflare: {ex.Message}");
+                    }
+                }
+            }
 
             course.Name = request.Name;
             course.Description = request.Description;

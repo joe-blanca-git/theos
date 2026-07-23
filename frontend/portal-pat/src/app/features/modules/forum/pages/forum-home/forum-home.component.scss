@@ -190,26 +190,7 @@ $card-border: 1px solid rgba(0, 0, 0, 0.035);
   &:disabled { opacity: 0.35; cursor: not-allowed; }
 }
 
-/* ─── Skeleton ───────────────────────────────────────────── */
-.skeleton {
-  background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
-  background-size: 200% 100%;
-  animation: shimmer 1.4s infinite;
-  border-radius: 8px;
-  height: 14px;
-  width: 100%;
 
-  &.skeleton-xs  { height: 10px; }
-  &.skeleton-sm  { height: 14px; width: 70%; }
-  &.skeleton-lg  { height: 24px; }
-}
-
-@keyframes shimmer {
-  0%   { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
-}
-
-.skeleton-card { min-height: 90px; }
 
 /* ─── Modal ──────────────────────────────────────────────── */
 .custom-modal-backdrop {
