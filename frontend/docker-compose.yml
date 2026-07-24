@@ -8,7 +8,7 @@ services:
       dockerfile: Dockerfile
     container_name: theos-landing-container
     ports:
-      - "3000:80"
+      - "4210:80"
     restart: always
 
   # 2. Theos Portal POPT (Admin)
@@ -18,7 +18,7 @@ services:
       dockerfile: Dockerfile
     container_name: theos-portal-popt-container
     ports:
-      - "3001:80"
+      - "4212:80"
     restart: always
 
   # 3. Theos Portal PAT (Alunos)
@@ -28,5 +28,5 @@ services:
       dockerfile: Dockerfile
     container_name: theos-portal-pat-container
     ports:
-      - "3002:80"
+      - "4211:80"
     restart: always
