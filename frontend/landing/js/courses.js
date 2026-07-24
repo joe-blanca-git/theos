@@ -1,6 +1,6 @@
 // Configuração do endpoint da API (Altere para localhost se estiver desenvolvendo localmente)
-const API_BASE = "https://joederblanca.com.br/theos-landing-api/api/v1/Courses";
-const API_TEACHERS = "https://joederblanca.com.br/theos-landing-api/api/v1/Teachers";
+const API_BASE = "https://joederblanca.com.br/theos-landing-api/v1/api/Courses";
+const API_TEACHERS = "https://joederblanca.com.br/theos-landing-api/v1/api/Teachers";
 
 document.addEventListener("DOMContentLoaded", () => {
     if (document.getElementById("container-cursos")) {
@@ -135,7 +135,7 @@ async function fetchTeachers() {
             
             let roleHtml = "";
             if (teacher.role && teacher.position) {
-                roleHtml = `${teacher.role} <br> <span class="fw-normal text-muted">${teacher.position}</span>`;
+                roleHtml = `${teacher.role} <br> <span class="fw-normal text-gray">${teacher.position}</span>`;
             } else if (teacher.role) {
                 roleHtml = teacher.role;
             } else if (teacher.position) {
@@ -154,9 +154,9 @@ async function fetchTeachers() {
                 <div class="mb-4">
                     <img src="${avatar}" class="rounded-circle shadow-lg mb-3" style="width: 180px; height: 180px; object-fit: cover; border: 6px solid var(--bg-light);" alt="${teacher.name}">
                 </div>
-                <h4 class="fw-bold mb-1 text-dark">${teacher.name}</h4>
+                <h4 class="fw-bold mb-1 text-danger">${teacher.name}</h4>
                 <p class="text-primary fw-bold mb-3">${roleHtml}</p>
-                <p class="text-muted px-lg-5">${teacher.bio || ''}</p>
+                <p class="text-black px-lg-5">${teacher.bio || ''}</p>
                 <div class="mt-3">
                     ${socialLinks}
                 </div>
@@ -294,14 +294,14 @@ async function fetchCursoDetalhes() {
                 }
                 
                 accordionItem.innerHTML = `
-                    <h2 class="accordion-header">
+                    <h2 class="accordion-header border" style="border-color: #8b08087a !important;">
                         <button class="accordion-button fw-bold ${isCollapsed}" type="button" data-bs-toggle="collapse" data-bs-target="#mod-${mod.id}" aria-expanded="${isExpanded}">
                             ${mod.name}
                         </button>
                     </h2>
                     <div id="mod-${mod.id}" class="accordion-collapse collapse ${isShow}" data-bs-parent="#curriculumAccordion">
                         <div class="accordion-body p-0">
-                            <ul class="list-group list-group-flush">
+                            <ul class="list-group list-group-flush border border-top-0" style="border-color: #8b08087a !important;">
                                 ${lessonsListHtml}
                             </ul>
                         </div>
