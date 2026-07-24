@@ -151,7 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         
         currentPage = 1;
-        sectionTitle.innerText = \`Resultados para "\${term}"\`;
+        sectionTitle.innerText = `Resultados para "${term}"`;
         renderFiltered();
     }
 
@@ -170,10 +170,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (currentCategory) {
             filteredArticles = filteredArticles.filter(a => a.subject === currentCategory);
-            sectionTitle.innerText = \`Categoria: \${currentCategory}\`;
+            sectionTitle.innerText = `Categoria: ${currentCategory}`;
         } else if (currentTag) {
             filteredArticles = filteredArticles.filter(a => parseTags(a.tags).includes(currentTag));
-            sectionTitle.innerText = \`Tag: \${currentTag}\`;
+            sectionTitle.innerText = `Tag: ${currentTag}`;
         } else {
             sectionTitle.innerText = 'Últimos Artigos';
         }
@@ -228,24 +228,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function renderHero(article) {
         const excerpt = getExcerpt(article.content, 150);
-        const html = \`
-            <div class="hero-article" style="background-image: url('\${article.headerImageUrl}');" onclick="window.location.href='blog-artigo.html?id=\${article.id}'">
+        const html = `
+            <div class="hero-article" style="background-image: url('${article.headerImageUrl}');" onclick="window.location.href='blog-artigo.html?id=${article.id}'">
                 <div class="hero-article-overlay"></div>
                 <div class="hero-article-content">
-                    <span class="badge bg-primary mb-3 px-3 py-2 text-uppercase tracking-wider fw-bold">\${article.subject}</span>
-                    <h2 class="text-white fw-bold mb-3 display-6">\${article.title}</h2>
-                    <p class="text-white-50 lead mb-4" style="max-width: 700px;">\${excerpt}</p>
+                    <span class="badge bg-primary mb-3 px-3 py-2 text-uppercase tracking-wider fw-bold">${article.subject}</span>
+                    <h2 class="text-white fw-bold mb-3 display-6">${article.title}</h2>
+                    <p class="text-white-50 lead mb-4" style="max-width: 700px;">${excerpt}</p>
                     <div class="d-flex align-items-center justify-content-between">
                         <div class="d-flex align-items-center text-white-50 small">
-                            <i class="far fa-calendar-alt me-2"></i> \${formatDate(article.date)}
+                            <i class="far fa-calendar-alt me-2"></i> ${formatDate(article.date)}
                             <span class="mx-2">•</span>
-                            <i class="far fa-clock me-2"></i> \${getReadingTime(article.content)} min de leitura
+                            <i class="far fa-clock me-2"></i> ${getReadingTime(article.content)} min de leitura
                         </div>
-                        <a href="blog-artigo.html?id=\${article.id}" class="btn btn-primary rounded-pill px-4">Ler Artigo <i class="fas fa-arrow-right ms-2"></i></a>
+                        <a href="blog-artigo.html?id=${article.id}" class="btn btn-primary rounded-pill px-4">Ler Artigo <i class="fas fa-arrow-right ms-2"></i></a>
                     </div>
                 </div>
             </div>
-        \`;
+        `;
         heroContainer.innerHTML = html;
     }
 
@@ -254,22 +254,22 @@ document.addEventListener('DOMContentLoaded', () => {
         const col = document.createElement('div');
         col.className = 'col-md-6 col-xl-4';
         
-        col.innerHTML = \`
-            <div class="article-card" onclick="window.location.href='blog-artigo.html?id=\${article.id}'">
+        col.innerHTML = `
+            <div class="article-card" onclick="window.location.href='blog-artigo.html?id=${article.id}'">
                 <div class="article-card-img-wrapper">
-                    <img src="\${article.headerImageUrl}" alt="\${article.title}" class="article-card-img">
+                    <img src="${article.headerImageUrl}" alt="${article.title}" class="article-card-img">
                 </div>
                 <div class="article-card-body">
-                    <span class="article-category">\${article.subject}</span>
-                    <h5 class="article-title">\${article.title}</h5>
-                    <p class="article-excerpt">\${excerpt}</p>
+                    <span class="article-category">${article.subject}</span>
+                    <h5 class="article-title">${article.title}</h5>
+                    <p class="article-excerpt">${excerpt}</p>
                     <div class="article-meta">
-                        <span>\${formatDate(article.date)}</span>
-                        <span>\${getReadingTime(article.content)} min</span>
+                        <span>${formatDate(article.date)}</span>
+                        <span>${getReadingTime(article.content)} min</span>
                     </div>
                 </div>
             </div>
-        \`;
+        `;
         return col;
     }
 
@@ -284,27 +284,27 @@ document.addEventListener('DOMContentLoaded', () => {
         let html = '';
         
         // Prev
-        html += \`<li class="page-item \${currentPage === 1 ? 'disabled' : ''}">
-            <a class="page-link bg-transparent border-secondary border-opacity-25 text-white" href="javascript:void(0)" onclick="goToPage(\${currentPage - 1})">
+        html += `<li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+            <a class="page-link bg-transparent border-secondary border-opacity-25 text-white" href="javascript:void(0)" onclick="goToPage(${currentPage - 1})">
                 <i class="fas fa-chevron-left"></i>
             </a>
-        </li>\`;
+        </li>`;
 
         // Pages
         for (let i = 1; i <= totalPages; i++) {
             if (i === currentPage) {
-                html += \`<li class="page-item active"><span class="page-link bg-primary border-primary">\${i}</span></li>\`;
+                html += `<li class="page-item active"><span class="page-link bg-primary border-primary">${i}</span></li>`;
             } else {
-                html += \`<li class="page-item"><a class="page-link bg-transparent border-secondary border-opacity-25 text-white" href="javascript:void(0)" onclick="goToPage(\${i})">\${i}</a></li>\`;
+                html += `<li class="page-item"><a class="page-link bg-transparent border-secondary border-opacity-25 text-white" href="javascript:void(0)" onclick="goToPage(${i})">${i}</a></li>`;
             }
         }
 
         // Next
-        html += \`<li class="page-item \${currentPage === totalPages ? 'disabled' : ''}">
-            <a class="page-link bg-transparent border-secondary border-opacity-25 text-white" href="javascript:void(0)" onclick="goToPage(\${currentPage + 1})">
+        html += `<li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
+            <a class="page-link bg-transparent border-secondary border-opacity-25 text-white" href="javascript:void(0)" onclick="goToPage(${currentPage + 1})">
                 <i class="fas fa-chevron-right"></i>
             </a>
-        </li>\`;
+        </li>`;
 
         paginationList.innerHTML = html;
     }
