@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  # 1. Theos Landing Page
+  theos-landing:
+    build:
+      context: ./landing
+      dockerfile: Dockerfile
+    container_name: theos-landing-container
+    ports:
+      - "3000:80"
+    restart: always
+
+  # 2. Theos Portal POPT (Admin)
+  theos-portal-popt:
+    build:
+      context: ./portal-popt
+      dockerfile: Dockerfile
+    container_name: theos-portal-popt-container
+    ports:
+      - "3001:80"
+    restart: always
+
+  # 3. Theos Portal PAT (Alunos)
+  theos-portal-pat:
+    build:
+      context: ./portal-pat
+      dockerfile: Dockerfile
+    container_name: theos-portal-pat-container
+    ports:
+      - "3002:80"
+    restart: always
