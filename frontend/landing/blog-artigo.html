@@ -13,7 +13,7 @@
     <meta name="twitter:card" content="summary_large_image">
 
     <!-- Base HREF -->
-    <base href="./">
+    <script>document.write('<base href="' + (window.location.pathname.startsWith('/theos') ? '/theos/' : '/') + '" />');</script>
 
     <!-- Favicon-->
     <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />

@@ -7,7 +7,7 @@
     <meta name="description" content="O Instituto Theos é a plataforma definitiva para sua formação teológica e ministerial." />
 
     <!-- Base HREF para garantir o caminho correto dos assets -->
-    <base href="./">
+    <script>document.write('<base href="' + (window.location.pathname.startsWith('/theos') ? '/theos/' : '/') + '" />');</script>
 
     <!-- Favicon-->
     <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />

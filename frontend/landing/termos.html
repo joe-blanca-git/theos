@@ -7,7 +7,7 @@
     <meta name="description" content="Leia os termos de uso da plataforma Instituto Theos. Regras sobre pagamentos, reembolsos, assinaturas e propriedade intelectual." />
     
     <!-- Base HREF para garantir o caminho correto dos assets -->
-    <base href="./">
+    <script>document.write('<base href="' + (window.location.pathname.startsWith('/theos') ? '/theos/' : '/') + '" />');</script>
 
     <!-- Favicon-->
     <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />

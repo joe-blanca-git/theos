@@ -7,7 +7,7 @@
     <meta name="description" content="Conheça o Instituto Theos (ITT), a plataforma que conecta pessoas ao verdadeiro ensino teológico. Missão, visão e nossos valores." />
     
     <!-- Base HREF para garantir o caminho correto dos assets -->
-    <base href="./">
+    <script>document.write('<base href="' + (window.location.pathname.startsWith('/theos') ? '/theos/' : '/') + '" />');</script>
 
     <!-- Favicon-->
     <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
