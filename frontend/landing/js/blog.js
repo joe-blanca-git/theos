@@ -28,19 +28,20 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const response = await fetch(API_BLOG);
             if(response.ok) {
-                const data = await response.json();
-                // Map API DTO to internal structure
-                articles = data.map(item => ({
-                    id: item.id.toString(),
-                    title: item.title || '',
-                    subject: item.subject || '',
-                    content: item.content || '',
-                    tags: item.tags || '',
-                    headerImageUrl: item.headerImageUrl || './assets/images/backgrounds/header-light.jpeg',
-                    date: item.createdAt || new Date().toISOString(),
-                    author: item.authorName || 'Equipe Theos'
-                }));
-            } else {
+            const data = await response.json();
+            // Map API DTO to internal structure
+            articles = data.map(item => ({
+                id: item.id.toString(),
+                title: item.title || '',
+                subject: item.subject || '',
+                content: item.content || '',
+                tags: item.tags || '',
+                headerImageUrl: item.headerImageUrl || './assets/images/backgrounds/header-light.jpeg',
+                date: item.createdAt || new Date().toISOString(),
+                author: item.authorName || 'Equipe Theos',
+                slug: createSlug(item.title)
+            }));
+        } else {
                 console.error("Erro ao carregar os blogs da API");
                 // fallback to empty or handle gracefully
                 articles = [];
@@ -56,6 +57,18 @@ document.addEventListener('DOMContentLoaded', () => {
         extractCategoriesAndTags();
         attachEventListeners();
         render();
+    }
+
+    // Generate slug from title
+    function createSlug(title) {
+        if (!title) return 'artigo';
+        return title.toString().toLowerCase()
+            .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+            .replace(/\s+/g, '-')
+            .replace(/[^\w\-]+/g, '')
+            .replace(/\-\-+/g, '-')
+            .replace(/^-+/, '')
+            .replace(/-+$/, '');
     }
 
     // Extract categories & tags dynamically
@@ -229,7 +242,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderHero(article) {
         const excerpt = getExcerpt(article.content, 150);
         const html = `
-            <div class="hero-article" style="background-image: url('${article.headerImageUrl}');" onclick="window.location.href='blog-artigo.html?id=${article.id}'">
+            <div class="hero-article" style="background-image: url('${article.headerImageUrl}');" onclick="window.location.href='blog-artigo.html?slug=${article.slug}'">
                 <div class="hero-article-overlay"></div>
                 <div class="hero-article-content">
                     <span class="badge bg-primary mb-3 px-3 py-2 text-uppercase tracking-wider fw-bold">${article.subject}</span>
@@ -241,7 +254,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <span class="mx-2">•</span>
                             <i class="far fa-clock me-2"></i> ${getReadingTime(article.content)} min de leitura
                         </div>
-                        <a href="blog-artigo.html?id=${article.id}" class="btn btn-primary rounded-pill px-4">Ler Artigo <i class="fas fa-arrow-right ms-2"></i></a>
+                        <a href="blog-artigo.html?slug=${article.slug}" class="btn btn-primary rounded-pill px-4">Ler Artigo <i class="fas fa-arrow-right ms-2"></i></a>
                     </div>
                 </div>
             </div>
@@ -255,7 +268,7 @@ document.addEventListener('DOMContentLoaded', () => {
         col.className = 'col-md-6 col-xl-4';
         
         col.innerHTML = `
-            <div class="article-card" onclick="window.location.href='blog-artigo.html?id=${article.id}'">
+            <div class="article-card" onclick="window.location.href='blog-artigo.html?slug=${article.slug}'">
                 <div class="article-card-img-wrapper">
                     <img src="${article.headerImageUrl}" alt="${article.title}" class="article-card-img">
                 </div>

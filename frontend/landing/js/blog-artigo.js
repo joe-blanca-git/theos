@@ -6,6 +6,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     const API_BLOG = "https://joederblanca.com.br/theos-landing-api/api/v1/BlogPosts";
     let articles = [];
 
+    // Generate slug helper (same as home-blog)
+    function createSlug(title) {
+        if (!title) return 'artigo';
+        return title.toString().toLowerCase()
+            .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+            .replace(/\s+/g, '-')
+            .replace(/[^\w\-]+/g, '')
+            .replace(/\-\-+/g, '-')
+            .replace(/^-+/, '')
+            .replace(/-+$/, '');
+    }
+
     try {
         const response = await fetch(API_BLOG);
         if(response.ok) {
@@ -18,14 +30,21 @@ document.addEventListener('DOMContentLoaded', async () => {
                 tags: item.tags || '',
                 headerImageUrl: item.headerImageUrl || './assets/images/backgrounds/header-light.jpeg',
                 date: item.createdAt || new Date().toISOString(),
-                author: item.authorName || 'Equipe Theos'
+                author: item.authorName || 'Equipe Theos',
+                slug: createSlug(item.title)
             }));
         }
     } catch (error) {
         console.error("Erro de conexão", error);
     }
 
-    const article = articles.find(a => a.id === articleId);
+    let article;
+    const articleSlug = urlParams.get('slug');
+    if (articleSlug) {
+        article = articles.find(a => a.slug === articleSlug);
+    } else {
+        article = articles.find(a => a.id === articleId);
+    }
 
     if (!article) {
         // Fallback if not found
