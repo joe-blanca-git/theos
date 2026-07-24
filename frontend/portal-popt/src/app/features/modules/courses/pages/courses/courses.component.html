@@ -53,6 +53,8 @@
               <th scope="col" class="fw-semibold border-0 py-3">Nível</th>
               <th scope="col" class="fw-semibold border-0 py-3">Módulos</th>
               <th scope="col" class="fw-semibold border-0 py-3">Aulas</th>
+              <th scope="col" class="fw-semibold border-0 py-3">Domínios</th>
+              <th scope="col" class="fw-semibold border-0 py-3">Professores</th>
               <th scope="col" class="fw-semibold border-0 py-3">Preço</th>
               <th scope="col" class="pe-4 text-end fw-semibold border-0 py-3">Ações</th>
             </tr>
@@ -70,6 +72,12 @@
               </td>
               <td class="py-3">
                 <div class="skeleton rounded-pill" style="height: 24px; width: 80px;"></div>
+              </td>
+              <td class="py-3">
+                <div class="skeleton rounded" style="height: 16px; width: 70px;"></div>
+              </td>
+              <td class="py-3">
+                <div class="skeleton rounded" style="height: 16px; width: 70px;"></div>
               </td>
               <td class="py-3">
                 <div class="skeleton rounded" style="height: 16px; width: 70px;"></div>
@@ -106,6 +114,8 @@
               <th scope="col" class="fw-semibold">Nível</th>
               <th scope="col" class="fw-semibold">Módulos</th>
               <th scope="col" class="fw-semibold">Aulas</th>
+              <th scope="col" class="fw-semibold">Domínios</th>
+              <th scope="col" class="fw-semibold">Professores</th>
               <th scope="col" class="fw-semibold">Preço</th>
               <th scope="col" class="fw-semibold text-center">Status</th>
               <th scope="col" class="pe-3 text-end fw-semibold">Ações</th>
@@ -151,6 +161,28 @@
                   </button>
                   <button class="btn btn-sm btn-white rounded-circle p-1 d-flex align-items-center justify-content-center shadow-sm border btn-add-module" style="width: 32px; height: 32px;" (click)="openAddLessonModal(course)" title="Adicionar Aula">
                     <i class="fas fa-plus text-danger"></i>
+                  </button>
+                </div>
+              </td>
+              <td class="py-3 text-white-50 fw-medium">
+                <div class="d-flex align-items-center gap-2">
+                  <span class="badge bg-info bg-opacity-10 text-info rounded-pill px-3 py-2 border border-info border-opacity-25">{{ course.domains?.length || 0 }} domínios</span>
+                  <button class="btn btn-sm btn-white rounded-circle p-1 d-flex align-items-center justify-content-center shadow-sm border btn-add-module" style="width: 32px; height: 32px;" (click)="openDomainListModal(course)" title="Ver Domínios">
+                    <i class="fas fa-list text-info"></i>
+                  </button>
+                  <button class="btn btn-sm btn-white rounded-circle p-1 d-flex align-items-center justify-content-center shadow-sm border btn-add-module" style="width: 32px; height: 32px;" (click)="openAddDomainModal(course.id)" title="Adicionar Domínio">
+                    <i class="fas fa-plus text-info"></i>
+                  </button>
+                </div>
+              </td>
+              <td class="py-3 text-white-50 fw-medium">
+                <div class="d-flex align-items-center gap-2">
+                  <span class="badge text-uppercase" style="background: rgba(139, 92, 246, 0.1); color: #8b5cf6; border: 1px solid rgba(139, 92, 246, 0.25);">{{ course.teachers?.length || 0 }} professores</span>
+                  <button class="btn btn-sm btn-white rounded-circle p-1 d-flex align-items-center justify-content-center shadow-sm border btn-add-module" style="width: 32px; height: 32px;" (click)="openTeacherListModal(course)" title="Ver Professores">
+                    <i class="fas fa-list" style="color: #8b5cf6;"></i>
+                  </button>
+                  <button class="btn btn-sm btn-white rounded-circle p-1 d-flex align-items-center justify-content-center shadow-sm border btn-add-module" style="width: 32px; height: 32px;" (click)="openAssignTeacherModal(course.id)" title="Vincular Professor">
+                    <i class="fas fa-link" style="color: #8b5cf6;"></i>
                   </button>
                 </div>
               </td>
@@ -703,3 +735,267 @@
     </div>
   </div>
 </div>
+
+<!-- Domain Modal -->
+<div class="modal fade" id="domainModal" tabindex="-1" #domainModal style="z-index: 1060;">
+  <div class="modal-dialog modal-dialog-centered modal-md">
+    <div class="modal-content rounded-4 border-0 shadow-lg overflow-hidden">
+      <!-- Premium Header -->
+      <div class="modal-header border-0 pb-0 pt-4 px-4 position-relative">
+        <div class="d-flex align-items-center gap-3">
+          <div class="bg-info bg-opacity-10 text-info rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 48px; height: 48px;">
+            <i class="fas fa-globe fs-5"></i>
+          </div>
+          <div>
+            <h5 class="modal-title fw-bolder text-white mb-0 fs-5">{{ domainToEdit ? 'Editar Domínio' : 'Novo Domínio' }}</h5>
+            <small class="text-white-50 fw-medium">{{ domainToEdit ? 'Altere as informações do domínio' : 'Adicione um novo domínio/benefício ao curso' }}</small>
+          </div>
+        </div>
+        <button type="button" class="btn-close position-absolute top-0 end-0 mt-4 me-4" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body p-4">
+        <form [formGroup]="domainForm">
+          <fieldset [disabled]="isSubmittingDomain">
+          <div class="row g-4">
+            
+            <div class="col-12">
+              <div class="form-floating shadow-sm rounded-3">
+                <input type="text" class="form-control border-light-subtle rounded-3" id="domTitle" formControlName="title" placeholder="Ex: Acesso Vitalício">
+                <label for="domTitle" class="text-white-50">Título do Domínio <span class="text-danger">*</span></label>
+              </div>
+            </div>
+
+            <div class="col-12">
+              <div class="form-floating shadow-sm rounded-3">
+                <textarea class="form-control border-light-subtle rounded-3" id="domDesc" formControlName="description" placeholder="Detalhes do domínio..." style="height: 100px; resize: none;"></textarea>
+                <label for="domDesc" class="text-white-50">Descrição</label>
+              </div>
+            </div>
+            
+          </div>
+          </fieldset>
+        </form>
+      </div>
+
+      <div class="modal-footer bg-secondary bg-opacity-10 border-top-0 px-4 py-3 d-flex justify-content-between align-items-center">
+        <button type="button" class="btn btn-white border rounded-pill px-4 fw-semibold text-white-50 shadow-sm hover-primary transition-all" data-bs-dismiss="modal">
+          Cancelar
+        </button>
+        <button type="button" class="btn btn-info rounded-pill px-4 fw-bold shadow-sm text-white d-flex align-items-center gap-2" (click)="saveDomain()" [disabled]="domainForm.invalid || isSubmittingDomain">
+          <span *ngIf="!isSubmittingDomain"><i class="fas" [ngClass]="domainToEdit ? 'fa-save' : 'fa-check-circle'"></i> {{ domainToEdit ? 'Salvar Domínio' : 'Criar Domínio' }}</span>
+          <span *ngIf="isSubmittingDomain"><i class="fas fa-spinner fa-spin"></i> Processando...</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Domain List Modal -->
+<div class="modal fade" id="domainListModal" tabindex="-1" #domainListModal>
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content rounded-4 border-0 shadow-lg overflow-hidden">
+      <!-- Premium Header -->
+      <div class="modal-header border-0 pb-0 pt-4 px-4 position-relative bg-secondary bg-opacity-10">
+        <div class="d-flex align-items-center gap-3">
+          <div class="bg-info bg-opacity-10 text-info rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 48px; height: 48px;">
+            <i class="fas fa-list fs-5"></i>
+          </div>
+          <div>
+            <h5 class="modal-title fw-bolder text-white mb-0 fs-5">Domínios do Curso</h5>
+            <small class="text-white-50 fw-medium text-truncate d-block" style="max-width: 300px;">{{ selectedCourseForDomains?.name }}</small>
+          </div>
+        </div>
+        <button type="button" class="btn-close position-absolute top-0 end-0 mt-4 me-4" (click)="closeDomainListModal()" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body p-4 bg-secondary bg-opacity-10">
+        
+        <!-- Empty State -->
+        <div class="text-center py-5" *ngIf="!selectedCourseForDomains?.domains || selectedCourseForDomains?.domains?.length === 0">
+          <i class="fas fa-folder-open text-white-50 fs-1 mb-3 opacity-50"></i>
+          <h6 class="text-white-50">Nenhum domínio cadastrado neste curso.</h6>
+        </div>
+
+        <!-- Domains List -->
+        <div class="d-flex flex-column gap-3" *ngIf="selectedCourseForDomains?.domains && selectedCourseForDomains?.domains!.length > 0">
+          <div class="card border-0 shadow-sm bg-dark rounded-4" *ngFor="let domain of selectedCourseForDomains?.domains; let i = index">
+            <div class="card-body p-3 d-flex align-items-center">
+              <div class="d-flex align-items-center gap-3 flex-grow-1 overflow-hidden">
+                <span class="badge bg-secondary bg-opacity-25 text-white-50 rounded-circle d-flex align-items-center justify-content-center" style="width: 32px; height: 32px; flex-shrink: 0;">{{ i + 1 }}</span>
+                <div class="flex-grow-1 overflow-hidden pe-3">
+                  <h6 class="mb-0 fw-bold text-white text-truncate">{{ domain.title }}</h6>
+                  <small class="text-white-50 text-truncate d-block">{{ domain.description || 'Sem descrição' }}</small>
+                </div>
+              </div>
+              <div class="d-flex gap-2 flex-shrink-0">
+                <button type="button" class="btn btn-sm btn-white border rounded-circle text-primary shadow-sm hover-primary transition-all d-flex align-items-center justify-content-center" style="width: 36px; height: 36px;" (click)="openEditDomainModal(domain, selectedCourseForDomains!.id)" title="Editar Domínio">
+                  <i class="fas fa-pen"></i>
+                </button>
+                <button type="button" class="btn btn-sm btn-white border rounded-circle text-danger shadow-sm hover-danger transition-all d-flex align-items-center justify-content-center" style="width: 36px; height: 36px;" (click)="confirmDeleteDomain(domain, selectedCourseForDomains!.id)" title="Excluir Domínio">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="modal-footer bg-secondary bg-opacity-10 border-top-0 px-4 py-3 d-flex justify-content-between align-items-center">
+        <button type="button" class="btn btn-white border rounded-pill px-4 fw-semibold text-white-50 shadow-sm hover-primary transition-all" (click)="closeDomainListModal()">
+          Fechar
+        </button>
+        <button type="button" class="btn btn-info rounded-pill px-4 fw-bold shadow-sm text-white d-flex align-items-center gap-2" (click)="openAddDomainModal(selectedCourseForDomains!.id)">
+          <i class="fas fa-plus"></i> Adicionar Domínio
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Confirm Delete Domain Modal -->
+<div class="modal fade" id="confirmDeleteDomainModal" tabindex="-1" #confirmDeleteDomainModal style="z-index: 1060;">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content rounded-4 border-0 shadow">
+      <div class="modal-header border-bottom-0 pb-0">
+        <h5 class="modal-title fw-bold text-white"><i class="fas fa-exclamation-triangle me-2 text-danger"></i>Excluir Domínio</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center py-4">
+        <div class="mb-3">
+          <div class="d-inline-flex align-items-center justify-content-center bg-danger bg-opacity-10 rounded-circle" style="width: 80px; height: 80px;">
+            <i class="fas fa-trash-alt fs-1 text-danger"></i>
+          </div>
+        </div>
+        <h5 class="fw-bold mb-2">Tem certeza?</h5>
+        <p class="text-white-50 mb-0">O domínio <strong class="text-white">{{ domainToDelete?.title }}</strong> será excluído permanentemente.<br>Esta ação não pode ser desfeita.</p>
+      </div>
+      <div class="modal-footer bg-secondary bg-opacity-10 border-top-0 px-4 py-3 d-flex justify-content-center gap-2">
+        <button type="button" class="btn btn-white border rounded-pill px-4 fw-semibold text-white-50 shadow-sm hover-primary transition-all" data-bs-dismiss="modal">
+          Cancelar
+        </button>
+        <button type="button" class="btn btn-danger rounded-pill px-4 fw-bold shadow-sm d-flex align-items-center gap-2" 
+                (click)="executeDeleteDomain()"
+                [disabled]="isDeletingDomain">
+          <span *ngIf="!isDeletingDomain">
+            <i class="fas fa-trash"></i> Sim, excluir
+          </span>
+          <span *ngIf="isDeletingDomain">
+            <i class="fas fa-spinner fa-spin"></i> Excluindo...
+          </span>
+        </button>
+      </div>
+</div>
+  </div>
+</div>
+
+<!-- Teacher List Modal -->
+<div class="modal fade" id="teacherListModal" tabindex="-1" #teacherListModal>
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content rounded-4 border-0 shadow">
+      
+      <div class="modal-header bg-dark border-bottom-0 pb-3 pt-4 px-4 rounded-top-4 position-relative overflow-hidden">
+        <div class="position-absolute top-0 end-0 p-3 opacity-25">
+          <i class="fas fa-chalkboard-teacher text-white" style="font-size: 8rem; transform: translate(20%, -30%);"></i>
+        </div>
+        <div class="d-flex align-items-center gap-3">
+          <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 48px; height: 48px;">
+            <i class="fas fa-list fs-5"></i>
+          </div>
+          <div>
+            <h5 class="modal-title fw-bolder text-white mb-0 fs-5">Professores Vinculados</h5>
+            <small class="text-white-50 fw-medium text-truncate d-block" style="max-width: 300px;">{{ selectedCourseForTeachers?.name }}</small>
+          </div>
+        </div>
+        <button type="button" class="btn-close position-absolute top-0 end-0 mt-4 me-4" (click)="closeTeacherListModal()" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body p-4 bg-secondary bg-opacity-10">
+        
+        <!-- Empty State -->
+        <div class="text-center py-5" *ngIf="!selectedCourseForTeachers?.teachers || selectedCourseForTeachers?.teachers?.length === 0">
+          <i class="fas fa-folder-open text-white-50 fs-1 mb-3 opacity-50"></i>
+          <h6 class="text-white-50">Nenhum professor vinculado a este curso.</h6>
+        </div>
+
+        <!-- Teachers List -->
+        <div class="d-flex flex-column gap-3" *ngIf="selectedCourseForTeachers?.teachers && selectedCourseForTeachers?.teachers!.length > 0">
+          <div class="card border-0 shadow-sm bg-dark rounded-4" *ngFor="let teacher of selectedCourseForTeachers?.teachers">
+            <div class="card-body p-3 d-flex align-items-center">
+              <div class="d-flex align-items-center gap-3 flex-grow-1 overflow-hidden">
+                <div class="rounded-circle overflow-hidden shadow-sm" style="width: 48px; height: 48px; flex-shrink: 0;">
+                  <img [src]="teacher.avatar || 'assets/images/default-avatar.png'" alt="{{ teacher.name }}" class="w-100 h-100 object-fit-cover" onerror="this.src='assets/images/default-avatar.png'">
+                </div>
+                <div class="flex-grow-1 overflow-hidden pe-3">
+                  <h6 class="mb-0 fw-bold text-white text-truncate">{{ teacher.name }}</h6>
+                  <small class="text-white-50 text-truncate d-block">{{ teacher.role || 'Sem cargo' }}</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="modal-footer bg-secondary bg-opacity-10 border-top-0 px-4 py-3 d-flex justify-content-between align-items-center">
+        <button type="button" class="btn btn-white border rounded-pill px-4 fw-semibold text-white-50 shadow-sm hover-primary transition-all" (click)="closeTeacherListModal()">
+          Fechar
+        </button>
+        <button type="button" class="btn btn-primary rounded-pill px-4 fw-bold shadow-sm text-white d-flex align-items-center gap-2" (click)="openAssignTeacherModal(selectedCourseForTeachers!.id); closeTeacherListModal()">
+          <i class="fas fa-link"></i> Vincular Professor
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Assign Teacher Modal -->
+<div class="modal fade" id="teacherAssignModal" tabindex="-1" #teacherAssignModal>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content rounded-4 border-0 shadow">
+      
+      <div class="modal-header border-bottom-0 pb-0">
+        <h5 class="modal-title fw-bold text-white"><i class="fas fa-link me-2 text-primary"></i>Vincular Professor</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <form [formGroup]="teacherAssignForm" (ngSubmit)="saveTeacherAssignment()">
+        <div class="modal-body bg-secondary bg-opacity-10 p-4">
+          <div class="bg-dark p-4 rounded-4 shadow-sm border-0">
+            <h6 class="fw-bold mb-4 text-primary"><i class="fas fa-user-tie me-2"></i>Selecione o Professor</h6>
+            
+            <div class="mb-3">
+              <label class="form-label small fw-bold text-white-50 text-uppercase" style="letter-spacing: 0.5px; font-size: 0.7rem;">Professor <span class="text-danger">*</span></label>
+              <select class="form-select border-light-subtle form-select-lg" formControlName="teacherId">
+                <option value="" disabled selected>Selecione um professor...</option>
+                <option *ngFor="let teacher of availableTeachers" [value]="teacher.id">{{ teacher.name }} - {{ teacher.role }}</option>
+              </select>
+              <div class="text-danger small mt-1" *ngIf="teacherAssignForm.get('teacherId')?.invalid && teacherAssignForm.get('teacherId')?.touched">
+                Campo obrigatório.
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="modal-footer bg-secondary bg-opacity-10 border-top-0 px-4 py-3 d-flex justify-content-between align-items-center">
+          <button type="button" class="btn btn-white border rounded-pill px-4 fw-semibold text-white-50 shadow-sm hover-primary transition-all" data-bs-dismiss="modal">
+            Cancelar
+          </button>
+          
+          <button type="submit" class="btn btn-primary rounded-pill px-4 fw-bold shadow-sm d-flex align-items-center gap-2" [disabled]="isAssigningTeacher">
+            <span *ngIf="!isAssigningTeacher">
+              <i class="fas fa-check"></i> Vincular
+            </span>
+            <span *ngIf="isAssigningTeacher">
+              <i class="fas fa-spinner fa-spin"></i> Vinculando...
+            </span>
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>
+

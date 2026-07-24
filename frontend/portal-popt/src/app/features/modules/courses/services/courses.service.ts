@@ -58,6 +58,26 @@ export class CoursesService extends BaseService {
     return this.http.delete<any>(`${this.urlApiTheos}courses/lessons/${id}`, this.GetAuthHeaderJson());
   }
 
+  createDomain(courseId: number, domainData: any): Observable<any> {
+    return this.http.post<any>(`${this.urlApiTheos}Courses/${courseId}/domains`, domainData, this.GetAuthHeaderJson());
+  }
+
+  updateDomain(courseId: number, domainData: any): Observable<any> {
+    return this.http.put<any>(`${this.urlApiTheos}Courses/${courseId}/domains/${domainData.id}`, domainData, this.GetAuthHeaderJson());
+  }
+
+  deleteDomain(courseId: number, domainId: number): Observable<any> {
+    return this.http.delete<any>(`${this.urlApiTheos}Courses/${courseId}/domains/${domainId}`, this.GetAuthHeaderJson());
+  }
+
+  getTeachers(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.urlApiTheos}Teachers`, this.GetAuthHeaderJson());
+  }
+
+  assignTeacher(teacherId: number, courseId: number): Observable<any> {
+    return this.http.post<any>(`${this.urlApiTheos}Teachers/assign`, { teacherId, courseId }, this.GetAuthHeaderJson());
+  }
+
   uploadImage(file: File): Observable<{ url: string }> {
     const formData = new FormData();
     formData.append('file', file);

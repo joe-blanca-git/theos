@@ -42,6 +42,7 @@
         
         <!-- Placeholder iframe for bunny.net -->
         <iframe 
+          *ngIf="currentLesson.videoUrl"
           [src]="safeVideoUrl" 
           loading="lazy" 
           style="border: none; width: 100%; height: 100%;" 

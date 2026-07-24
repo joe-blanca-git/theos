@@ -36,6 +36,8 @@ export class CoursesComponent implements OnInit {
   courseForm!: FormGroup;
   moduleForm!: FormGroup;
   lessonForm!: FormGroup;
+  domainForm!: FormGroup;
+  teacherAssignForm!: FormGroup;
 
   selectedCourseId: number | null = null;
   selectedCourseForLesson: Course | null = null;
@@ -46,6 +48,11 @@ export class CoursesComponent implements OnInit {
   lessonToEdit: any | null = null;
   lessonToDelete: any | null = null;
   selectedCourseForLessons: Course | null = null;
+  domainToEdit: any | null = null;
+  domainToDelete: any | null = null;
+  selectedCourseForDomains: Course | null = null;
+  selectedCourseForTeachers: Course | null = null;
+  availableTeachers: any[] = [];
   
   isSubmittingCourse = false;
   isSubmittingModule = false;
@@ -53,6 +60,9 @@ export class CoursesComponent implements OnInit {
   isTogglingStatus = false;
   isDeletingModule = false;
   isDeletingLesson = false;
+  isSubmittingDomain = false;
+  isDeletingDomain = false;
+  isAssigningTeacher = false;
 
   categories: any[] = [];
 
@@ -78,6 +88,11 @@ export class CoursesComponent implements OnInit {
   @ViewChild('confirmDeleteModuleModal') confirmDeleteModuleModalRef!: ElementRef;
   @ViewChild('lessonListModal') lessonListModalRef!: ElementRef;
   @ViewChild('confirmDeleteLessonModal') confirmDeleteLessonModalRef!: ElementRef;
+  @ViewChild('domainModal') domainModalRef!: ElementRef;
+  @ViewChild('domainListModal') domainListModalRef!: ElementRef;
+  @ViewChild('confirmDeleteDomainModal') confirmDeleteDomainModalRef!: ElementRef;
+  @ViewChild('teacherListModal') teacherListModalRef!: ElementRef;
+  @ViewChild('teacherAssignModal') teacherAssignModalRef!: ElementRef;
 
   private courseModalInstance: any;
   private moduleModalInstance: any;
@@ -87,6 +102,11 @@ export class CoursesComponent implements OnInit {
   private confirmDeleteModuleModalInstance: any;
   private lessonListModalInstance: any;
   private confirmDeleteLessonModalInstance: any;
+  private domainModalInstance: any;
+  private domainListModalInstance: any;
+  private confirmDeleteDomainModalInstance: any;
+  private teacherListModalInstance: any;
+  private teacherAssignModalInstance: any;
 
   courseToToggle: any = null;
 
@@ -100,6 +120,7 @@ export class CoursesComponent implements OnInit {
   ngOnInit(): void {
     this.initForms();
     this.loadCategories();
+    this.loadTeachers();
     this.loadCourses();
   }
 
@@ -112,6 +133,11 @@ export class CoursesComponent implements OnInit {
     this.confirmDeleteModuleModalInstance = new bootstrap.Modal(this.confirmDeleteModuleModalRef.nativeElement);
     this.lessonListModalInstance = new bootstrap.Modal(this.lessonListModalRef.nativeElement);
     this.confirmDeleteLessonModalInstance = new bootstrap.Modal(this.confirmDeleteLessonModalRef.nativeElement);
+    this.domainModalInstance = new bootstrap.Modal(this.domainModalRef.nativeElement);
+    this.domainListModalInstance = new bootstrap.Modal(this.domainListModalRef.nativeElement);
+    this.confirmDeleteDomainModalInstance = new bootstrap.Modal(this.confirmDeleteDomainModalRef.nativeElement);
+    this.teacherListModalInstance = new bootstrap.Modal(this.teacherListModalRef.nativeElement);
+    this.teacherAssignModalInstance = new bootstrap.Modal(this.teacherAssignModalRef.nativeElement);
   }
 
   initForms() {
@@ -138,6 +164,15 @@ export class CoursesComponent implements OnInit {
       description: [''],
       durationSeconds: [0, [Validators.required, Validators.min(1)]]
     });
+
+    this.domainForm = this.fb.group({
+      title: ['', Validators.required],
+      description: ['']
+    });
+
+    this.teacherAssignForm = this.fb.group({
+      teacherId: ['', Validators.required]
+    });
   }
 
   loadCategories() {
@@ -147,6 +182,17 @@ export class CoursesComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error loading categories', err);
+      }
+    });
+  }
+
+  loadTeachers() {
+    this.coursesService.getTeachers().subscribe({
+      next: (data: any) => {
+        this.availableTeachers = data.filter((t: any) => t.active !== false); // Assumes active is true or undefined for active teachers
+      },
+      error: (err) => {
+        console.error('Error loading teachers', err);
       }
     });
   }
@@ -188,6 +234,14 @@ export class CoursesComponent implements OnInit {
 
         if (this.selectedCourseForLessons) {
           this.selectedCourseForLessons = this.courses.find(c => c.id === this.selectedCourseForLessons?.id) || null;
+        }
+
+        if (this.selectedCourseForDomains) {
+          this.selectedCourseForDomains = this.courses.find(c => c.id === this.selectedCourseForDomains?.id) || null;
+        }
+
+        if (this.selectedCourseForTeachers) {
+          this.selectedCourseForTeachers = this.courses.find(c => c.id === this.selectedCourseForTeachers?.id) || null;
         }
 
         this.isLoading = false;
@@ -692,6 +746,156 @@ export class CoursesComponent implements OnInit {
     this.uploadProgress = 0;
     this.lessonModalInstance.hide();
     this.loadCourses(); // refresh
+  }
+
+  openAddDomainModal(courseId: number) {
+    this.selectedCourseId = courseId;
+    this.domainToEdit = null;
+    this.domainForm.reset();
+    
+    this.domainModalInstance.show();
+  }
+
+  openEditDomainModal(domain: any, courseId: number) {
+    this.selectedCourseId = courseId;
+    this.domainToEdit = domain;
+    this.domainForm.patchValue({
+      title: domain.title,
+      description: domain.description
+    });
+
+    this.domainModalInstance.show();
+  }
+
+  openDomainListModal(course: Course) {
+    this.selectedCourseForDomains = course;
+    this.domainListModalInstance.show();
+  }
+
+  closeDomainListModal() {
+    this.domainListModalInstance.hide();
+    this.selectedCourseForDomains = null;
+  }
+
+  saveDomain() {
+    if (this.domainForm.invalid || !this.selectedCourseId) {
+      this.domainForm.markAllAsTouched();
+      return;
+    }
+
+    this.isSubmittingDomain = true;
+
+    if (this.domainToEdit) {
+      const domainPayload = {
+        ...this.domainForm.value,
+        id: this.domainToEdit.id,
+        courseId: this.selectedCourseId
+      };
+
+      this.coursesService.updateDomain(this.selectedCourseId, domainPayload).subscribe({
+        next: () => {
+          this.toastService.success('Domínio atualizado com sucesso!');
+          this.finishDomainCreation();
+        },
+        error: (err) => {
+          console.error('Error updating domain', err);
+          this.toastService.error('Erro ao atualizar domínio.');
+          this.isSubmittingDomain = false;
+        }
+      });
+    } else {
+      const domainPayload = {
+        id: 0,
+        ...this.domainForm.value,
+        courseId: this.selectedCourseId
+      };
+
+      this.coursesService.createDomain(this.selectedCourseId, domainPayload).subscribe({
+        next: () => {
+          this.toastService.success('Domínio criado com sucesso!');
+          this.finishDomainCreation();
+        },
+        error: (err) => {
+          console.error('Error creating domain', err);
+          this.toastService.error('Erro ao criar domínio.');
+          this.isSubmittingDomain = false;
+        }
+      });
+    }
+  }
+
+  private finishDomainCreation() {
+    this.isSubmittingDomain = false;
+    this.domainModalInstance.hide();
+    this.loadCourses();
+  }
+
+  confirmDeleteDomain(domain: any, courseId: number) {
+    this.selectedCourseId = courseId;
+    this.domainToDelete = domain;
+    this.confirmDeleteDomainModalInstance.show();
+  }
+
+  executeDeleteDomain() {
+    if (!this.domainToDelete || !this.selectedCourseId) return;
+
+    this.isDeletingDomain = true;
+    this.coursesService.deleteDomain(this.selectedCourseId, this.domainToDelete.id).subscribe({
+      next: () => {
+        this.toastService.success('Domínio excluído com sucesso!');
+        this.confirmDeleteDomainModalInstance.hide();
+        this.isDeletingDomain = false;
+        this.domainToDelete = null;
+        this.loadCourses();
+      },
+      error: (err) => {
+        console.error('Error deleting domain', err);
+        this.toastService.error('Erro ao excluir domínio.');
+        this.isDeletingDomain = false;
+      }
+    });
+  }
+
+  // --- Teachers Management ---
+
+  openTeacherListModal(course: Course) {
+    this.selectedCourseForTeachers = course;
+    this.teacherListModalInstance.show();
+  }
+
+  closeTeacherListModal() {
+    this.teacherListModalInstance.hide();
+    this.selectedCourseForTeachers = null;
+  }
+
+  openAssignTeacherModal(courseId: number) {
+    this.selectedCourseId = courseId;
+    this.teacherAssignForm.reset({ teacherId: '' });
+    this.teacherAssignModalInstance.show();
+  }
+
+  saveTeacherAssignment() {
+    if (this.teacherAssignForm.invalid || !this.selectedCourseId) {
+      this.teacherAssignForm.markAllAsTouched();
+      return;
+    }
+
+    this.isAssigningTeacher = true;
+    const teacherId = parseInt(this.teacherAssignForm.value.teacherId, 10);
+
+    this.coursesService.assignTeacher(teacherId, this.selectedCourseId).subscribe({
+      next: () => {
+        this.toastService.success('Professor vinculado com sucesso!');
+        this.isAssigningTeacher = false;
+        this.teacherAssignModalInstance.hide();
+        this.loadCourses();
+      },
+      error: (err) => {
+        console.error('Error assigning teacher', err);
+        this.toastService.error('Erro ao vincular professor.');
+        this.isAssigningTeacher = false;
+      }
+    });
   }
 
   trackById(index: number, item: any): number {

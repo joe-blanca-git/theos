@@ -262,6 +262,8 @@ export class LessonViewerComponent implements OnInit, OnDestroy {
     // Configura a URL segura para o iframe diretamente do videoUrl
     if (lesson.videoUrl) {
       this.safeVideoUrl = this.sanitizer.bypassSecurityTrustResourceUrl(lesson.videoUrl);
+    } else {
+      this.safeVideoUrl = null as any;
     }
 
     // Simula carregamento de novo vídeo
