@@ -8,7 +8,7 @@ namespace Theos.Landing.Api.Controllers;
 
 [AllowAnonymous]
 [ApiController]
-[Route("v1/api/Teachers")]
+[Route("api/v1/Teachers")]
 public class LandingTeachersController : ApiControllerBase
 {
     /// <summary>

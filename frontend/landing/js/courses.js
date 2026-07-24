@@ -1,6 +1,6 @@
 // Configuração do endpoint da API (Altere para localhost se estiver desenvolvendo localmente)
-const API_BASE = "https://joederblanca.com.br/theos-landing-api/v1/api/Courses";
-const API_TEACHERS = "https://joederblanca.com.br/theos-landing-api/v1/api/Teachers";
+const API_BASE = "https://joederblanca.com.br/theos-landing-api/api/v1/Courses";
+const API_TEACHERS = "https://joederblanca.com.br/theos-landing-api/api/v1/Teachers";
 
 document.addEventListener("DOMContentLoaded", () => {
     if (document.getElementById("container-cursos")) {
@@ -40,7 +40,7 @@ async function fetchCursos() {
             const precoFormatado = curso.priceSingle ? curso.priceSingle.toLocaleString('pt-BR', {
                 style: 'currency',
                 currency: 'BRL'
-            }) : "R$ 0,00";
+            }) : "GRÁTIS";
 
             col.innerHTML = `
                 <div class="card course-card h-100">
@@ -54,7 +54,7 @@ async function fetchCursos() {
                         <div>
                             <hr class="my-4 opacity-10">
                             <div class="d-flex justify-content-between align-items-center flex-column flex-md-row">
-                                <span class="fw-bold text-primary fs-5">${precoFormatado}</span>
+                                <span class="fw-semibold text-white fs-5">${precoFormatado}</span>
                                 <a href="curso-detalhes.html?id=${curso.id}" class="btn btn-primary btn-sm">Ver detalhes</a>
                             </div>
                         </div>
@@ -282,7 +282,7 @@ async function fetchCursoDetalhes() {
                         const durationMin = lesson.durationSeconds ? `${Math.round(lesson.durationSeconds / 60)} min` : "";
                         lessonsListHtml += `
                             <li class="list-group-item d-flex justify-content-between align-items-center py-3 bg-transparent">
-                                <div class="d-flex align-items-center gap-3">
+                                <div class="d-flex align-items-center gap-3 text-light">
                                     <i class="bi bi-play-circle text-primary"></i> ${lesson.name}
                                 </div>
                                 <span class="badge bg-light text-muted fw-normal">${durationMin}</span>

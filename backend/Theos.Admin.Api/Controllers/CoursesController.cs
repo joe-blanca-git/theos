@@ -29,8 +29,7 @@ namespace Theos.Admin.Api.Controllers
     /// </summary>
     [Authorize]
     [ApiController]
-    [Route("v1/api/[controller]")]
-    [Produces("application/json")]
+    [Route("api/v1/[controller]")]
     public class CoursesController : ControllerBase
     {
         private readonly IMediator _mediator;

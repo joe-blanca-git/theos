@@ -7,6 +7,6 @@ export const environment = {
   //=============================PRODUCAO==============================================================
   apiAgivysUrl: 'https://joederblanca.com.br/agivys-api/api/v1/',
   apiAvivysAuthUrl: 'https://joederblanca.com.br/agivys-api/api/v1/auth/',
-  apiTheosUrl: 'https://joederblanca.com.br/theos-admin-api/v1/api/',
+  apiTheosUrl: 'https://joederblanca.com.br/theos-admin-api/api/v1/',
   //===================================================================================================
 };

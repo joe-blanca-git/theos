@@ -10,7 +10,7 @@ using Theos.Application.Teachers.Common;
 namespace Theos.Admin.Api.Controllers;
 
 [ApiController]
-[Route("v1/api/[controller]")]
+[Route("api/v1/[controller]")]
 public class TeachersController : ApiControllerBase
 {
     /// <summary>

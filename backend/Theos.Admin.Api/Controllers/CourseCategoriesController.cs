@@ -10,7 +10,8 @@ using Theos.Application.CourseCategories.Queries.GetCourseCategoryById;
 namespace Theos.Admin.Api.Controllers;
 
 [Authorize]
-[Route("v1/api/course-categories")]
+[ApiController]
+[Route("api/v1/course-categories")]
 [Tags("Course Categories")]
 public class CourseCategoriesController : ApiControllerBase
 {

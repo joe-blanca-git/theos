@@ -62,6 +62,13 @@ section {
 }
 
 /* ================================
+   BOOTSTRAP OVERRIDES (DARK THEME)
+================================ */
+.bg-white { background-color: var(--bg-white) !important; color: var(--text-main) !important; }
+.text-dark { color: var(--text-light) !important; }
+.text-muted { color: var(--text-muted) !important; }
+
+/* ================================
    NAVBAR (FIXED)
 ================================ */
 

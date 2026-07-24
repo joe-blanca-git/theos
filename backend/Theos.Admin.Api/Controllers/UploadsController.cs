@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace Theos.Admin.Api.Controllers
 {
     [ApiController]
-    [Route("v1/api/[controller]")]
+    [Route("api/v1/[controller]")]
     public class UploadsController : ControllerBase
     {
         private readonly ICloudflareStorageService _cloudflareStorageService;
