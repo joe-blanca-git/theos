@@ -23,7 +23,7 @@ namespace Theos.Admin.Api.Controllers
         [HttpPost("Image")]
         [Authorize]
         [RequestSizeLimit(3 * 1024 * 1024)] // 3MB limit (slightly above 2MB for safety margin)
-        public async Task<IActionResult> UploadImage(IFormFile file)
+        public async Task<IActionResult> UploadImage(IFormFile file, [FromQuery] string folder = "courses/covers")
         {
             if (file == null || file.Length == 0)
                 return BadRequest(new { message = "Nenhum arquivo enviado." });
@@ -37,7 +37,7 @@ namespace Theos.Admin.Api.Controllers
             if (!allowedExtensions.Contains(extension))
                 return BadRequest(new { message = "Formato de imagem não suportado. Use JPG, PNG ou WEBP." });
 
-            var uniqueFileName = $"courses/covers/{Guid.NewGuid()}{extension}";
+            var uniqueFileName = $"{folder}/{Guid.NewGuid()}{extension}";
 
             using var stream = file.OpenReadStream();
             

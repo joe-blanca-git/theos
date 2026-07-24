@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "cA0W56wOBKA=",
+  "dgSpecHash": "EMPxwxbv9bg=",
   "success": true,
-  "projectFilePath": "C:\\Users\\joeder-blanca\\Documents\\projetos-joe\\git\\theos\\backend\\Theos.Api\\Theos.Api.csproj",
+  "projectFilePath": "c:\\Users\\joeder-blanca\\Documents\\projetos-joe\\git\\theos\\backend\\Theos.Api\\Theos.Api.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\joeder-blanca\\.nuget\\packages\\awssdk.core\\4.0.100.5\\awssdk.core.4.0.100.5.nupkg.sha512",
     "C:\\Users\\joeder-blanca\\.nuget\\packages\\awssdk.s3\\4.0.101.1\\awssdk.s3.4.0.101.1.nupkg.sha512",

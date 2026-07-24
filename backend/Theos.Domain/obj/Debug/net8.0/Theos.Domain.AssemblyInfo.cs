@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Theos.Domain")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d7c66c9edf59358418907f9b6327f5fa38f464e1")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0e30f6ffe1bcc57cd0ea3547742c378d1a5f8234")]
 [assembly: System.Reflection.AssemblyProductAttribute("Theos.Domain")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Theos.Domain")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

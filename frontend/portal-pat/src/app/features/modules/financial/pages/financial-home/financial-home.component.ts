@@ -61,6 +61,10 @@ export class FinancialHomeComponent implements OnInit, OnDestroy {
   selectedTransaction: ITransaction | null = null;
   toastMessage = '';
   showToast = false;
+  isCanceling = false;
+
+  showCancelConfirmModal = false;
+  transactionToCancel: ITransaction | null = null;
 
   // ─── Filter Options ───────────────────────────────────────────────────────
   statusOptions: string[] = ['Todos', 'Pago', 'Pendente', 'Cancelado', 'Reembolsado'];
@@ -371,6 +375,38 @@ export class FinancialHomeComponent implements OnInit, OnDestroy {
     } else {
       this.triggerToast('ID do curso não encontrado para continuar o pagamento.');
     }
+  }
+
+  cancelTransaction(tx: ITransaction): void {
+    this.transactionToCancel = tx;
+    this.showCancelConfirmModal = true;
+  }
+
+  closeCancelConfirm(): void {
+    this.showCancelConfirmModal = false;
+    this.transactionToCancel = null;
+  }
+
+  confirmCancelTransaction(): void {
+    if (!this.transactionToCancel) return;
+    const tx = this.transactionToCancel;
+
+    this.isCanceling = true;
+    this.financialService.cancelPurchase(Number(tx.id)).subscribe({
+      next: () => {
+        this.isCanceling = false;
+        this.triggerToast('Transação cancelada com sucesso!');
+        this.closeCancelConfirm();
+        this.closeDetail();
+        this.loadTransactions();
+      },
+      error: (err) => {
+        this.isCanceling = false;
+        console.error('Erro ao cancelar transação', err);
+        this.triggerToast('Erro ao cancelar a transação. Tente novamente.');
+        this.closeCancelConfirm();
+      }
+    });
   }
 
 

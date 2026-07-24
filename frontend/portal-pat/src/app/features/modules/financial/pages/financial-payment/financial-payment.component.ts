@@ -37,6 +37,8 @@ export class FinancialPaymentComponent implements OnInit {
   // Business Rules States
   transacaoPendente: PendenciaDTO | null = null;
   bloquearOutrosMetodos = false;
+  purchaseId: number | null = null;
+  isCancelingPix = false;
 
   cursoId: number = 0;
   checkoutSummary?: CheckoutSummary;
@@ -126,6 +128,7 @@ export class FinancialPaymentComponent implements OnInit {
         } else {
           // Se backend disser que não tem pendência (foi cancelado ou expirou), liberamos a UI
           this.transacaoPendente = null;
+          this.purchaseId = null;
           this.bloquearOutrosMetodos = false;
           this.qrCodeGenerated = false;
           this.pixCopiaECola = '';
@@ -141,6 +144,15 @@ export class FinancialPaymentComponent implements OnInit {
   }
 
   tratarPendencia(pendencia: PendenciaDTO) {
+    if (pendencia.purchaseId) {
+      this.purchaseId = pendencia.purchaseId;
+    }
+
+    // Fallback: se o backend enviar o erro cru do Asaas, tratamos no front para melhorar a UX
+    if (pendencia.mensagem && (pendencia.mensagem.includes('Asaas.GetPixQrCodeAsync') || pendencia.mensagem.includes('invalid_action'))) {
+      pendencia.mensagem = 'O PIX gerado anteriormente expirou ou é inválido. Por favor, cancele-o para liberar o pagamento.';
+    }
+    
     if (pendencia.metodoPagamento === 'PIX' && pendencia.status === 'PENDING') {
       this.bloquearOutrosMetodos = true;
       this.setPaymentMethod('PIX');
@@ -241,9 +253,14 @@ export class FinancialPaymentComponent implements OnInit {
             this.qrCodeUrl = res.qrCode;
             this.pixCopiaECola = res.pixCopiaECola;
             
+            if (res.purchaseId) {
+              this.purchaseId = res.purchaseId;
+            }
+            
             // Regra: Bloquear outras abas
             this.transacaoPendente = {
               temPendencia: true,
+              purchaseId: res.purchaseId,
               status: 'PENDING',
               metodoPagamento: 'PIX',
               pixCopiaECola: res.pixCopiaECola,
@@ -297,5 +314,29 @@ export class FinancialPaymentComponent implements OnInit {
         }, 3000);
       }
     }, 2500);
+  }
+
+  cancelPix() {
+    if (!this.purchaseId) return;
+
+    this.isCancelingPix = true;
+    this.financialService.cancelPurchase(this.purchaseId).subscribe({
+      next: () => {
+        this.isCancelingPix = false;
+        this.toastService.success('Cobrança PIX cancelada com sucesso!');
+        // Reset states
+        this.purchaseId = null;
+        this.transacaoPendente = null;
+        this.bloquearOutrosMetodos = false;
+        this.qrCodeGenerated = false;
+        this.pixCopiaECola = '';
+        this.qrCodeUrl = '';
+      },
+      error: (err) => {
+        this.isCancelingPix = false;
+        console.error('Error canceling pix', err);
+        this.toastService.error('Erro ao cancelar a cobrança PIX. Tente novamente mais tarde.');
+      }
+    });
   }
 }

@@ -1,0 +1,64 @@
+using MediatR;
+using Microsoft.EntityFrameworkCore;
+using Theos.Application.Common.Interfaces;
+
+namespace Theos.Application.Purchases.Commands.CancelPurchase;
+
+public class CancelPurchaseCommandHandler : IRequestHandler<CancelPurchaseCommand, CancelPurchaseResponseDto>
+{
+    private readonly ITheosDbContext _context;
+    private readonly IAsaasService _asaasService;
+    private readonly IUserContextService _userContextService;
+
+    public CancelPurchaseCommandHandler(ITheosDbContext context, IAsaasService asaasService, IUserContextService userContextService)
+    {
+        _context = context;
+        _asaasService = asaasService;
+        _userContextService = userContextService;
+    }
+
+    public async Task<CancelPurchaseResponseDto> Handle(CancelPurchaseCommand request, CancellationToken cancellationToken)
+    {
+        var currentUser = await _userContextService.GetCurrentUserAsync();
+        var purchase = await _context.Purchases
+            .FirstOrDefaultAsync(p => p.Id == request.PurchaseId && p.UserId == currentUser.Id, cancellationToken);
+
+        if (purchase == null)
+        {
+            return new CancelPurchaseResponseDto
+            {
+                Success = false,
+                Message = "Compra não encontrada."
+            };
+        }
+
+        if (purchase.Status != Domain.Enums.PurchaseStatus.Pending && purchase.Status != Domain.Enums.PurchaseStatus.Approved)
+        {
+            return new CancelPurchaseResponseDto
+            {
+                Success = false,
+                Message = "Compra não pode ser cancelada no status atual."
+            };
+        }
+
+        if (string.IsNullOrWhiteSpace(purchase.AsaasPaymentId))
+        {
+            return new CancelPurchaseResponseDto
+            {
+                Success = false,
+                Message = "Pagamento Asaas não encontrado para esta compra."
+            };
+        }
+
+        await _asaasService.CancelPaymentAsync(purchase.AsaasPaymentId, cancellationToken);
+
+        purchase.Cancel();
+        await _context.SaveChangesAsync(cancellationToken);
+
+        return new CancelPurchaseResponseDto
+        {
+            Success = true,
+            Message = "Pagamento cancelado com sucesso."
+        };
+    }
+}

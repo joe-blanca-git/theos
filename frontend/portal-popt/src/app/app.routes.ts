@@ -44,6 +44,12 @@ export const routes: Routes = [
                 title: 'Dados Cadastrais',
                 loadChildren: () =>
                     import('./features/modules/profile/profile.routes').then((r) => r.profileRoutes),
+            },
+            {
+                path: 'blog',
+                title: 'Blog',
+                loadChildren: () =>
+                    import('./features/modules/blog/blog.routes').then((r) => r.blogRoutes),
             }
         ]
     }

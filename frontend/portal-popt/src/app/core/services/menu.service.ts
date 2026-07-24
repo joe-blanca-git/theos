@@ -22,6 +22,12 @@ export class MenuService {
         title: 'Cursos',
         icon: 'fas fa-book-reader',
         route: '/courses'
+      },
+      {
+        id: 3,
+        title: 'Blog',
+        icon: 'fas fa-newspaper',
+        route: '/blog'
       }
     ];
     return menuMock;

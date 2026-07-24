@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    
+    <!-- SEO Meta Tags (Will be dynamically updated via JS) -->
+    <title>Artigo - Instituto Theos</title>
+    <meta name="description" id="metaDescription" content="Conteúdo teológico do Instituto Theos." />
+    <meta property="og:title" id="ogTitle" content="Artigo - Instituto Theos" />
+    <meta property="og:description" id="ogDesc" content="Conteúdo teológico do Instituto Theos." />
+    <meta property="og:image" id="ogImage" content="" />
+    <meta name="twitter:card" content="summary_large_image">
+
+    <!-- Base HREF -->
+    <base href="./">
+
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+    <!-- Icons-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+    <!-- CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="./css/styles.css" rel="stylesheet" />
+    <link href="./css/blog.css" rel="stylesheet" />
+</head>
+<body class="bg-deep">
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg fixed-top" id="mainNav">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <img src="assets/images/logos/logo.png" width="80" alt="Logo" class="logo" />
+            </a>
+            <button class="navbar-toggler border-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon text-white"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html#home">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="index.html#sobre">Sobre</a></li>
+                    <li class="nav-item"><a class="nav-link" href="index.html#cursos">Trilhas</a></li>
+                    <li class="nav-item"><a class="nav-link" href="index.html#professores">Professores</a></li>
+                    <li class="nav-item"><a class="nav-link" href="index.html#faq">FAQ</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="blog.html">Blog</a></li>
+                    <li class="nav-item ms-lg-3"><a class="btn btn-warning btn-sm text-black" href="https://joederblanca.com.br/portal-pan/auth/register">Matricule-se</a></li>
+                    <li class="nav-item ms-lg-3"><a class="btn btn-primary btn-sm text-white" href="https://joederblanca.com.br/portal-pan/auth/login">Entrar</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header Section (Dynamic) -->
+    <header class="article-header" id="articleHeader" style="margin-top: 70px;">
+        <div class="article-header-overlay"></div>
+    </header>
+
+    <!-- Article Content -->
+    <section class="py-0" style="background-color: var(--bg-deep);">
+        <div class="container article-content-wrapper">
+            
+            <!-- Breadcrumb -->
+            <nav aria-label="breadcrumb" class="mb-4 position-relative z-3">
+                <ol class="breadcrumb" id="breadcrumbList">
+                    <li class="breadcrumb-item"><a href="index.html" class="text-white-50 text-decoration-none">Home</a></li>
+                    <li class="breadcrumb-item"><a href="blog.html" class="text-white-50 text-decoration-none">Blog</a></li>
+                    <li class="breadcrumb-item"><a href="blog.html" class="text-white-50 text-decoration-none" id="bcCategory">Categoria</a></li>
+                    <li class="breadcrumb-item active text-white" aria-current="page" id="bcTitle">Título</li>
+                </ol>
+            </nav>
+
+            <!-- Article Body Card -->
+            <div class="article-body mb-5">
+                
+                <!-- Meta Info -->
+                <div class="text-center mb-5">
+                    <span class="badge bg-primary px-3 py-2 text-uppercase tracking-wider fw-bold mb-3" id="articleCategory">Categoria</span>
+                    <h1 class="display-font text-white fw-bold mb-4" id="articleTitle">Carregando Título...</h1>
+                    
+                    <div class="d-flex align-items-center justify-content-center text-white-50 small flex-wrap gap-3">
+                        <div><i class="far fa-user me-2"></i> <span id="articleAuthor">Autor</span></div>
+                        <div><i class="far fa-calendar-alt me-2"></i> <span id="articleDate">Data</span></div>
+                        <div><i class="far fa-clock me-2"></i> <span id="articleReadTime">-- min</span> de leitura</div>
+                    </div>
+                </div>
+
+                <!-- Content Injection -->
+                <div id="articleContent" class="content-formatted">
+                    <!-- HTML content from JS -->
+                    <div class="skeleton" style="height: 20px; margin-bottom: 15px; width: 100%;"></div>
+                    <div class="skeleton" style="height: 20px; margin-bottom: 15px; width: 90%;"></div>
+                    <div class="skeleton" style="height: 20px; margin-bottom: 30px; width: 95%;"></div>
+                </div>
+
+                <hr class="my-5 border-secondary border-opacity-25">
+
+                <!-- Tags & Share -->
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-4">
+                    <div>
+                        <h6 class="text-white-50 mb-3 text-uppercase small tracking-wider">Tags do Artigo</h6>
+                        <div id="articleTags"></div>
+                    </div>
+                    <div>
+                        <h6 class="text-white-50 mb-3 text-uppercase small tracking-wider text-md-end">Compartilhar</h6>
+                        <div class="d-flex gap-2">
+                            <a href="#" id="shareWhatsapp" target="_blank" class="share-btn"><i class="fab fa-whatsapp"></i></a>
+                            <a href="#" id="shareFacebook" target="_blank" class="share-btn"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" id="shareTwitter" target="_blank" class="share-btn"><i class="fab fa-twitter"></i></a>
+                            <a href="#" id="shareLinkedin" target="_blank" class="share-btn"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="javascript:void(0)" onclick="copyLink()" class="share-btn" title="Copiar Link"><i class="fas fa-link"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Back Button -->
+            <div class="text-center mb-5">
+                <a href="blog.html" class="btn btn-outline-light rounded-pill px-5 py-2"><i class="fas fa-arrow-left me-2"></i> Voltar ao Blog</a>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Related Articles -->
+    <section class="py-5" style="background-color: var(--bg-light); border-top: 1px solid rgba(255,255,255,0.05);" id="relatedSection">
+        <div class="container">
+            <h3 class="fw-bold text-white mb-4">Leia Também</h3>
+            <div class="row g-4" id="relatedArticlesGrid">
+                <!-- Loaded dynamically -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row g-5">
+                <div class="col-lg-4">
+                    <h3 class="text-white mb-4 fw-bold">Instituto Theos</h3>
+                    <p class="mt-3">Formação teológica para transformar vidas. Conectando conhecimento bíblico com a prática ministerial.</p>
+                </div>
+                <div class="col-lg-2">
+                    <h5 class="mb-4">Navegação</h5>
+                    <div class="footer-links">
+                        <a href="index.html#home">Início</a>
+                        <a href="blog.html">Blog</a>
+                    </div>
+                </div>
+            </div>
+            <hr class="mt-5 mb-4 opacity-10">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-center text-center text-md-start">
+                <p class="mb-0 small">&copy; 2026 Instituto Theos. Todos os direitos reservados.</p>
+                <p class="mb-0 small">Fidelidade às Escrituras.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/scripts.js"></script>
+    <script src="js/blog-data.js"></script>
+    <script src="js/blog-artigo.js"></script>
+</body>
+</html>

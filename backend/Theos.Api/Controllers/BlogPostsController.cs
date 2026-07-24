@@ -2,6 +2,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Theos.Application.BlogPosts.Queries.GetBlogPostById;
 using Theos.Application.BlogPosts.Queries.GetBlogPosts;
+using Theos.Application.BlogPosts.Commands.CreateBlogPost;
+using Theos.Application.BlogPosts.Commands.UpdateBlogPost;
+using Theos.Application.BlogPosts.Commands.DeleteBlogPost;
 using Theos.Application.BlogPosts.DTOs;
 using Swashbuckle.AspNetCore.Annotations;
 using Microsoft.AspNetCore.Http;
@@ -30,5 +33,39 @@ public class BlogPostsController : ApiControllerBase
     {
         var result = await Mediator.Send(new GetBlogPostsQuery());
         return Ok(result);
+    }
+
+    [HttpPost]
+    [SwaggerOperation(Summary = "Criar um novo post", Description = "Cria uma nova publicação no blog.")]
+    [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> Create([FromBody] CreateBlogPostCommand command)
+    {
+        var id = await Mediator.Send(command);
+        return CreatedAtAction(nameof(GetById), new { id }, id);
+    }
+
+    [HttpPut("{id}")]
+    [SwaggerOperation(Summary = "Atualizar um post", Description = "Atualiza os dados de uma publicação existente.")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> Update(int id, [FromBody] UpdateBlogPostCommand command)
+    {
+        if (id != command.Id)
+        {
+            return BadRequest("O ID da rota não corresponde ao ID do corpo da requisição.");
+        }
+
+        await Mediator.Send(command);
+        return NoContent();
+    }
+
+    [HttpDelete("{id}")]
+    [SwaggerOperation(Summary = "Excluir um post", Description = "Remove uma publicação do blog pelo ID.")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> Delete(int id)
+    {
+        await Mediator.Send(new DeleteBlogPostCommand(id));
+        return NoContent();
     }
 }

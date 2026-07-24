@@ -101,6 +101,16 @@
             <param name="purchaseId">ID da compra a ser estornada.</param>
             <returns>Resultado da operação de refund.</returns>
         </member>
+        <member name="M:Theos.Api.Controllers.PurchasesController.Cancel(System.Int32)">
+            <summary>
+            Cancela uma compra no sistema e no Asaas.
+            </summary>
+            <remarks>
+            Exemplo de request: POST /api/purchases/123/cancel
+            </remarks>
+            <param name="purchaseId">ID da compra a ser cancelada.</param>
+            <returns>Resultado da operação de cancelamento.</returns>
+        </member>
         <member name="M:Theos.Api.Controllers.PurchasesController.GetMyPurchases">
             <summary>
             Retorna a lista de compras do usuário autenticado.

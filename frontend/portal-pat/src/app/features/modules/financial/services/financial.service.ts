@@ -12,12 +12,14 @@ export interface PixRequest {
 
 export interface PixResponse {
   sucesso: boolean;
+  purchaseId?: number;
   cobrancaId: string;
   pixCopiaECola: string;
   qrCode: string;
 }
 export interface PendenciaDTO {
   temPendencia: boolean;
+  purchaseId?: number;
   status: string;
   metodoPagamento: string;
   pixCopiaECola?: string;
@@ -47,11 +49,15 @@ export class FinancialService extends BaseService {
   }
 
   verificarPendencias(cursoId: number | undefined): Observable<PendenciaDTO> {
-    let url = `${this.urlApiTheos}financeiro/checkout/pendencias?tipoCompra=AVULSO`;
-    if (cursoId) {
-      url += `&cursoId=${cursoId}`;
+    if (!cursoId) {
+      throw new Error('CursoId é obrigatório para verificar pendências.');
     }
+    const url = `${this.urlApiTheos}financeiro/checkout/pendencias?cursoId=${cursoId}&tipoCompra=AVULSO`;
     return this.http.get<PendenciaDTO>(url, this.GetAuthHeaderJson());
+  }
+
+  cancelPurchase(purchaseId: number): Observable<any> {
+    return this.http.post(`${this.urlApiTheos}purchases/${purchaseId}/cancel`, {}, this.GetAuthHeaderJson());
   }
 
   getMyPortalTransactions(): Observable<any[]> {

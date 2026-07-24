@@ -25,6 +25,7 @@ public class FinancialCheckoutController : ApiControllerBase
                 return Ok(new CheckoutPixResponseDto
                 {
                     Sucesso = true,
+                    PurchaseId = result.PurchaseId,
                     CobrancaId = result.AsaasPaymentId,
                     PixCopiaECola = result.PixCopyPaste ?? string.Empty,
                     QrCode = result.PixQrCode ?? string.Empty

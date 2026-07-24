@@ -205,6 +205,18 @@ public class AsaasService : IAsaasService
 
 
 
+    public async Task CancelPaymentAsync(string asaasPaymentId, CancellationToken ct)
+    {
+        if (string.IsNullOrWhiteSpace(asaasPaymentId)) throw new ArgumentException("asaasPaymentId is required");
+
+        var response = await _httpClient.DeleteAsync($"payments/{asaasPaymentId}", ct);
+        if (!response.IsSuccessStatusCode)
+        {
+            var body = await response.Content.ReadAsStringAsync(ct);
+            throw new InvalidOperationException($"Asaas.CancelPaymentAsync failed: {(int)response.StatusCode} - {response.ReasonPhrase}. Body: {body}");
+        }
+    }
+
     public async Task RefundPaymentAsync(string asaasPaymentId, CancellationToken ct)
     {
         if (string.IsNullOrWhiteSpace(asaasPaymentId)) throw new ArgumentException("asaasPaymentId is required");
