@@ -10,6 +10,10 @@ import { errorInterceptor } from './core/interceptors/error-interceptor';
 import { AuthService } from './core/auth/auth.service';
 import { AuthGuardService } from './core/guards/auth.guard';
 import { provideServiceWorker } from '@angular/service-worker';
+import { registerLocaleData } from '@angular/common';
+import localePt from '@angular/common/locales/pt';
+
+registerLocaleData(localePt, 'pt-BR');
 
 export const appConfig: ApplicationConfig = {
   providers: [

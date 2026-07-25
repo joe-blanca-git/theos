@@ -1,21 +1,17 @@
 <!-- Floating Banner -->
-<div class="pwa-floating-banner shadow-lg p-3 rounded-4" *ngIf="showBanner">
-  <div class="d-flex align-items-center justify-content-between">
-    <div class="d-flex align-items-center gap-3">
-      <div class="app-icon shadow-sm">
-        <img src="icons/icon-72x72.png" alt="App Icon" width="40" height="40" class="rounded-3">
-      </div>
-      <div>
-        <h6 class="mb-0 fw-bold text-dark">Instalar App</h6>
-        <small class="text-muted" style="font-size: 0.75rem;">Adicione o portal à sua tela inicial.</small>
-      </div>
+<div class="pwa-floating-banner shadow p-3 rounded-4 border" *ngIf="showBanner">
+  <div class="d-flex align-items-center gap-3 mb-3">
+    <div class="app-icon flex-shrink-0">
+      <img src="icons/icon-72x72.png" alt="App Icon" width="48" height="48" style="object-fit: contain; border-radius: 12px; background-color: transparent;">
     </div>
-    <div class="d-flex gap-2">
-      <button class="btn btn-sm btn-primary rounded-pill px-3 fw-bold shadow-sm" (click)="installPwa()">Instalar</button>
-      <button class="btn btn-sm btn-light rounded-circle text-muted" style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;" (click)="dismissBanner()">
-        <i class="bi bi-x"></i>
-      </button>
+    <div>
+      <h6 class="mb-1 fw-bold text-dark">Aplicativo Theos</h6>
+      <p class="text-muted mb-0" style="font-size: 0.85rem; line-height: 1.2;">Instale o Portal do Aluno na sua tela inicial para acesso rápido e fácil.</p>
     </div>
+  </div>
+  <div class="d-flex gap-2 justify-content-end">
+    <button class="btn btn-sm btn-light text-muted fw-semibold rounded-pill px-3" (click)="dismissBanner()">Agora não</button>
+    <button class="btn btn-sm btn-primary fw-bold rounded-pill px-4" (click)="installPwa()">Instalar</button>
   </div>
 </div>
 

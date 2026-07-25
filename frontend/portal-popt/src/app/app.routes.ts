@@ -50,6 +50,18 @@ export const routes: Routes = [
                 title: 'Blog',
                 loadChildren: () =>
                     import('./features/modules/blog/blog.routes').then((r) => r.blogRoutes),
+            },
+            {
+                path: 'settings',
+                title: 'Configurações',
+                loadChildren: () =>
+                    import('./features/modules/settings/settings.routes').then((r) => r.routes),
+            },
+            {
+                path: 'support',
+                title: 'Suporte',
+                loadChildren: () =>
+                    import('./features/modules/support/support.routes').then((r) => r.routes),
             }
         ]
     }

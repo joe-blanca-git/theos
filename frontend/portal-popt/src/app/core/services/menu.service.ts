@@ -28,6 +28,18 @@ export class MenuService {
         title: 'Blog',
         icon: 'fas fa-newspaper',
         route: '/blog'
+      },
+      {
+        id: 4,
+        title: 'Configurações',
+        icon: 'fas fa-cog',
+        route: '/settings'
+      },
+      {
+        id: 5,
+        title: 'Suporte',
+        icon: 'fas fa-headset',
+        route: '/support'
       }
     ];
     return menuMock;

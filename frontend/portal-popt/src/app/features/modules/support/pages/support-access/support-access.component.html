@@ -1,0 +1,163 @@
+<div class="row g-0 h-100 flex-grow-1" style="min-height: 0;">
+  
+  <!-- Painel Esquerdo: Lista de Usuários -->
+  <div class="col-12 col-md-4 col-lg-3 border-end d-flex flex-column h-100 overflow-hidden bg-white" style="min-height: 0;">
+    <!-- Cabeçalho / Filtro -->
+    <div class="p-3 border-bottom bg-light bg-opacity-25">
+      <div class="input-group input-group-sm shadow-sm rounded-pill overflow-hidden">
+        <span class="input-group-text bg-white border-end-0 border-secondary border-opacity-25 text-muted px-3">
+          <i class="fas fa-search"></i>
+        </span>
+        <input type="text" class="form-control border-start-0 border-secondary border-opacity-25 ps-0 bg-white" 
+               placeholder="Buscar usuário..." (keyup)="onSearch($event)">
+      </div>
+    </div>
+
+    <!-- Lista -->
+    <div class="flex-grow-1 overflow-auto bg-white custom-scrollbar">
+      <!-- Loading State -->
+      <div *ngIf="isLoading" class="p-3">
+        <div class="skeleton rounded mb-3" style="height: 60px; width: 100%;"></div>
+        <div class="skeleton rounded mb-3" style="height: 60px; width: 100%;"></div>
+        <div class="skeleton rounded" style="height: 60px; width: 100%;"></div>
+      </div>
+
+      <!-- Empty State -->
+      <div *ngIf="!isLoading && filteredUsers.length === 0" class="text-center py-5 px-3 text-muted">
+        <i class="fas fa-users fs-2 mb-3 text-secondary opacity-50"></i>
+        <p class="mb-0">Nenhum usuário encontrado.</p>
+      </div>
+
+      <!-- Users -->
+      <div class="list-group list-group-flush rounded-0" *ngIf="!isLoading">
+        <button *ngFor="let user of filteredUsers" 
+                class="list-group-item list-group-item-action p-3 border-bottom user-item"
+                [class.active-user]="selectedUser?.id === user.id"
+                (click)="selectUser(user)">
+          <div class="fw-bold mb-1 text-truncate" [class.text-primary]="selectedUser?.id === user.id" style="font-size: 0.95rem;">
+            {{ user.name }}
+          </div>
+          <div class="text-muted text-truncate mb-2" style="font-size: 0.8rem;">{{ user.email }}</div>
+          <div class="d-flex align-items-center">
+            <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-25 rounded-pill" style="font-size: 0.7rem;">
+              {{ user.courses.length }} curso(s)
+            </span>
+          </div>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Painel Direito: Detalhes e Cursos -->
+  <div class="col-12 col-md-8 col-lg-9 d-flex flex-column h-100 overflow-hidden bg-light bg-opacity-25" style="min-height: 0;">
+    
+    <!-- Empty State -->
+    <div *ngIf="!selectedUser" class="flex-grow-1 d-flex flex-column align-items-center justify-content-center text-muted p-5">
+      <div class="bg-white rounded-circle shadow-sm d-flex align-items-center justify-content-center mb-4" style="width: 80px; height: 80px;">
+        <i class="fas fa-id-card fs-2 text-secondary opacity-50"></i>
+      </div>
+      <h5 class="fw-bold">Selecione um usuário</h5>
+      <p>Clique em um usuário na lista ao lado para visualizar e gerenciar seus cursos.</p>
+    </div>
+
+    <!-- User Details -->
+    <ng-container *ngIf="selectedUser">
+      <!-- Cabeçalho do Usuário -->
+      <div class="p-4 border-bottom bg-white shadow-sm z-1">
+        <div class="d-flex align-items-center">
+          <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center me-3 shadow-sm flex-shrink-0 fw-bold fs-5" style="width: 60px; height: 60px;">
+            {{ selectedUser.name.charAt(0) }}
+          </div>
+          <div>
+            <h4 class="fw-bold mb-1">{{ selectedUser.name }}</h4>
+            <div class="text-muted">
+              <i class="fas fa-envelope me-1"></i> {{ selectedUser.email }} &nbsp;&bull;&nbsp; 
+              <i class="fas fa-calendar-alt me-1"></i> Cadastro: {{ selectedUser.createdAt | date:'shortDate' }} &nbsp;&bull;&nbsp; 
+              <i class="fas fa-graduation-cap me-1"></i> {{ selectedUser.courses.length }} cursos adquiridos
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabela de Cursos (Padrão Ouro) -->
+      <div class="flex-grow-1 p-4 overflow-auto custom-scrollbar">
+        <div class="table-responsive bg-white rounded-3 shadow-sm border border-secondary border-opacity-10">
+          <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+              <tr>
+                <th scope="col" class="ps-4">Curso</th>
+                <th scope="col">Data</th>
+                <th scope="col">Pagamento</th>
+                <th scope="col">Acesso</th>
+                <th scope="col" class="text-end pe-4">Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngIf="selectedUser.courses.length === 0">
+                <td colspan="5" class="text-center py-5 text-muted">Este usuário não possui cursos.</td>
+              </tr>
+              <tr *ngFor="let course of selectedUser.courses">
+                <td class="ps-4">
+                  <div class="fw-semibold text-dark">{{ course.name }}</div>
+                  <small class="text-muted">{{ course.price | currency:'BRL' }} &bull; {{ course.paymentMethod }}</small>
+                </td>
+                <td class="text-muted">{{ course.purchaseDate | date:'shortDate' }}</td>
+                <td>
+                  <span class="badge border border-opacity-25 rounded-pill" [ngClass]="getPaymentBadgeClass(course.paymentStatus)">
+                    {{ course.paymentStatus }}
+                  </span>
+                </td>
+                <td>
+                  <span class="badge border border-opacity-25 rounded-pill" [ngClass]="getAccessBadgeClass(course.accessStatus)">
+                    <i class="fas me-1" [ngClass]="course.accessStatus === 'Liberado' ? 'fa-unlock' : 'fa-lock'"></i>
+                    {{ course.accessStatus }}
+                  </span>
+                </td>
+                <td class="text-end pe-4">
+                  <!-- Botão de Liberação Manual (Apenas se pendente/cancelado E bloqueado) -->
+                  <button class="btn btn-sm btn-outline-primary rounded-pill fw-semibold shadow-sm px-3"
+                          *ngIf="course.accessStatus === 'Bloqueado' && (course.paymentStatus === 'Pendente' || course.paymentStatus === 'Cancelado')"
+                          (click)="openGrantModal(course)">
+                    Liberar Curso
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </ng-container>
+
+  </div>
+</div>
+
+<!-- Modal de Confirmação de Liberação -->
+<div class="custom-modal-backdrop animated-fade-in d-flex align-items-center justify-content-center" *ngIf="showConfirmModal" (click)="closeGrantModal()">
+  <div class="card bg-white border-0 shadow-lg rounded-4 overflow-hidden" 
+       style="width: 100%; max-width: 450px;" 
+       (click)="$event.stopPropagation()">
+    
+    <div class="card-body p-4 text-center">
+      <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 70px; height: 70px;">
+        <i class="fas fa-key fs-2"></i>
+      </div>
+      <h4 class="fw-bold mb-3">Liberação Manual</h4>
+      <p class="text-muted mb-1">Você está prestes a liberar manualmente o acesso ao curso:</p>
+      <p class="fw-semibold text-dark mb-4">{{ courseToGrant?.name }}</p>
+      
+      <div class="alert alert-warning border-warning border-opacity-25 text-start small mb-4" role="alert">
+        <i class="fas fa-exclamation-triangle me-2"></i> <strong>Atenção:</strong> O status do pagamento continuará como <strong>{{ courseToGrant?.paymentStatus }}</strong>, apenas o acesso ao conteúdo será liberado.
+      </div>
+      
+      <div class="d-flex gap-2 w-100">
+        <button type="button" class="btn btn-light border flex-grow-1 rounded-pill fw-semibold" (click)="closeGrantModal()" [disabled]="isGranting">
+          Cancelar
+        </button>
+        <button type="button" class="btn btn-primary flex-grow-1 rounded-pill fw-semibold shadow-sm d-flex justify-content-center align-items-center" (click)="confirmGrantAccess()" [disabled]="isGranting">
+          <span class="spinner-border spinner-border-sm me-2" *ngIf="isGranting"></span>
+          {{ isGranting ? 'Liberando...' : 'Confirmar Liberação' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ILatestNews } from '../../../modules/home/models/home.model';
 import { RouterModule } from '@angular/router';
@@ -27,13 +27,24 @@ export class BlogExternalComponent implements OnChanges {
   mediumPosts: IPost[] = [];
   smallPosts: IPost[] = [];
 
+  constructor(private cdr: ChangeDetectorRef) {}
+
   ngOnChanges(changes: SimpleChanges) {
-    if ((changes['news'] || changes['isLoadingPage']) && !this.isLoadingPage) {
+    if (changes['news'] || changes['isLoadingPage']) {
       this.buildPosts();
     }
   }
 
   buildPosts() {
+    if (this.isLoadingPage) {
+      const dummy: IPost = { id: 0, title: '', excerpt: '', image: '', category: '', date: '' };
+      this.featuredPost = dummy;
+      this.mediumPosts = [dummy, dummy];
+      this.smallPosts = [dummy, dummy, dummy, dummy];
+      this.cdr.detectChanges();
+      return;
+    }
+
     // If no news, just render empty or placeholders
     if (!this.news || this.news.length === 0) {
       this.featuredPost = {
@@ -63,5 +74,7 @@ export class BlogExternalComponent implements OnChanges {
     this.mediumPosts = this.news.slice(1, 3).map(mapToIPost);
     
     this.smallPosts = this.news.slice(3, 7).map(mapToIPost);
+
+    this.cdr.detectChanges();
   }
 }
