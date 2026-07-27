@@ -1,7 +1,7 @@
 <div class="row p-0 m-0 min-vh-100">
     <!-- Left panel (Form) -->
     <div class="col-12 col-md-6 d-flex flex-column gap-3 justify-content-center align-items-center login-left px-2 px-md-5">
-        <div class="card w-100 rounded-5 shadow border-0">
+        <div class="card w-100 rounded-5 shadow border-0" style="z-index: 20;">
             <!-- Mobile Header Logo (visible only on mobile) -->
             <div class="card-header rounded-top-5 d-md-none mb-2 bg-dark d-flex justify-content-center align-items-center py-4">
                 <img width="150" height="auto" src="logos/logo-nobg.png" alt="Logo Mobile">
@@ -38,6 +38,22 @@
                                 [class.is-valid]="f['birthDate'].touched && f['birthDate'].valid">
                         </div>
                         <div class="text-danger small mt-1" *ngIf="(f['birthDate'].touched || submitted) && f['birthDate'].errors?.['required']">Data de nascimento é obrigatória.</div>
+                    </div>
+
+                    <!-- Telefone -->
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold text-white-50">Telefone / WhatsApp</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-secondary bg-opacity-10 text-white-50 border-end-0"><i class="fas fa-phone"></i></span>
+                            <select class="form-select bg-secondary bg-opacity-10 border-start-0 border-end-0 text-white" formControlName="countryCode" style="max-width: 100px; padding-left: 0;">
+                                <option *ngFor="let c of countries" [value]="c.code" class="text-dark">{{ c.name }}</option>
+                            </select>
+                            <input type="tel" class="form-control bg-secondary bg-opacity-10 border-start-0" formControlName="phone" placeholder="(11) 99999-9999"
+                                (input)="onPhoneInput($event)"
+                                [class.is-invalid]="(f['phone'].touched || submitted) && f['phone'].invalid"
+                                [class.is-valid]="f['phone'].touched && f['phone'].valid">
+                        </div>
+                        <div class="text-danger small mt-1" *ngIf="(f['phone'].touched || submitted) && f['phone'].errors?.['required']">Telefone é obrigatório.</div>
                     </div>
 
                     <!-- E-mail -->
@@ -105,12 +121,12 @@
 
             <!-- Card Footer -->
             <div class="card-footer border-top-0 d-flex justify-content-center align-items-center py-4 bg-transparent">
-                <span class="text-white-50">Já tem uma conta? <a class="text-white fw-bold text-decoration-none" routerLink="/auth/login">Faça Login</a></span>
+                <span class="text-white-50">Já tem uma conta? <a class="text-white fw-bold text-decoration-none" style="cursor: pointer;" routerLink="/auth/login">Faça Login</a></span>
             </div>
         </div>
 
         <!-- Footer -->
-        <div class="footer position-absolute bottom-0 w-100 text-center text-md-start ps-md-5 d-flex flex-column py-3">
+        <div class="footer position-absolute bottom-0 w-100 text-center text-md-start ps-md-5 d-flex flex-column py-3" style="pointer-events: none;">
             <span class="text-white-50 small">Todos os direitos reservados à Agivys Tecnologia e Serviços</span>
             <span class="text-white-50 small">&copy; 2026 Agivys</span>
         </div>
