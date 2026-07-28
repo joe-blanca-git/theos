@@ -21,7 +21,7 @@ export function app(): express.Express {
 
   // CRÍTICO 2: Entrega o main.js e o styles.css perfeitamente.
   // 'index: false' impede que ele sirva o HTML em branco no lugar do SSR.
-  server.use('/portal-popt', express.static(browserDistFolder, {
+  server.use('/portal-pop', express.static(browserDistFolder, {
     maxAge: '1y',
     index: false 
   }));
@@ -36,7 +36,7 @@ export function app(): express.Express {
         documentFilePath: indexHtml,
         url: `${protocol}://${headers.host}${originalUrl}`,
         publicPath: browserDistFolder,
-        providers: [{ provide: APP_BASE_HREF, useValue: '/portal-popt/' }],
+        providers: [{ provide: APP_BASE_HREF, useValue: '/portal-pop/' }],
       })
       .then((html) => res.send(html))
       .catch((err) => next(err));
