@@ -29,7 +29,7 @@ export class CertificateViewerComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     const code = this.route.snapshot.paramMap.get('code');
     if (!code) {
-      window.location.href = 'https://joederblanca.com.br/theos';
+      window.location.href = 'https://portaltheos.com.br/theos';
       return;
     }
 

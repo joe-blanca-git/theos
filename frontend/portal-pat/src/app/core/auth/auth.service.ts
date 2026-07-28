@@ -131,4 +131,29 @@ export class AuthService extends BaseService {
     const url = `${this.urlApiServiceAuth}register-system-user`;
     return this.http.post(url, payload, this.GetAuthHeaderJson());
   }
+
+  updatePerson(payload: any): Observable<any> {
+    const url = `${this.urlApiServiceAuth}update-person`;
+    return this.http.put(url, payload, this.GetAuthHeaderJson());
+  }
+
+  getMyAddresses(): Observable<any> {
+    const url = `${this.urlApiServiceAuth}my-addresses`;
+    return this.http.get(url, this.GetAuthHeaderJson());
+  }
+
+  addAddress(payload: any): Observable<any> {
+    const url = `${this.urlApiServiceAuth}my-addresses`;
+    return this.http.post(url, payload, this.GetAuthHeaderJson());
+  }
+
+  updateAddress(id: string, payload: any): Observable<any> {
+    const url = `${this.urlApiServiceAuth}my-addresses/${id}`;
+    return this.http.put(url, payload, this.GetAuthHeaderJson());
+  }
+
+  deleteAddress(id: string): Observable<any> {
+    const url = `${this.urlApiServiceAuth}my-addresses/${id}`;
+    return this.http.delete(url, this.GetAuthHeaderJson());
+  }
 }

@@ -1,6 +1,6 @@
 // Configuração do endpoint da API (Altere para localhost se estiver desenvolvendo localmente)
-const API_BASE = "https://joederblanca.com.br/theos-landing-api/api/v1/Courses";
-const API_TEACHERS = "https://joederblanca.com.br/theos-landing-api/api/v1/Teachers";
+const API_BASE = "https://portaltheos.com.br/theos-landing-api/api/v1/Courses";
+const API_TEACHERS = "https://portaltheos.com.br/theos-landing-api/api/v1/Teachers";
 
 document.addEventListener("DOMContentLoaded", () => {
     if (document.getElementById("container-cursos")) {
@@ -131,7 +131,7 @@ async function fetchTeachers() {
             const col = document.createElement("div");
             col.className = `col-lg-5 col-md-10 text-center reveal ${index > 0 ? 'delay-' + (index % 3) : ''}`;
             
-            const avatar = teacher.avatar ? teacher.avatar : "https://joederblanca.com.br/assets/img/profile/default-avatar.png";
+            const avatar = teacher.avatar ? teacher.avatar : "https://portaltheos.com.br/assets/img/profile/default-avatar.png";
             
             let roleHtml = "";
             if (teacher.role && teacher.position) {
@@ -336,7 +336,7 @@ async function fetchCursoDetalhes() {
             teachersContainer.innerHTML = "";
             curso.teachers.forEach(teacher => {
                 // Se Avatar for base64 ou URL usa ele, senao default
-                const avatar = teacher.avatar ? teacher.avatar : "https://joederblanca.com.br/assets/img/profile/default-avatar.png";
+                const avatar = teacher.avatar ? teacher.avatar : "https://portaltheos.com.br/assets/img/profile/default-avatar.png";
                 
                 // Concatena Role e Position se os dois existirem
                 const rolePosition = [teacher.role, teacher.position].filter(Boolean).join(" & ");

@@ -17,8 +17,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("DevelopmentCors", policy =>
     {
         policy.SetIsOriginAllowed(origin => 
-                new Uri(origin).Host == "localhost" || 
-                new Uri(origin).Host.EndsWith("joederblanca.com.br"))
+                new Uri(origin).Host.EndsWith("portaltheos.com.br"))
               .AllowAnyMethod()
               .AllowAnyHeader()
               .AllowCredentials();
@@ -70,7 +69,7 @@ app.UseSwagger(c =>
     {
         swaggerDoc.Servers = new List<OpenApiServer>
         {
-            new OpenApiServer { Url = "https://joederblanca.com.br/theos-admin-api" }
+            new OpenApiServer { Url = "https://portaltheos.com.br/theos-admin-api" }
         };
     });
 });

@@ -157,5 +157,5 @@ export class ForumService extends BaseService {
     }
   }
 }
-//https://joederblanca.com.br/theos-api/api/v1/ForumCategories
+  //https://portaltheos.com.br/theos-api/api/v1/ForumCategories
 //

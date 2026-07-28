@@ -1,104 +1,233 @@
 <div class="container-fluid py-4 animated-fade-in">
-  <div class="row mb-4">
-    <div class="col-12">
-      <h3 class="fw-bold text-white mb-1">Dados Cadastrais</h3>
-      <p class="text-white-50">Gerencie as informações da sua conta e credenciais de acesso.</p>
-    </div>
-  </div>
 
   <div class="row g-4">
     <!-- Identificação do Usuário -->
-    <div class="col-12 col-lg-5 col-xl-4">
-      <div class="profile-card">
-        <div class="profile-header-bg"></div>
-        <div class="text-center px-4 pb-4 position-relative" style="margin-top: -60px;">
-          <div class="avatar-profile rounded-circle mx-auto mb-3">
+    <div class="col-12 col-lg-4">
+      <div class="profile-card h-100 bg-dark rounded-4 shadow border-0 overflow-hidden">
+        <div class="profile-header-bg" style="height: 100px; background: linear-gradient(135deg, var(--bs-primary) 0%, #1e1e1e 100%);"></div>
+        <div class="text-center px-4 pb-4 position-relative" style="margin-top: -50px;">
+          <div class="avatar-profile rounded-circle mx-auto mb-3 shadow-lg d-flex justify-content-center align-items-center bg-secondary bg-opacity-25 text-white fw-bold fs-1 border border-3 border-dark" style="width: 100px; height: 100px;">
             {{ getInitials(userName) }}
           </div>
           <h4 class="fw-bold text-white mb-1">{{ userName }}</h4>
           <p class="text-white-50 mb-3">{{ userEmail }}</p>
           
-          <div class="badge bg-indigo-light text-primary-emphasis rounded-pill px-3 py-2 fw-semibold border border-indigo opacity-75">
+          <div class="badge bg-indigo-light rounded-pill px-3 py-2 fw-semibold border border-indigo opacity-75" style="color: #ff6b6b;">
             <i class="fas fa-shield-alt me-1"></i> Acesso: {{ userRole }}
           </div>
         </div>
 
-        <div class="border-top p-4 bg-secondary bg-opacity-10 bg-opacity-50">
-          <h6 class="fw-bold text-uppercase text-white-50 mb-3" style="font-size: 0.75rem; letter-spacing: 0.05rem;">Informações da Conta</h6>
-          
-          <div class="mb-3">
-            <label class="small text-white-50 mb-1">Nome Completo</label>
-            <div class="fw-semibold text-white">{{ userName }}</div>
-          </div>
-          <div class="mb-3">
-            <label class="small text-white-50 mb-1">E-mail Principal</label>
-            <div class="fw-semibold text-white">{{ userEmail }}</div>
-          </div>
-          <div>
-            <label class="small text-white-50 mb-1">Status da Conta</label>
-            <div><span class="badge bg-success"><i class="fas fa-check-circle me-1"></i> Ativa</span></div>
-          </div>
+        <div class="border-top border-secondary border-opacity-10 p-4 bg-secondary bg-opacity-10 bg-opacity-50 h-100">
+          <ul class="nav nav-pills flex-column gap-2 custom-nav-pills">
+            <li class="nav-item">
+              <button class="nav-link w-100 text-start fw-semibold py-3 border-0 bg-transparent" [class.active]="activeTab === 'cadastrais'" (click)="switchTab('cadastrais')">
+                <i class="fas fa-user-edit me-2 text-center" style="width: 20px;"></i> Dados Cadastrais
+              </button>
+            </li>
+            <li class="nav-item">
+              <button class="nav-link w-100 text-start fw-semibold py-3 border-0 bg-transparent" [class.active]="activeTab === 'seguranca'" (click)="switchTab('seguranca')">
+                <i class="fas fa-lock me-2 text-center" style="width: 20px;"></i> Segurança e Acesso
+              </button>
+            </li>
+          </ul>
         </div>
       </div>
     </div>
 
-    <!-- Alteração de Senha -->
-    <div class="col-12 col-lg-7 col-xl-8">
-      <div class="card border-0 shadow-sm rounded-4 h-100">
-        <div class="card-header bg-dark border-bottom-0 pt-4 px-4 pb-0">
-          <h5 class="fw-bold text-white mb-0"><i class="fas fa-lock text-white-50 me-2"></i> Segurança e Acesso</h5>
+    <!-- Conteúdo da Aba -->
+    <div class="col-12 col-lg-8">
+      
+      <!-- ABA: DADOS CADASTRAIS -->
+      <div *ngIf="activeTab === 'cadastrais'" class="animated-slide-in">
+        <div class="card bg-dark border-0 shadow-sm rounded-4 mb-4">
+          <div class="card-header bg-transparent border-bottom border-secondary border-opacity-10 pt-4 px-4 pb-3">
+            <h5 class="fw-bold text-white mb-0"><i class="fas fa-address-card text-white-50 me-2"></i> Meus Dados</h5>
+          </div>
+          <div class="card-body p-4">
+            <form [formGroup]="personForm" (ngSubmit)="onSubmitPerson()">
+              <div class="row g-3">
+                <div class="col-12 col-md-6">
+                  <label class="form-label fw-semibold text-white small">Nome Completo</label>
+                  <input type="text" class="form-control form-control-lg bg-secondary bg-opacity-10 border-secondary border-opacity-25 text-white" formControlName="name">
+                </div>
+                <div class="col-12 col-md-6">
+                  <label class="form-label fw-semibold text-white small">E-mail</label>
+                  <input type="email" class="form-control form-control-lg bg-secondary bg-opacity-10 border-secondary border-opacity-25 text-white" formControlName="email">
+                </div>
+                <div class="col-12 col-md-4">
+                  <label class="form-label fw-semibold text-white small">Data de Nascimento</label>
+                  <input type="date" class="form-control form-control-lg bg-secondary bg-opacity-10 border-secondary border-opacity-25 text-white" formControlName="birthDate">
+                </div>
+                <div class="col-12 col-md-4">
+                  <label class="form-label fw-semibold text-white small">Telefone</label>
+                  <div class="input-group">
+                    <select class="form-select form-control-lg bg-secondary bg-opacity-10 border-secondary border-opacity-25 text-white" formControlName="countryCode" style="max-width: 120px;">
+                      <option *ngFor="let c of countries" [value]="c.code" class="text-dark">{{ c.name }}</option>
+                    </select>
+                    <input type="text" class="form-control form-control-lg bg-secondary bg-opacity-10 border-secondary border-opacity-25 text-white" formControlName="phone" placeholder="(11) 99999-9999" (input)="onPhoneInput($event)">
+                  </div>
+                </div>
+                <div class="col-12 col-md-4">
+                  <label class="form-label fw-semibold text-white small">Documento (CPF)</label>
+                  <input type="text" class="form-control form-control-lg bg-secondary bg-opacity-10 border-secondary border-opacity-25 text-white" formControlName="document" placeholder="000.000.000-00">
+                </div>
+              </div>
+              <div class="d-flex justify-content-end mt-4">
+                <button type="submit" class="btn btn-primary fw-bold px-4 py-2" [disabled]="personForm.invalid || isLoading">
+                  <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status"></span>
+                  Salvar Alterações
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
-        <div class="card-body p-4">
-          
-          <div class="alert alert-primary bg-primary bg-opacity-10 border-0 rounded-3 mb-4 d-flex align-items-center">
-            <i class="fas fa-info-circle fs-4 text-primary me-3"></i>
-            <div class="small text-primary-emphasis">
-              Recomendamos que você altere sua senha periodicamente para manter a segurança da sua conta. Use pelo menos 6 caracteres.
+
+        <div class="card bg-dark border-0 shadow-sm rounded-4">
+          <div class="card-header bg-transparent border-bottom border-secondary border-opacity-10 pt-4 px-4 pb-3 d-flex justify-content-between align-items-center">
+            <h5 class="fw-bold text-white mb-0"><i class="fas fa-map-marker-alt text-white-50 me-2"></i> Meus Endereços</h5>
+            <button class="btn btn-sm btn-outline-light rounded-pill px-3" (click)="openAddressModal()">
+              <i class="fas fa-plus me-1"></i> Adicionar
+            </button>
+          </div>
+          <div class="card-body p-4">
+            <div *ngIf="addresses.length === 0" class="text-center py-4 text-white-50">
+              <i class="fas fa-home fs-1 mb-3 opacity-25"></i>
+              <p class="mb-0">Nenhum endereço cadastrado.</p>
+            </div>
+            
+            <div class="row g-3">
+              <div class="col-12 col-md-6" *ngFor="let addr of addresses">
+                <div class="card bg-secondary bg-opacity-10 border-secondary border-opacity-25 h-100 rounded-4">
+                  <div class="card-body position-relative">
+                    <div class="position-absolute top-0 end-0 mt-3 me-3">
+                      <button class="btn btn-sm btn-link text-white-50 p-0 me-3" (click)="openAddressModal(addr)"><i class="fas fa-edit"></i></button>
+                      <button class="btn btn-sm btn-link text-danger p-0" (click)="deleteAddress(addr.id)"><i class="fas fa-trash-alt"></i></button>
+                    </div>
+                    <h6 class="fw-bold text-white mb-2"><i class="fas fa-map-pin me-2 text-primary"></i>{{ addr.description }}</h6>
+                    <p class="text-white-50 small mb-1">{{ addr.street }}, {{ addr.number }}<span *ngIf="addr.complement"> - {{ addr.complement }}</span></p>
+                    <p class="text-white-50 small mb-1">{{ addr.neighborhood }}, {{ addr.city }} - {{ addr.state }}</p>
+                    <p class="text-white-50 small mb-0"><i class="fas fa-envelope-open-text me-1 opacity-50"></i> {{ addr.zipCode }}</p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-
-          <form (submit)="onSubmitPassword($event)">
-            
-            <div class="row mb-4">
-              <div class="col-12 col-md-8 col-lg-7">
-                <label class="form-label fw-semibold text-white small">Senha Atual</label>
-                <div class="input-group">
-                  <span class="input-group-text bg-secondary bg-opacity-10 border-end-0 text-white-50"><i class="fas fa-key"></i></span>
-                  <input type="password" class="form-control form-control-lg bg-secondary bg-opacity-10 border-start-0 ps-0 fs-6" placeholder="Digite sua senha atual" [(ngModel)]="currentPassword" name="currentPassword" required>
-                </div>
-              </div>
-            </div>
-
-            <hr class="border-secondary border-opacity-10 mb-4">
-
-            <div class="row g-3 mb-4">
-              <div class="col-12 col-md-6">
-                <label class="form-label fw-semibold text-white small">Nova Senha</label>
-                <div class="input-group">
-                  <span class="input-group-text bg-secondary bg-opacity-10 border-end-0 text-white-50"><i class="fas fa-lock"></i></span>
-                  <input type="password" class="form-control form-control-lg bg-secondary bg-opacity-10 border-start-0 ps-0 fs-6" placeholder="Nova senha segura" [(ngModel)]="newPassword" name="newPassword" required minlength="6">
-                </div>
-              </div>
-              <div class="col-12 col-md-6">
-                <label class="form-label fw-semibold text-white small">Confirmar Nova Senha</label>
-                <div class="input-group">
-                  <span class="input-group-text bg-secondary bg-opacity-10 border-end-0 text-white-50"><i class="fas fa-lock"></i></span>
-                  <input type="password" class="form-control form-control-lg bg-secondary bg-opacity-10 border-start-0 ps-0 fs-6" placeholder="Repita a nova senha" [(ngModel)]="confirmPassword" name="confirmPassword" required minlength="6">
-                </div>
-              </div>
-            </div>
-
-            <div class="d-flex flex-column flex-sm-row justify-content-end gap-2 mt-2">
-              <button type="button" class="btn btn-light fw-semibold px-4 py-2 w-100 w-sm-auto order-2 order-sm-1" (click)="currentPassword=''; newPassword=''; confirmPassword=''">Cancelar</button>
-              <button type="submit" class="btn btn-dark fw-bold px-4 py-2 d-flex align-items-center justify-content-center gap-2 w-100 w-sm-auto order-1 order-sm-2 shadow-sm" [disabled]="isSubmitting">
-                <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                {{ isSubmitting ? 'Atualizando...' : 'Atualizar Senha' }}
-              </button>
-            </div>
-
-          </form>
-
         </div>
+      </div>
+
+      <!-- ABA: SEGURANÇA -->
+      <div *ngIf="activeTab === 'seguranca'" class="animated-slide-in">
+        <div class="card bg-dark border-0 shadow-sm rounded-4 h-100">
+          <div class="card-header bg-transparent border-bottom border-secondary border-opacity-10 pt-4 px-4 pb-3">
+            <h5 class="fw-bold text-white mb-0"><i class="fas fa-lock text-white-50 me-2"></i> Segurança e Acesso</h5>
+          </div>
+          <div class="card-body p-4">
+            
+            <div class="alert alert-primary bg-primary bg-opacity-10 border-0 rounded-3 mb-4 d-flex align-items-center">
+              <i class="fas fa-info-circle fs-4 text-primary me-3"></i>
+              <div class="small fw-semibold" style="color: #ff6b6b;">
+                Recomendamos que você altere sua senha periodicamente para manter a segurança da sua conta. Use pelo menos 6 caracteres.
+              </div>
+            </div>
+
+            <form (submit)="onSubmitPassword($event)">
+              <div class="row mb-4">
+                <div class="col-12 col-md-8 col-lg-7">
+                  <label class="form-label fw-semibold text-white small">Senha Atual</label>
+                  <div class="input-group">
+                    <span class="input-group-text bg-secondary bg-opacity-10 border-end-0 text-white-50 border-secondary border-opacity-25"><i class="fas fa-key"></i></span>
+                    <input type="password" class="form-control form-control-lg bg-secondary bg-opacity-10 border-start-0 ps-0 fs-6 text-white border-secondary border-opacity-25" placeholder="Digite sua senha atual" [(ngModel)]="currentPassword" name="currentPassword" required>
+                  </div>
+                </div>
+              </div>
+
+              <hr class="border-secondary border-opacity-10 mb-4">
+
+              <div class="row g-3 mb-4">
+                <div class="col-12 col-md-6">
+                  <label class="form-label fw-semibold text-white small">Nova Senha</label>
+                  <div class="input-group">
+                    <span class="input-group-text bg-secondary bg-opacity-10 border-end-0 text-white-50 border-secondary border-opacity-25"><i class="fas fa-lock"></i></span>
+                    <input type="password" class="form-control form-control-lg bg-secondary bg-opacity-10 border-start-0 ps-0 fs-6 text-white border-secondary border-opacity-25" placeholder="Nova senha segura" [(ngModel)]="newPassword" name="newPassword" required minlength="6">
+                  </div>
+                </div>
+                <div class="col-12 col-md-6">
+                  <label class="form-label fw-semibold text-white small">Confirmar Nova Senha</label>
+                  <div class="input-group">
+                    <span class="input-group-text bg-secondary bg-opacity-10 border-end-0 text-white-50 border-secondary border-opacity-25"><i class="fas fa-lock"></i></span>
+                    <input type="password" class="form-control form-control-lg bg-secondary bg-opacity-10 border-start-0 ps-0 fs-6 text-white border-secondary border-opacity-25" placeholder="Repita a nova senha" [(ngModel)]="confirmPassword" name="confirmPassword" required minlength="6">
+                  </div>
+                </div>
+              </div>
+
+              <div class="d-flex flex-column flex-sm-row justify-content-end gap-2 mt-4">
+                <button type="button" class="btn btn-light fw-semibold px-4 py-2 w-100 w-sm-auto order-2 order-sm-1" (click)="currentPassword=''; newPassword=''; confirmPassword=''">Cancelar</button>
+                <button type="submit" class="btn btn-primary fw-bold px-4 py-2 d-flex align-items-center justify-content-center gap-2 w-100 w-sm-auto order-1 order-sm-2 shadow-sm" [disabled]="isSubmitting">
+                  <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                  {{ isSubmitting ? 'Atualizando...' : 'Atualizar Senha' }}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- MODAL ENDEREÇO -->
+<div class="modal fade show d-block" *ngIf="showAddressModal" tabindex="-1" style="background: rgba(0,0,0,0.85); z-index: 1055;">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content bg-dark border-secondary border-opacity-25 shadow-lg rounded-4">
+      <div class="modal-header border-bottom border-secondary border-opacity-10 p-4">
+        <h5 class="modal-title fw-bold text-white"><i class="fas fa-map-marked-alt text-primary me-2"></i>{{ isEditingAddress ? 'Editar Endereço' : 'Novo Endereço' }}</h5>
+        <button type="button" class="btn-close btn-close-white" (click)="closeAddressModal()"></button>
+      </div>
+      <div class="modal-body p-4">
+        <form [formGroup]="addressForm">
+          <div class="row g-3">
+            <div class="col-12 col-md-4">
+              <label class="form-label text-white small fw-semibold">Identificação (Ex: Casa)</label>
+              <input type="text" class="form-control bg-secondary bg-opacity-10 border-secondary border-opacity-25 text-white" formControlName="description">
+            </div>
+            <div class="col-12 col-md-4">
+              <label class="form-label text-white small fw-semibold">CEP</label>
+              <input type="text" class="form-control bg-secondary bg-opacity-10 border-secondary border-opacity-25 text-white" formControlName="zipCode" (input)="onCepInput($event)" (blur)="onCepChange()" placeholder="00000-000">
+            </div>
+            <div class="col-12 col-md-8">
+              <label class="form-label text-white small fw-semibold">Rua / Logradouro</label>
+              <input type="text" class="form-control bg-secondary bg-opacity-10 border-secondary border-opacity-25 text-white" formControlName="street">
+            </div>
+            <div class="col-12 col-md-4">
+              <label class="form-label text-white small fw-semibold">Número</label>
+              <input type="text" class="form-control bg-secondary bg-opacity-10 border-secondary border-opacity-25 text-white" formControlName="number">
+            </div>
+            <div class="col-12 col-md-4">
+              <label class="form-label text-white small fw-semibold">Complemento</label>
+              <input type="text" class="form-control bg-secondary bg-opacity-10 border-secondary border-opacity-25 text-white" formControlName="complement">
+            </div>
+            <div class="col-12 col-md-4">
+              <label class="form-label text-white small fw-semibold">Bairro</label>
+              <input type="text" class="form-control bg-secondary bg-opacity-10 border-secondary border-opacity-25 text-white" formControlName="neighborhood">
+            </div>
+            <div class="col-12 col-md-4">
+              <label class="form-label text-white small fw-semibold">Cidade</label>
+              <input type="text" class="form-control bg-secondary bg-opacity-10 border-secondary border-opacity-25 text-white" formControlName="city">
+            </div>
+            <div class="col-12 col-md-4">
+              <label class="form-label text-white small fw-semibold">Estado (UF)</label>
+              <input type="text" class="form-control bg-secondary bg-opacity-10 border-secondary border-opacity-25 text-white" formControlName="state">
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer border-top border-secondary border-opacity-10 p-4">
+        <button type="button" class="btn btn-light fw-semibold px-4" (click)="closeAddressModal()">Cancelar</button>
+        <button type="button" class="btn btn-primary fw-bold px-4" [disabled]="addressForm.invalid || isLoading" (click)="onSubmitAddress()">
+          <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
+          Salvar Endereço
+        </button>
       </div>
     </div>
   </div>
