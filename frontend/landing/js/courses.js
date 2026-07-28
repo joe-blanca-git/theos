@@ -245,20 +245,32 @@ async function fetchCursoDetalhes() {
 
         // 3. Atualizar preços e investimento
         const priceValEl = document.getElementById("price-value");
-        if (priceValEl && curso.priceSingle) {
-            priceValEl.textContent = curso.priceSingle.toLocaleString('pt-BR', {
+        if (priceValEl) {
+            priceValEl.textContent = curso.priceSingle ? curso.priceSingle.toLocaleString('pt-BR', {
                 style: 'currency',
                 currency: 'BRL'
-            });
+            }) : "GRÁTIS";
         }
 
         const priceInstallmentsEl = document.getElementById("price-installments");
-        if (priceInstallmentsEl && curso.priceSingle) {
-            const installmentVal = (curso.priceSingle / 10).toLocaleString('pt-BR', {
-                style: 'currency',
-                currency: 'BRL'
-            });
-            priceInstallmentsEl.textContent = `ou 10x de ${installmentVal}`;
+        if (priceInstallmentsEl) {
+            if (curso.priceSingle) {
+                const installmentVal = (curso.priceSingle / 10).toLocaleString('pt-BR', {
+                    style: 'currency',
+                    currency: 'BRL'
+                });
+                priceInstallmentsEl.textContent = `ou 10x de ${installmentVal}`;
+            } else {
+                priceInstallmentsEl.textContent = "";
+            }
+        }
+
+        const buyBtn = document.getElementById("buy-btn");
+        if (buyBtn) {
+            if (!curso.priceSingle || curso.priceSingle === 0) {
+                buyBtn.textContent = "Matricule-se Já";
+                buyBtn.href = "https://portaltheos.com.br/portal-pat/auth/register";
+            }
         }
 
         const priceCourseNameEl = document.getElementById("price-course-name");
