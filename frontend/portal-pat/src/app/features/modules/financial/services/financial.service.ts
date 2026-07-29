@@ -6,6 +6,7 @@ import { BaseService } from '../../../../core/services/base.service';
 export interface PixRequest {
   cursoId: number;
   cpf: string;
+  holderName?: string;
   valor: number;
   tipoCompra: string;
 }

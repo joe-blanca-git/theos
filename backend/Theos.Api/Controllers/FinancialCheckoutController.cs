@@ -20,7 +20,8 @@ public class FinancialCheckoutController : ApiControllerBase
         {
             if (request.TipoCompra?.ToUpper() == "AVULSO")
             {
-                var command = new CreatePurchaseCommand(request.CursoId, request.Valor, "PIX", request.Cpf);
+                var command = new CreatePurchaseCommand(request.CursoId, request.Valor, "PIX", request.Cpf, null, request.HolderName);
+                
                 var result = await Mediator.Send(command);
                 return Ok(new CheckoutPixResponseDto
                 {

@@ -28,7 +28,8 @@ public record CreatePurchaseCommand(
     decimal Amount, 
     string PaymentMethod, 
     string? Cpf = null,
-    CreditCardInfo? Card = null) : IRequest<PurchaseResponseDto>;
+    CreditCardInfo? Card = null,
+    string? PixHolderName = null) : IRequest<PurchaseResponseDto>;
 
 public class CreatePurchaseCommandHandler : IRequestHandler<CreatePurchaseCommand, PurchaseResponseDto>
 {
@@ -100,7 +101,7 @@ public class CreatePurchaseCommandHandler : IRequestHandler<CreatePurchaseComman
             if (request.Card != null || !string.IsNullOrWhiteSpace(request.Cpf))
             {
                 var profileName = string.IsNullOrWhiteSpace(user.FullName)
-                    ? (request.Card?.HolderName ?? user.ExternalId)
+                    ? (request.Card?.HolderName ?? request.PixHolderName ?? user.ExternalId)
                     : user.FullName!;
 
                 var profileCpfCnpj = string.IsNullOrWhiteSpace(user.CpfCnpj)

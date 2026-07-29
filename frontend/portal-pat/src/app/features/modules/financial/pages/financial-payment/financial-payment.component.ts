@@ -30,6 +30,7 @@ export class FinancialPaymentComponent implements OnInit {
   
   // PIX specifics
   pixCpf = '';
+  pixHolderName = '';
   qrCodeGenerated = false;
   pixCopiaECola = '';
   qrCodeUrl = '';
@@ -253,6 +254,7 @@ export class FinancialPaymentComponent implements OnInit {
       this.financialService.gerarPixAsaas({
         cursoId: this.cursoId,
         cpf: this.pixCpf,
+        holderName: this.pixHolderName,
         valor: this.valorTotal,
         tipoCompra: 'AVULSO'
       }).subscribe({

@@ -142,7 +142,7 @@
             <!-- PIX -->
             <div *ngIf="paymentMethod === 'PIX'" class="animated-slide-in">
               <div *ngIf="!qrCodeGenerated" class="pix-form">
-                <h6 class="fw-bold mb-3">Informe seu CPF/CNPJ</h6>
+                <h6 class="fw-bold mb-3">Informe seus dados para o PIX</h6>
                 
                 <div *ngIf="errorMessage" class="alert alert-danger p-2 small mb-3">
                   <i class="fas fa-exclamation-circle me-1"></i> {{ errorMessage }}
@@ -150,11 +150,17 @@
 
                 <div class="mb-3">
                   <input type="text" class="form-control form-control-lg bg-secondary bg-opacity-10 py-2 px-3 rounded-3 border-0" 
-                         placeholder="000.000.000-00" 
+                         placeholder="Nome Completo" 
+                         [(ngModel)]="pixHolderName">
+                </div>
+
+                <div class="mb-3">
+                  <input type="text" class="form-control form-control-lg bg-secondary bg-opacity-10 py-2 px-3 rounded-3 border-0" 
+                         placeholder="000.000.000-00 (CPF)" 
                          [(ngModel)]="pixCpf">
                 </div>
                 <button class="btn btn-dark rounded-pill px-4 py-3 fw-bold w-100" 
-                        [disabled]="isLoadingPix || !pixCpf" 
+                        [disabled]="isLoadingPix || !pixCpf || !pixHolderName" 
                         (click)="generatePix()">
                   <span *ngIf="isLoadingPix" class="spinner-border spinner-border-sm me-2"></span>
                   {{ isLoadingPix ? 'Gerando QR Code...' : 'Gerar QR Code PIX' }}
@@ -276,7 +282,7 @@
               <i class="fas fa-clock fs-3 text-warning"></i>
               <div>
                 <h6 class="fw-bold mb-1">Pagamento em Análise</h6>
-                <p class="small mb-0">Seu pagamento está em análise pelo sistema antifraude do Asaas. Você pode acompanhar o status na aba Financeiro.</p>
+                <p class="small mb-0">Seu pagamento está em análise pelo sistema antifraude do Asaas. Você pode acompanhar o status na aba <a routerLink="/financial" class="alert-link text-warning text-decoration-underline fw-bold">Financeiro</a>.</p>
               </div>
             </div>
 

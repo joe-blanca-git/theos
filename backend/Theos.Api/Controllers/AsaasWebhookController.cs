@@ -10,10 +10,18 @@ namespace Theos.Api.Controllers;
 [Route("api/v1/webhooks/asaas")]
 public class AsaasWebhookController : ApiControllerBase
 {
+    private readonly ILogger<AsaasWebhookController> _logger;
+
+    public AsaasWebhookController(ILogger<AsaasWebhookController> logger)
+    {
+        _logger = logger;
+    }
+
     // A rota do webhook geralmente não deve exigir [Authorize] porque o Asaas que faz a chamada de fora
     [HttpPost]
     public async Task<IActionResult> ReceiveWebhook([FromBody] JsonElement payload)
     {
+        _logger.LogInformation($"[WEBHOOK ASAAS] Recebido payload: {payload.GetRawText()}");
         try
         {
             // Extrai as informações de evento e do payment.id

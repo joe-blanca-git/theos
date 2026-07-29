@@ -371,7 +371,7 @@ export class FinancialHomeComponent implements OnInit, OnDestroy {
   continuePayment(tx: ITransaction): void {
     if (tx.relatedCourseId) {
       this.closeDetail();
-      window.location.href = `http://localhost:4200/portal-pat/financial/payment/${tx.relatedCourseId}?plan=single`;
+      this.router.navigate(['/financial/payment', tx.relatedCourseId]);
     } else {
       this.triggerToast('ID do curso não encontrado para continuar o pagamento.');
     }
