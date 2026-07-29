@@ -31,6 +31,7 @@ export interface Course {
   title: string;
   description: string;
   modules: Module[];
+  released?: boolean;
 }
 
 export interface ForumComment {

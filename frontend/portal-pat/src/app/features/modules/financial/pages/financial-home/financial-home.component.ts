@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FinancialService } from '../../services/financial.service';
 import { SignalRService, PaymentNotification } from '../../../../../core/services/signalr.service';
+import { Router } from '@angular/router';
 import { forkJoin, Subscription } from 'rxjs';
 import { jsPDF } from 'jspdf';
 
@@ -80,7 +81,8 @@ export class FinancialHomeComponent implements OnInit, OnDestroy {
 
   constructor(
     private financialService: FinancialService,
-    private signalRService: SignalRService
+    private signalRService: SignalRService,
+    private router: Router
   ) {
     this.broadcastChannel = new BroadcastChannel('payment_sync_channel');
   }
