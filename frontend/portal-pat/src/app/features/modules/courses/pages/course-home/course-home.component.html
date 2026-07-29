@@ -124,10 +124,10 @@
                 </span>
                
                 <a class="btn btn-link ms-auto text-decoration-none fw-bold p-0 d-flex align-items-center gap-1.5 transition active-hover-link"
-                   [style.color]="course.hasPendingPurchase ? '#fbbf24' : '#6366f1'"
+                   [style.color]="course.released ? '#6366f1' : (course.hasPendingPurchase ? '#fbbf24' : '#10b981')"
                    style="font-size: 0.72rem;">
                   {{ course.released ? 'Acessar' : (course.hasPendingPurchase ? 'Em Análise' : 'Comprar Agora') }}
-                  <i class="fas fa-arrow-right fs-8"></i>
+                  <i class="fas fs-8" [ngClass]="course.released ? 'fa-arrow-right' : (course.hasPendingPurchase ? 'fa-clock' : 'fa-shopping-cart')"></i>
                 </a>
               </div>
             </div>
