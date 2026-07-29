@@ -141,6 +141,23 @@ public class CreatePurchaseCommandHandler : IRequestHandler<CreatePurchaseComman
         // 5. Atualiza o ID externo e persiste
         // O result.AsaasPaymentId deve ser retornado pelo serviço no DTO de resposta
         purchase.UpdateAsaasPaymentId(result.AsaasPaymentId);
+
+        // Se Asaas já retornou a compra como CONFIRMED ou RECEIVED, aprovamos na hora
+        if (result.Status == "CONFIRMED" || result.Status == "RECEIVED")
+        {
+            purchase.Approve();
+            
+            // Garantir que a matrícula seja criada imediatamente
+            bool enrollmentExists = await _context.Enrollments
+                .AnyAsync(e => e.UserId == purchase.UserId && e.CourseId == purchase.CourseId, cancellationToken);
+            
+            if (!enrollmentExists)
+            {
+                var enrollment = Theos.Domain.Entities.Enrollment.Create(purchase.UserId, purchase.CourseId, EnrollmentOrigin.Purchase);
+                _context.Enrollments.Add(enrollment);
+            }
+        }
+
         await _context.SaveChangesAsync(cancellationToken);
 
         return result;

@@ -23,6 +23,7 @@ export interface ICourse {
   completedLessons?: number;
   totalLessons?: number;
   categories?: ICategory[];
+  hasPendingPurchase?: boolean;
 }
 
 @Component({

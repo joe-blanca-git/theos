@@ -21,6 +21,7 @@ export class FinancialPaymentComponent implements OnInit {
   // States
   isProcessing = false;
   paymentSuccess = false;
+  paymentPending = false;
   paymentError = false;
   errorMessage = '';
 
@@ -161,9 +162,16 @@ export class FinancialPaymentComponent implements OnInit {
         this.pixCopiaECola = pendencia.pixCopiaECola;
         this.qrCodeUrl = pendencia.qrCodeBase64;
       }
-    } else if (['CREDIT', 'DEBIT'].includes(pendencia.metodoPagamento) && pendencia.status === 'REJECTED') {
-      this.bloquearOutrosMetodos = true;
-      this.setPaymentMethod(pendencia.metodoPagamento as 'CREDIT' | 'DEBIT');
+    } else if (['CREDIT', 'DEBIT'].includes(pendencia.metodoPagamento)) {
+      if (pendencia.status === 'REJECTED') {
+        this.bloquearOutrosMetodos = true;
+        this.setPaymentMethod(pendencia.metodoPagamento as 'CREDIT' | 'DEBIT');
+      } else if (pendencia.status === 'PENDING') {
+        this.bloquearOutrosMetodos = true;
+        this.setPaymentMethod(pendencia.metodoPagamento as 'CREDIT' | 'DEBIT');
+        this.paymentPending = true;
+        pendencia.mensagem = pendencia.mensagem || 'Pagamento em análise pelo sistema antifraude.';
+      }
     }
   }
 
@@ -233,6 +241,7 @@ export class FinancialPaymentComponent implements OnInit {
     this.paymentMethod = method;
     this.paymentError = false;
     this.paymentSuccess = false;
+    this.paymentPending = false;
     this.errorMessage = '';
   }
 
@@ -297,6 +306,7 @@ export class FinancialPaymentComponent implements OnInit {
     this.isProcessing = true;
     this.paymentError = false;
     this.paymentSuccess = false;
+    this.paymentPending = false;
     this.errorMessage = '';
 
     const formValues = this.cardForm.value;
@@ -329,10 +339,23 @@ export class FinancialPaymentComponent implements OnInit {
       next: (res) => {
         this.isProcessing = false;
         if (res.sucesso) {
-          this.paymentSuccess = true;
-          setTimeout(() => {
-            this.router.navigate(['/courses']);
-          }, 3000);
+          if (res.status === 'CONFIRMED' || res.status === 'RECEIVED') {
+            this.paymentSuccess = true;
+            setTimeout(() => {
+              this.router.navigate(['/courses']);
+            }, 3000);
+          } else {
+            // Se for PENDING ou outro status não reprovado/confirmado
+            this.paymentPending = true;
+            this.bloquearOutrosMetodos = true;
+            this.transacaoPendente = {
+              temPendencia: true,
+              purchaseId: res.purchaseId,
+              status: res.status,
+              metodoPagamento: this.paymentMethod,
+              mensagem: 'Pagamento em análise pelo sistema antifraude.'
+            };
+          }
         } else {
           this.paymentError = true;
           this.errorMessage = 'Pagamento recusado pela operadora.';

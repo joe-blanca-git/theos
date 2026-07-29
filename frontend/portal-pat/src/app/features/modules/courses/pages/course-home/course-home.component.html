@@ -124,8 +124,9 @@
                 </span>
                
                 <a class="btn btn-link ms-auto text-decoration-none fw-bold p-0 d-flex align-items-center gap-1.5 transition active-hover-link"
-                   style="color: #6366f1; font-size: 0.72rem;">
-                  {{course.released ? 'Acessar' : 'Comprar Agora'}}
+                   [style.color]="course.hasPendingPurchase ? '#fbbf24' : '#6366f1'"
+                   style="font-size: 0.72rem;">
+                  {{ course.released ? 'Acessar' : (course.hasPendingPurchase ? 'Em Análise' : 'Comprar Agora') }}
                   <i class="fas fa-arrow-right fs-8"></i>
                 </a>
               </div>

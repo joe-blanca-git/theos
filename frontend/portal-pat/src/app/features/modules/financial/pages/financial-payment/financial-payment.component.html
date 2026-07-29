@@ -187,7 +187,7 @@
             </div>
 
             <!-- CREDIT / DEBIT CARD FORM -->
-            <div *ngIf="paymentMethod === 'CREDIT' || paymentMethod === 'DEBIT'" class="animated-slide-in">
+            <div *ngIf="(paymentMethod === 'CREDIT' || paymentMethod === 'DEBIT') && !paymentPending && !paymentSuccess" class="animated-slide-in">
               <form [formGroup]="cardForm" (ngSubmit)="processPayment()" 
                     [class.border]="transacaoPendente?.status === 'REJECTED'" 
                     [class.border-danger]="transacaoPendente?.status === 'REJECTED'" 
@@ -269,6 +269,14 @@
               <div>
                 <h6 class="fw-bold mb-1">Pagamento Aprovado!</h6>
                 <p class="small mb-0">Sua assinatura foi ativada com sucesso. Redirecionando para os cursos...</p>
+              </div>
+            </div>
+
+            <div *ngIf="paymentPending" class="alert alert-warning mt-4 d-flex align-items-center gap-3 rounded-3 border-warning animated-slide-in">
+              <i class="fas fa-clock fs-3 text-warning"></i>
+              <div>
+                <h6 class="fw-bold mb-1">Pagamento em Análise</h6>
+                <p class="small mb-0">Seu pagamento está em análise pelo sistema antifraude do Asaas. Você pode acompanhar o status na aba Financeiro.</p>
               </div>
             </div>
 

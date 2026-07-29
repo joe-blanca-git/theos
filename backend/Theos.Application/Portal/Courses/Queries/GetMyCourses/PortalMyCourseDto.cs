@@ -12,5 +12,6 @@ public record PortalMyCourseDto(
     int Progress,
     int CompletedLessons,
     int TotalLessons,
-    List<Theos.Application.Courses.Common.CourseCategoryBasicDto>? Categories = null
+    List<Theos.Application.Courses.Common.CourseCategoryBasicDto>? Categories = null,
+    bool HasPendingPurchase = false
 );
