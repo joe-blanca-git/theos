@@ -1,4 +1,5 @@
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Theos.Application.Common.Interfaces;
 using Theos.Domain.Entities;
 

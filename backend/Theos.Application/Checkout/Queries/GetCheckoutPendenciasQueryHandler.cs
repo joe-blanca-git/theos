@@ -66,7 +66,7 @@ public class GetCheckoutPendenciasQueryHandler : IRequestHandler<GetCheckoutPend
                         response.QrCodeBase64 = qrCodeData.EncodedImage;
                         response.Mensagem = "Você já possui um PIX aguardando pagamento para este item.";
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         // Failed to retrieve QR Code from Asaas (might be expired, deleted, or API error)
                         // We DO NOT cancel the purchase here automatically anymore. 

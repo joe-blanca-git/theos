@@ -1,4 +1,5 @@
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Theos.Application.Common.Interfaces;
 
 namespace Theos.Application.Teachers.Commands.DeleteTeacher
