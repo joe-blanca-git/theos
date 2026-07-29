@@ -15,14 +15,23 @@ namespace Theos.Application.Teachers.Commands.UnassignTeacher
     public class UnassignTeacherCommandHandler : IRequestHandler<UnassignTeacherCommand, UnassignTeacherResult>
     {
         private readonly ITheosDbContext _context;
+        private readonly IUserContextService _userContextService;
 
-        public UnassignTeacherCommandHandler(ITheosDbContext context)
+        public UnassignTeacherCommandHandler(ITheosDbContext context, IUserContextService userContextService)
         {
             _context = context;
+            _userContextService = userContextService;
         }
 
         public async Task<UnassignTeacherResult> Handle(UnassignTeacherCommand request, CancellationToken cancellationToken)
         {
+            var currentUser = await _userContextService.GetCurrentUserAsync();
+            var loggedTeacher = await _context.Teachers.FirstOrDefaultAsync(t => t.IdAgivys == currentUser.ExternalId, cancellationToken);
+
+            if (loggedTeacher == null || loggedTeacher.Role != "Admin")
+            {
+                return new UnassignTeacherResult(false, "Apenas administradores podem desvincular professores.");
+            }
             var courseTeacher = await _context.CourseTeachers
                 .FirstOrDefaultAsync(ct => ct.TeacherId == request.TeacherId && ct.CourseId == request.CourseId, cancellationToken);
 

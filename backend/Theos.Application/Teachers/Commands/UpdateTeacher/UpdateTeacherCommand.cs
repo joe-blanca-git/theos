@@ -20,14 +20,26 @@ namespace Theos.Application.Teachers.Commands.UpdateTeacher
     public class UpdateTeacherCommandHandler : IRequestHandler<UpdateTeacherCommand, bool>
     {
         private readonly ITheosDbContext _context;
+        private readonly IUserContextService _userContextService;
 
-        public UpdateTeacherCommandHandler(ITheosDbContext context)
+        public UpdateTeacherCommandHandler(ITheosDbContext context, IUserContextService userContextService)
         {
             _context = context;
+            _userContextService = userContextService;
         }
 
         public async Task<bool> Handle(UpdateTeacherCommand request, CancellationToken cancellationToken)
         {
+            var currentUser = await _userContextService.GetCurrentUserAsync();
+            var loggedTeacher = await _context.Teachers.FirstOrDefaultAsync(t => t.IdAgivys == currentUser.ExternalId, cancellationToken);
+
+            if (loggedTeacher == null) return false;
+
+            if (loggedTeacher.Role != "Admin" && loggedTeacher.Id != request.Id)
+            {
+                return false; // Cannot edit another teacher
+            }
+
             var teacher = await _context.Teachers.FindAsync(new object[] { request.Id }, cancellationToken);
 
             if (teacher == null || !teacher.Active)
@@ -36,7 +48,13 @@ namespace Theos.Application.Teachers.Commands.UpdateTeacher
             }
 
             teacher.Name = request.Name;
-            teacher.Role = request.Role;
+            
+            // Only Admin can change roles
+            if (loggedTeacher.Role == "Admin")
+            {
+                teacher.Role = request.Role;
+            }
+
             teacher.Position = request.Position;
             teacher.Avatar = request.Avatar;
             teacher.Bio = request.Bio;

@@ -40,6 +40,46 @@ public class FinancialCheckoutController : ApiControllerBase
         }
     }
 
+    [HttpPost("card")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CheckoutCardResponseDto))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> CheckoutCard([FromBody] CheckoutCardRequestDto request)
+    {
+        try
+        {
+            if (request.TipoCompra?.ToUpper() == "AVULSO")
+            {
+                var cardDto = new CardDto
+                {
+                    HolderName = request.HolderName,
+                    Number = request.Number,
+                    ExpiryMonth = request.ExpiryMonth,
+                    ExpiryYear = request.ExpiryYear,
+                    Ccv = request.Ccv,
+                    HolderCpfCnpj = request.Cpf
+                };
+
+                var method = request.PaymentMethod?.ToUpper() == "DEBIT" ? "DEBIT" : "CREDIT";
+                var command = new CreatePurchaseCommand(request.CursoId, request.Valor, method, request.Cpf, cardDto);
+                
+                var result = await Mediator.Send(command);
+                return Ok(new CheckoutCardResponseDto
+                {
+                    Sucesso = true,
+                    PurchaseId = result.PurchaseId,
+                    CobrancaId = result.AsaasPaymentId,
+                    Status = result.Status
+                });
+            }
+
+            return BadRequest(new { Message = "Tipo de compra inválido." });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { Message = "Erro ao processar checkout por Cartão", Detalhe = ex.Message });
+        }
+    }
+
     [HttpGet("pendencias")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Theos.Application.Checkout.Queries.CheckoutPendenciasResponseDto))]
     public async Task<IActionResult> GetPendencias([FromQuery] int? cursoId, [FromQuery] string tipoCompra)

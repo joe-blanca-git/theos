@@ -13,14 +13,29 @@ namespace Theos.Application.Teachers.Queries.GetTeacherById
     public class GetTeacherByIdQueryHandler : IRequestHandler<GetTeacherByIdQuery, TeacherDto?>
     {
         private readonly ITheosDbContext _context;
+        private readonly IUserContextService _userContextService;
 
-        public GetTeacherByIdQueryHandler(ITheosDbContext context)
+        public GetTeacherByIdQueryHandler(ITheosDbContext context, IUserContextService userContextService)
         {
             _context = context;
+            _userContextService = userContextService;
         }
 
         public async Task<TeacherDto?> Handle(GetTeacherByIdQuery request, CancellationToken cancellationToken)
         {
+            var currentUser = await _userContextService.GetCurrentUserAsync();
+            var loggedTeacher = await _context.Teachers.FirstOrDefaultAsync(t => t.IdAgivys == currentUser.ExternalId, cancellationToken);
+
+            if (loggedTeacher == null)
+            {
+                return null;
+            }
+
+            if (loggedTeacher.Role != "Admin" && loggedTeacher.Id != request.Id)
+            {
+                return null;
+            }
+
             return await _context.Teachers
                 .Where(t => t.Id == request.Id && t.Active)
                 .Select(t => new TeacherDto

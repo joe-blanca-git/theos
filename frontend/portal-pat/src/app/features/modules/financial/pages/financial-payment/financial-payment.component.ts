@@ -217,9 +217,10 @@ export class FinancialPaymentComponent implements OnInit {
 
   initForm() {
     this.cardForm = this.fb.group({
+      cpfTitular: ['', [Validators.required, Validators.minLength(11)]],
       cardNumber: ['', [Validators.required, Validators.minLength(16), Validators.maxLength(19)]],
       cardHolder: ['', [Validators.required, Validators.minLength(3)]],
-      expiry: ['', [Validators.required, Validators.pattern(/^(0[1-9]|1[0-2])\/?([0-9]{2})$/)]],
+      expiry: ['', [Validators.required, Validators.pattern(/^(0[1-9]|1[0-2])\/?([0-9]{2,4})$/)]],
       cvc: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(4)]],
       installments: [1]
     });
@@ -296,24 +297,53 @@ export class FinancialPaymentComponent implements OnInit {
     this.isProcessing = true;
     this.paymentError = false;
     this.paymentSuccess = false;
+    this.errorMessage = '';
 
-    // Simulate API call and WebSocket delay
-    setTimeout(() => {
-      this.isProcessing = false;
-      
-      // Randomly simulate success or failure for demonstration (e.g., if CVV is '000', fail it)
-      const cvc = this.cardForm.get('cvc')?.value;
-      if (cvc === '000') {
-        this.paymentError = true;
-      } else {
-        this.paymentSuccess = true;
-        
-        // Simulate redirect after 3 seconds
-        setTimeout(() => {
-          this.router.navigate(['/courses']);
-        }, 3000);
+    const formValues = this.cardForm.value;
+    let expiryMonth = '';
+    let expiryYear = '';
+
+    if (formValues.expiry) {
+      const parts = formValues.expiry.split('/');
+      if (parts.length === 2) {
+        expiryMonth = parts[0];
+        expiryYear = parts[1];
       }
-    }, 2500);
+    }
+
+    const payload = {
+      cursoId: this.cursoId,
+      valor: this.valorTotal,
+      tipoCompra: 'AVULSO',
+      cpf: formValues.cpfTitular,
+      paymentMethod: this.paymentMethod, // 'CREDIT' or 'DEBIT'
+      holderName: formValues.cardHolder,
+      number: formValues.cardNumber,
+      expiryMonth: expiryMonth,
+      expiryYear: expiryYear,
+      ccv: formValues.cvc,
+      installments: formValues.installments
+    };
+
+    this.financialService.checkoutCard(payload).subscribe({
+      next: (res) => {
+        this.isProcessing = false;
+        if (res.sucesso) {
+          this.paymentSuccess = true;
+          setTimeout(() => {
+            this.router.navigate(['/courses']);
+          }, 3000);
+        } else {
+          this.paymentError = true;
+          this.errorMessage = 'Pagamento recusado pela operadora.';
+        }
+      },
+      error: (err) => {
+        this.isProcessing = false;
+        this.paymentError = true;
+        this.errorMessage = err.error?.message || err.error?.detalhe || 'Ocorreu um erro ao processar seu cartão. Verifique os dados.';
+      }
+    });
   }
 
   cancelPix() {

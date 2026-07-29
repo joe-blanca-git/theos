@@ -63,6 +63,8 @@ export class CoursesComponent implements OnInit {
   isSubmittingDomain = false;
   isDeletingDomain = false;
   isAssigningTeacher = false;
+  isUnassigningTeacher = false;
+  teacherToUnassign: any = null;
 
   categories: any[] = [];
 
@@ -93,6 +95,7 @@ export class CoursesComponent implements OnInit {
   @ViewChild('confirmDeleteDomainModal') confirmDeleteDomainModalRef!: ElementRef;
   @ViewChild('teacherListModal') teacherListModalRef!: ElementRef;
   @ViewChild('teacherAssignModal') teacherAssignModalRef!: ElementRef;
+  @ViewChild('confirmUnassignTeacherModal') confirmUnassignTeacherModalRef!: ElementRef;
 
   private courseModalInstance: any;
   private moduleModalInstance: any;
@@ -107,6 +110,7 @@ export class CoursesComponent implements OnInit {
   private confirmDeleteDomainModalInstance: any;
   private teacherListModalInstance: any;
   private teacherAssignModalInstance: any;
+  private confirmUnassignTeacherModalInstance: any;
 
   courseToToggle: any = null;
 
@@ -138,6 +142,7 @@ export class CoursesComponent implements OnInit {
     this.confirmDeleteDomainModalInstance = new bootstrap.Modal(this.confirmDeleteDomainModalRef.nativeElement);
     this.teacherListModalInstance = new bootstrap.Modal(this.teacherListModalRef.nativeElement);
     this.teacherAssignModalInstance = new bootstrap.Modal(this.teacherAssignModalRef.nativeElement);
+    this.confirmUnassignTeacherModalInstance = new bootstrap.Modal(this.confirmUnassignTeacherModalRef.nativeElement);
   }
 
   initForms() {
@@ -900,23 +905,30 @@ export class CoursesComponent implements OnInit {
 
   unassignTeacher(teacher: any) {
     if (!this.selectedCourseForTeachers) return;
-    
-    if (!confirm(`Deseja realmente desvincular o professor ${teacher.name}?`)) {
-      return;
-    }
+    this.teacherToUnassign = teacher;
+    this.confirmUnassignTeacherModalInstance.show();
+  }
 
+  executeUnassignTeacher() {
+    if (!this.teacherToUnassign || !this.selectedCourseForTeachers) return;
+
+    this.isUnassigningTeacher = true;
     const courseId = this.selectedCourseForTeachers.id;
+    const teacherId = this.teacherToUnassign.id;
 
-    this.coursesService.unassignTeacher(teacher.id, courseId).subscribe({
+    this.coursesService.unassignTeacher(teacherId, courseId).subscribe({
       next: () => {
         this.toastService.success('Professor desvinculado com sucesso!');
-        // Remove locally to avoid reload flash, or just call loadCourses
-        this.selectedCourseForTeachers!.teachers = this.selectedCourseForTeachers!.teachers.filter((t: any) => t.id !== teacher.id);
+        this.selectedCourseForTeachers!.teachers = this.selectedCourseForTeachers!.teachers.filter((t: any) => t.id !== teacherId);
+        this.confirmUnassignTeacherModalInstance.hide();
+        this.isUnassigningTeacher = false;
+        this.teacherToUnassign = null;
         this.loadCourses();
       },
       error: (err) => {
         console.error('Error unassigning teacher', err);
         this.toastService.error('Erro ao desvincular professor.');
+        this.isUnassigningTeacher = false;
       }
     });
   }

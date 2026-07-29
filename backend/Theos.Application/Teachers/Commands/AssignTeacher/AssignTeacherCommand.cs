@@ -16,14 +16,23 @@ namespace Theos.Application.Teachers.Commands.AssignTeacher
     public class AssignTeacherCommandHandler : IRequestHandler<AssignTeacherCommand, AssignTeacherResult>
     {
         private readonly ITheosDbContext _context;
+        private readonly IUserContextService _userContextService;
 
-        public AssignTeacherCommandHandler(ITheosDbContext context)
+        public AssignTeacherCommandHandler(ITheosDbContext context, IUserContextService userContextService)
         {
             _context = context;
+            _userContextService = userContextService;
         }
 
         public async Task<AssignTeacherResult> Handle(AssignTeacherCommand request, CancellationToken cancellationToken)
         {
+            var currentUser = await _userContextService.GetCurrentUserAsync();
+            var loggedTeacher = await _context.Teachers.FirstOrDefaultAsync(t => t.IdAgivys == currentUser.ExternalId, cancellationToken);
+
+            if (loggedTeacher == null || loggedTeacher.Role != "Admin")
+            {
+                return new AssignTeacherResult(false, "Apenas administradores podem vincular professores.");
+            }
             var teacher = await _context.Teachers.FirstOrDefaultAsync(t => t.Id == request.TeacherId, cancellationToken);
             if (teacher == null) 
                 return new AssignTeacherResult(false, "O professor informado não existe.");

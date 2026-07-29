@@ -163,7 +163,7 @@ public class AsaasService : IAsaasService
 
         var requestData = new {
             customer = purchase.User.AsaasCustomerId,
-            billingType = purchase.PaymentMethod == "PIX" ? "PIX" : "CREDIT_CARD",
+            billingType = purchase.PaymentMethod == "PIX" ? "PIX" : (purchase.PaymentMethod == "DEBIT" ? "DEBIT_CARD" : "CREDIT_CARD"),
             value = purchase.Amount,
             dueDate = DateTime.UtcNow.AddDays(1).ToString("yyyy-MM-dd"),
             externalReference = purchase.Id.ToString(),

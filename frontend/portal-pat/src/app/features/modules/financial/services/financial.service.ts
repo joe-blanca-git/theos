@@ -48,6 +48,10 @@ export class FinancialService extends BaseService {
     return this.http.post<PixResponse>(`${this.urlApiTheos}financeiro/checkout/pix`, payload, this.GetAuthHeaderJson());
   }
 
+  checkoutCard(payload: any): Observable<any> {
+    return this.http.post<any>(`${this.urlApiTheos}financeiro/checkout/card`, payload, this.GetAuthHeaderJson());
+  }
+
   verificarPendencias(cursoId: number | undefined): Observable<PendenciaDTO> {
     if (!cursoId) {
       throw new Error('CursoId é obrigatório para verificar pendências.');

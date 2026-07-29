@@ -10,16 +10,32 @@ namespace Theos.Application.Teachers.Queries.GetTeachers
     public class GetTeachersQueryHandler : IRequestHandler<GetTeachersQuery, List<TeacherDto>>
     {
         private readonly ITheosDbContext _context;
+        private readonly IUserContextService _userContextService;
 
-        public GetTeachersQueryHandler(ITheosDbContext context)
+        public GetTeachersQueryHandler(ITheosDbContext context, IUserContextService userContextService)
         {
             _context = context;
+            _userContextService = userContextService;
         }
 
         public async Task<List<TeacherDto>> Handle(GetTeachersQuery request, CancellationToken cancellationToken)
         {
-            return await _context.Teachers
-                .Where(t => t.Active)
+            var currentUser = await _userContextService.GetCurrentUserAsync();
+            var loggedTeacher = await _context.Teachers.FirstOrDefaultAsync(t => t.IdAgivys == currentUser.ExternalId, cancellationToken);
+
+            if (loggedTeacher == null)
+            {
+                return new List<TeacherDto>();
+            }
+
+            var query = _context.Teachers.Where(t => t.Active);
+
+            if (loggedTeacher.Role != "Admin")
+            {
+                query = query.Where(t => t.Id == loggedTeacher.Id);
+            }
+
+            return await query
                 .Select(t => new TeacherDto
                 {
                     Id = t.Id,

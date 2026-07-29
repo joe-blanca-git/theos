@@ -195,6 +195,14 @@
                     [class.p-3]="transacaoPendente?.status === 'REJECTED'">
                 <div class="row g-3">
                   <div class="col-12">
+                    <label class="form-label small fw-semibold text-white-50">CPF do Titular</label>
+                    <input type="text" class="form-control form-control-lg bg-secondary bg-opacity-10 border-0 py-2 px-3" placeholder="000.000.000-00" formControlName="cpfTitular" maxlength="14">
+                    <div class="text-danger small mt-1" *ngIf="cardForm.get('cpfTitular')?.invalid && cardForm.get('cpfTitular')?.touched">
+                      CPF é obrigatório para pagamento com cartão.
+                    </div>
+                  </div>
+
+                  <div class="col-12">
                     <label class="form-label small fw-semibold text-white-50">Número do Cartão</label>
                     <div class="input-group input-group-lg">
                       <span class="input-group-text bg-secondary bg-opacity-10 border-0 px-3"><i class="fas fa-credit-card text-white-50"></i></span>
