@@ -49,18 +49,17 @@ public class FinancialCheckoutController : ApiControllerBase
         {
             if (request.TipoCompra?.ToUpper() == "AVULSO")
             {
-                var cardDto = new CardDto
-                {
-                    HolderName = request.HolderName,
-                    Number = request.Number,
-                    ExpiryMonth = request.ExpiryMonth,
-                    ExpiryYear = request.ExpiryYear,
-                    Ccv = request.Ccv,
-                    HolderCpfCnpj = request.Cpf
-                };
+                var cardInfo = new CreditCardInfo(
+                    request.HolderName,
+                    request.Number,
+                    request.ExpiryMonth,
+                    request.ExpiryYear,
+                    request.Ccv,
+                    request.Cpf
+                );
 
                 var method = request.PaymentMethod?.ToUpper() == "DEBIT" ? "DEBIT" : "CREDIT";
-                var command = new CreatePurchaseCommand(request.CursoId, request.Valor, method, request.Cpf, cardDto);
+                var command = new CreatePurchaseCommand(request.CursoId, request.Valor, method, request.Cpf, cardInfo);
                 
                 var result = await Mediator.Send(command);
                 return Ok(new CheckoutCardResponseDto
