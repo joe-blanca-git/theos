@@ -60,6 +60,12 @@
                   "maximumError": "25kB"
                 }
               ],
+              "fileReplacements": [
+                {
+                  "replace": "src/app/core/environments/environment.ts",
+                  "with": "src/app/core/environments/environment.prod.ts"
+                }
+              ],
               "outputHashing": "all",
               "serviceWorker": "ngsw-config.json"
             },

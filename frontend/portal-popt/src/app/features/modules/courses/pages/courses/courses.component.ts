@@ -898,6 +898,29 @@ export class CoursesComponent implements OnInit {
     });
   }
 
+  unassignTeacher(teacher: any) {
+    if (!this.selectedCourseForTeachers) return;
+    
+    if (!confirm(`Deseja realmente desvincular o professor ${teacher.name}?`)) {
+      return;
+    }
+
+    const courseId = this.selectedCourseForTeachers.id;
+
+    this.coursesService.unassignTeacher(teacher.id, courseId).subscribe({
+      next: () => {
+        this.toastService.success('Professor desvinculado com sucesso!');
+        // Remove locally to avoid reload flash, or just call loadCourses
+        this.selectedCourseForTeachers!.teachers = this.selectedCourseForTeachers!.teachers.filter((t: any) => t.id !== teacher.id);
+        this.loadCourses();
+      },
+      error: (err) => {
+        console.error('Error unassigning teacher', err);
+        this.toastService.error('Erro ao desvincular professor.');
+      }
+    });
+  }
+
   trackById(index: number, item: any): number {
     return item.id;
   }

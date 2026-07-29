@@ -78,6 +78,10 @@ export class CoursesService extends BaseService {
     return this.http.post<any>(`${this.urlApiTheos}Teachers/assign`, { teacherId, courseId }, this.GetAuthHeaderJson());
   }
 
+  unassignTeacher(teacherId: number, courseId: number): Observable<any> {
+    return this.http.post<any>(`${this.urlApiTheos}Teachers/unassign`, { teacherId, courseId }, this.GetAuthHeaderJson());
+  }
+
   uploadImage(file: File): Observable<{ url: string }> {
     const formData = new FormData();
     formData.append('file', file);

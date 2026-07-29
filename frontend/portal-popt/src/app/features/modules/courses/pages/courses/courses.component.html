@@ -1005,6 +1005,11 @@
                   <small class="text-white-50 text-truncate d-block">{{ teacher.role || 'Sem cargo' }}</small>
                 </div>
               </div>
+              <div class="d-flex gap-2 flex-shrink-0">
+                <button type="button" class="btn btn-sm btn-white border rounded-circle text-danger shadow-sm hover-danger transition-all d-flex align-items-center justify-content-center" style="width: 36px; height: 36px;" (click)="unassignTeacher(teacher)" title="Desvincular Professor">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
             </div>
           </div>
         </div>

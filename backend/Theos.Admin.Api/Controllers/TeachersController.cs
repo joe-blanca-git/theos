@@ -75,9 +75,21 @@ public class TeachersController : ApiControllerBase
     [HttpPost("assign")]
     public async Task<ActionResult> AssignTeacher(AssignTeacherCommand command)
     {
-        var success = await Mediator.Send(command);
-        if (!success) return BadRequest("Não foi possível vincular o professor ao curso. Verifique se ambos existem.");
+        var result = await Mediator.Send(command);
+        if (!result.Success) return BadRequest(result.Message);
 
-        return Ok();
+        return Ok(new { message = result.Message });
+    }
+
+    /// <summary>
+    /// Desvincula um professor de um curso específico.
+    /// </summary>
+    [HttpPost("unassign")]
+    public async Task<ActionResult> UnassignTeacher(Theos.Application.Teachers.Commands.UnassignTeacher.UnassignTeacherCommand command)
+    {
+        var result = await Mediator.Send(command);
+        if (!result.Success) return BadRequest(result.Message);
+
+        return Ok(new { message = result.Message });
     }
 }

@@ -5,13 +5,15 @@ using Theos.Domain.Entities;
 
 namespace Theos.Application.Teachers.Commands.AssignTeacher
 {
-    public record AssignTeacherCommand : IRequest<bool>
+    public record AssignTeacherResult(bool Success, string Message);
+
+    public record AssignTeacherCommand : IRequest<AssignTeacherResult>
     {
         public int TeacherId { get; init; }
         public int CourseId { get; init; }
     }
 
-    public class AssignTeacherCommandHandler : IRequestHandler<AssignTeacherCommand, bool>
+    public class AssignTeacherCommandHandler : IRequestHandler<AssignTeacherCommand, AssignTeacherResult>
     {
         private readonly ITheosDbContext _context;
 
@@ -20,18 +22,24 @@ namespace Theos.Application.Teachers.Commands.AssignTeacher
             _context = context;
         }
 
-        public async Task<bool> Handle(AssignTeacherCommand request, CancellationToken cancellationToken)
+        public async Task<AssignTeacherResult> Handle(AssignTeacherCommand request, CancellationToken cancellationToken)
         {
-            var teacherExists = await _context.Teachers.AnyAsync(t => t.Id == request.TeacherId && t.Active, cancellationToken);
-            if (!teacherExists) return false;
+            var teacher = await _context.Teachers.FirstOrDefaultAsync(t => t.Id == request.TeacherId, cancellationToken);
+            if (teacher == null) 
+                return new AssignTeacherResult(false, "O professor informado não existe.");
+            if (!teacher.Active) 
+                return new AssignTeacherResult(false, "O professor informado está inativo e não pode ser vinculado.");
 
-            var courseExists = await _context.Courses.AnyAsync(c => c.Id == request.CourseId && c.Active, cancellationToken);
-            if (!courseExists) return false;
+            var course = await _context.Courses.FirstOrDefaultAsync(c => c.Id == request.CourseId, cancellationToken);
+            if (course == null) 
+                return new AssignTeacherResult(false, "O curso informado não existe.");
+            if (!course.Active) 
+                return new AssignTeacherResult(false, "O curso informado está inativo e não pode receber professores.");
 
             var alreadyAssigned = await _context.CourseTeachers
                 .AnyAsync(ct => ct.TeacherId == request.TeacherId && ct.CourseId == request.CourseId, cancellationToken);
 
-            if (alreadyAssigned) return true; // Already assigned, idempotent
+            if (alreadyAssigned) return new AssignTeacherResult(true, "O professor já está vinculado a este curso.");
 
             var courseTeacher = new CourseTeacher
             {
@@ -42,7 +50,7 @@ namespace Theos.Application.Teachers.Commands.AssignTeacher
             _context.CourseTeachers.Add(courseTeacher);
             await _context.SaveChangesAsync(cancellationToken);
 
-            return true;
+            return new AssignTeacherResult(true, "Professor vinculado com sucesso.");
         }
     }
 }
