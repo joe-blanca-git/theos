@@ -10,6 +10,7 @@ public class GetCourseDetailResponseDto
     public string? Teacher { get; set; }
     public string? Level { get; set; }
     public string? Category { get; set; }
+    public bool Released { get; set; }
 
     // Progress
     public int TotalLessons { get; set; }

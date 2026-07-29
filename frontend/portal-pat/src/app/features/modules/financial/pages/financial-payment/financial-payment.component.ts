@@ -16,7 +16,7 @@ import { ToastService } from '../../../../../core/services/toast.service';
   styleUrl: './financial-payment.component.scss'
 })
 export class FinancialPaymentComponent implements OnInit {
-  paymentMethod: 'PIX' | 'CREDIT' | 'DEBIT' = 'PIX';
+  paymentMethod: 'PIX' | 'CREDIT' = 'PIX';
   
   // States
   isProcessing = false;
@@ -163,13 +163,13 @@ export class FinancialPaymentComponent implements OnInit {
         this.pixCopiaECola = pendencia.pixCopiaECola;
         this.qrCodeUrl = pendencia.qrCodeBase64;
       }
-    } else if (['CREDIT', 'DEBIT'].includes(pendencia.metodoPagamento)) {
+    } else if (pendencia.metodoPagamento === 'CREDIT') {
       if (pendencia.status === 'REJECTED') {
-        this.bloquearOutrosMetodos = true;
-        this.setPaymentMethod(pendencia.metodoPagamento as 'CREDIT' | 'DEBIT');
-      } else if (pendencia.status === 'PENDING') {
-        this.bloquearOutrosMetodos = true;
-        this.setPaymentMethod(pendencia.metodoPagamento as 'CREDIT' | 'DEBIT');
+        // Se for crédito recusado, pré-seleciona a aba Crédito
+        this.setPaymentMethod('CREDIT');
+      } else {
+        // Se for pendente e for crédito
+        this.setPaymentMethod('CREDIT');
         this.paymentPending = true;
         pendencia.mensagem = pendencia.mensagem || 'Pagamento em análise pelo sistema antifraude.';
       }
@@ -235,7 +235,7 @@ export class FinancialPaymentComponent implements OnInit {
     });
   }
 
-  setPaymentMethod(method: 'PIX' | 'CREDIT' | 'DEBIT') {
+  setPaymentMethod(method: 'PIX' | 'CREDIT') {
     if (this.bloquearOutrosMetodos && this.transacaoPendente?.metodoPagamento !== method) {
       return;
     }
@@ -328,7 +328,7 @@ export class FinancialPaymentComponent implements OnInit {
       valor: this.valorTotal,
       tipoCompra: 'AVULSO',
       cpf: formValues.cpfTitular,
-      paymentMethod: this.paymentMethod, // 'CREDIT' or 'DEBIT'
+      paymentMethod: this.paymentMethod, // 'CREDIT'
       holderName: formValues.cardHolder,
       number: formValues.cardNumber,
       expiryMonth: expiryMonth,

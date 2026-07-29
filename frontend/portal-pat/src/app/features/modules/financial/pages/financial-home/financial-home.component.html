@@ -323,43 +323,43 @@
 
     <div class="mb-4">
       <div class="detail-row">
-        <span class="detail-label">Descrição</span>
-        <span class="detail-value fw-semibold">{{ selectedTransaction.name }}</span>
+        <span class="detail-label text-white-50">Descrição</span>
+        <span class="detail-value text-white fw-semibold">{{ selectedTransaction.name }}</span>
       </div>
       <div class="detail-row">
-        <span class="detail-label">Tipo</span>
+        <span class="detail-label text-white-50">Tipo</span>
         <span class="badge rounded-pill fw-semibold px-3 py-1.5 badge-type-course"
               style="font-size: 0.7rem;">
           {{ selectedTransaction.type }}
         </span>
       </div>
       <div class="detail-row">
-        <span class="detail-label">Valor</span>
-        <span class="detail-value fw-extrabold" style="color: #0f172a; font-size: 1.1rem;">
+        <span class="detail-label text-white-50">Valor</span>
+        <span class="detail-value text-white fw-extrabold" style="font-size: 1.1rem;">
           {{ formatCurrency(selectedTransaction.value) }}
         </span>
       </div>
       <div class="detail-row">
-        <span class="detail-label">Forma de Pagamento</span>
-        <span class="detail-value">
+        <span class="detail-label text-white-50">Forma de Pagamento</span>
+        <span class="detail-value text-white">
           <i class="fas me-1 text-white-50" [ngClass]="getPaymentMethodIcon(selectedTransaction.paymentMethod)"></i>
           {{ selectedTransaction.paymentMethod }}
         </span>
       </div>
       <div class="detail-row">
-        <span class="detail-label">Status</span>
+        <span class="detail-label text-white-50">Status</span>
         <span class="badge rounded-pill px-3 py-1.5 fw-semibold" [ngClass]="getStatusBadgeClass(selectedTransaction.status)" style="font-size: 0.72rem;">
           <i class="fas me-1" [ngClass]="getStatusIcon(selectedTransaction.status)"></i>
           {{ selectedTransaction.status }}
         </span>
       </div>
       <div class="detail-row">
-        <span class="detail-label">Data da Cobrança</span>
-        <span class="detail-value">{{ selectedTransaction.chargeDate }}</span>
+        <span class="detail-label text-white-50">Data da Cobrança</span>
+        <span class="detail-value text-white">{{ selectedTransaction.chargeDate }}</span>
       </div>
       <div class="detail-row" *ngIf="selectedTransaction.nextRenewal">
-        <span class="detail-label">Próxima Renovação</span>
-        <span class="detail-value">{{ selectedTransaction.nextRenewal }}</span>
+        <span class="detail-label text-white-50">Próxima Renovação</span>
+        <span class="detail-value text-white">{{ selectedTransaction.nextRenewal }}</span>
       </div>
     </div>
 

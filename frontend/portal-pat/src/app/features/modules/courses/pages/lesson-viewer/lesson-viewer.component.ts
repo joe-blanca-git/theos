@@ -196,6 +196,12 @@ export class LessonViewerComponent implements OnInit, OnDestroy {
     try {
       this.course = await this.coursesService.getCourseDetail(courseId);
       
+      if (this.course && !this.course.released) {
+        alert('Você não tem acesso a este curso ou sua matrícula foi bloqueada/cancelada.');
+        this.router.navigate(['/courses']);
+        return;
+      }
+
       if (!this.course || !this.course.modules || this.course.modules.length === 0) {
         return;
       }

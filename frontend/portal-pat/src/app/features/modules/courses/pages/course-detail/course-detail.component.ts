@@ -45,6 +45,11 @@ export class CourseDetailComponent implements OnInit {
     this.errorMessage = '';
     try {
       this.course = await this.coursesService.getCourseDetail(this.courseId);
+      
+      if (this.course && !this.course.released) {
+        this.toastService.error('Você não tem acesso a este curso ou sua matrícula foi bloqueada/cancelada.');
+        this.router.navigate(['/courses']);
+      }
     } catch (error) {
       console.error(error);
       this.errorMessage = 'Erro ao carregar os detalhes do curso.';

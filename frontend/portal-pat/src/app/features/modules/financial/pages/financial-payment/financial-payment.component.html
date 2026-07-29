@@ -61,7 +61,7 @@
             </div>
 
             <!-- BANNER ALERTA: CARTÃO REJEITADO -->
-            <div *ngIf="['CREDIT', 'DEBIT'].includes(transacaoPendente?.metodoPagamento || '') && transacaoPendente?.status === 'REJECTED'" 
+            <div *ngIf="transacaoPendente?.metodoPagamento === 'CREDIT' && transacaoPendente?.status === 'REJECTED'" 
                  class="alert alert-danger d-flex align-items-center mb-4" role="alert">
               <i class="fas fa-times-circle flex-shrink-0 me-2 text-danger fs-5"></i>
               <div>
@@ -114,28 +114,7 @@
                 </div>
               </div>
 
-              <div class="payment-card flex-grow-1" 
-                   [class.active]="paymentMethod === 'DEBIT'" 
-                   [class.opacity-50]="bloquearOutrosMetodos && transacaoPendente?.metodoPagamento !== 'DEBIT'"
-                   [style.pointer-events]="(bloquearOutrosMetodos && transacaoPendente?.metodoPagamento !== 'DEBIT') ? 'none' : 'auto'"
-                   (click)="setPaymentMethod('DEBIT')">
-                <div class="d-flex align-items-center gap-3 p-3 border rounded-3 transition-all cursor-pointer method-wrapper">
-                  <div class="icon-circle bg-secondary bg-opacity-10 d-flex align-items-center justify-content-center rounded-circle" style="width: 40px; height: 40px;">
-                    <i class="fas fa-money-check text-info fs-5"></i>
-                  </div>
-                  <div>
-                    <h6 class="mb-0 fw-bold">Débito</h6>
-                    <span class="small text-white-50">À vista</span>
-                  </div>
-                  <div class="ms-auto">
-                    <div class="form-check">
-                      <input class="form-check-input" type="radio" [checked]="paymentMethod === 'DEBIT'">
-                    </div>
-                  </div>
-                </div>
               </div>
-
-            </div>
 
             <!-- ETAPA 2: Dynamic forms per method -->
 
@@ -192,8 +171,8 @@
               </div>
             </div>
 
-            <!-- CREDIT / DEBIT CARD FORM -->
-            <div *ngIf="(paymentMethod === 'CREDIT' || paymentMethod === 'DEBIT') && !paymentPending && !paymentSuccess" class="animated-slide-in">
+            <!-- CREDIT CARD FORM -->
+            <div *ngIf="paymentMethod === 'CREDIT' && !paymentPending && !paymentSuccess" class="animated-slide-in">
               <form [formGroup]="cardForm" (ngSubmit)="processPayment()" 
                     [class.border]="transacaoPendente?.status === 'REJECTED'" 
                     [class.border-danger]="transacaoPendente?.status === 'REJECTED'" 
@@ -322,12 +301,10 @@
             <div class="d-flex justify-content-between align-items-center">
               <span class="fw-bold text-white">Total</span>
               <span class="fs-4 fw-bold" style="color: #6366f1;">{{ formatPrice(valorTotal) }}</span>
-            </div>
-            
             <div class="text-center mt-4">
               <small class="text-white-50 d-flex align-items-center justify-content-center gap-2">
                 <i class="fas fa-lock text-white-50"></i> Pagamento 100% seguro via 
-                <img src="/logos/asaas-logo.png" alt="Asaas" style="height: 100px; width: auto; object-fit: contain; filter: brightness(0) invert(1) opacity(0.5);">
+                <img src="logos/asaas-logo.png" alt="Asaas" style="height: 18px; width: auto; object-fit: contain; filter: brightness(0) invert(1) opacity(0.8);">
               </small>
             </div>
           </div>
