@@ -5,7 +5,7 @@ COPY package*.json ./
 RUN npm install --legacy-peer-deps
 COPY . .
 # O build compila a aplicação com a base correta
-RUN npm run build -- --base-href /portal-popt/
+RUN npm run build -- --base-href /portal-pop/
 
 # Estágio 2: Servidor Node (SSR)
 FROM node:20-alpine
