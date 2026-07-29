@@ -360,15 +360,31 @@ export class FinancialHomeComponent implements OnInit, OnDestroy {
     img.onerror = () => renderPdf(); // Falha graciosa se não encontrar a imagem
   }
 
+  showRefundConfirmModal = false;
+  transactionToRefund: ITransaction | null = null;
+
   requestRefund(tx: ITransaction): void {
     if (!tx.isRefundable) return;
-    
-    if (confirm(`Tem certeza que deseja solicitar o reembolso de "${tx.name}"? Isso cancelará seu acesso ao curso imediatamente e a reversão não será possível.`)) {
-      // Futura chamada à API de reembolso. Por enquanto mock visual
-      this.triggerToast(`Solicitação de reembolso enviada para ${tx.transactionCode}! Em breve você receberá um email.`);
-      this.closeDetail();
-    }
+    this.transactionToRefund = tx;
+    this.showRefundConfirmModal = true;
   }
+
+  closeRefundConfirm(): void {
+    this.showRefundConfirmModal = false;
+    this.transactionToRefund = null;
+  }
+
+  confirmRefundAction(): void {
+    if (!this.transactionToRefund) return;
+    const tx = this.transactionToRefund;
+    // Futura chamada à API de reembolso. Por enquanto mock visual
+    this.triggerToast(`Solicitação de reembolso enviada para ${tx.transactionCode}! Em breve você receberá um email.`);
+    this.closeRefundConfirm();
+    this.closeDetail();
+  }
+
+  showRetryConfirmModal = false;
+  transactionToRetry: ITransaction | null = null;
 
   cancelAndRetryPayment(tx: ITransaction): void {
     if (!tx.relatedCourseId) {
@@ -376,21 +392,33 @@ export class FinancialHomeComponent implements OnInit, OnDestroy {
       return;
     }
     
-    if (confirm('Deseja cancelar esta tentativa e tentar outra forma de pagamento?')) {
-      this.isCanceling = true;
-      this.financialService.cancelPurchase(Number(tx.id)).subscribe({
-        next: () => {
-          this.isCanceling = false;
-          this.closeDetail();
-          this.router.navigate(['/financial/payment', tx.relatedCourseId]);
-        },
-        error: (err) => {
-          this.isCanceling = false;
-          console.error(err);
-          this.triggerToast('Erro ao cancelar o pagamento anterior.');
-        }
-      });
-    }
+    this.transactionToRetry = tx;
+    this.showRetryConfirmModal = true;
+  }
+
+  closeRetryConfirm(): void {
+    this.showRetryConfirmModal = false;
+    this.transactionToRetry = null;
+  }
+
+  confirmRetryAction(): void {
+    if (!this.transactionToRetry) return;
+    const tx = this.transactionToRetry;
+    
+    this.isCanceling = true;
+    this.financialService.cancelPurchase(Number(tx.id)).subscribe({
+      next: () => {
+        this.isCanceling = false;
+        this.closeRetryConfirm();
+        this.closeDetail();
+        this.router.navigate(['/financial/payment', tx.relatedCourseId]);
+      },
+      error: (err) => {
+        this.isCanceling = false;
+        console.error(err);
+        this.triggerToast('Erro ao cancelar o pagamento anterior.');
+      }
+    });
   }
 
   cancelTransaction(tx: ITransaction): void {

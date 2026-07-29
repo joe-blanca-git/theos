@@ -1,0 +1,1 @@
+﻿# Regras de Interface (UI/UX)`n- NUNCA use `alert()`, `prompt()` ou `confirm()` nativos do navegador. SEMPRE utilize os componentes visuais padronizados do projeto (Toast, Modais em HTML/CSS) para exibir avisos ou pedir confirmações.
