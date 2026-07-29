@@ -41,6 +41,7 @@ export class FinancialPaymentComponent implements OnInit {
   bloquearOutrosMetodos = false;
   purchaseId: number | null = null;
   isCancelingPix = false;
+  isCancelingCredit = false;
 
   cursoId: number = 0;
   checkoutSummary?: CheckoutSummary;
@@ -391,6 +392,31 @@ export class FinancialPaymentComponent implements OnInit {
         this.isCancelingPix = false;
         console.error('Error canceling pix', err);
         this.toastService.error('Erro ao cancelar a cobrança PIX. Tente novamente mais tarde.');
+      }
+    });
+  }
+
+  cancelPendingCredit() {
+    if (!this.purchaseId) return;
+
+    this.isCancelingCredit = true;
+    this.financialService.cancelPurchase(this.purchaseId).subscribe({
+      next: () => {
+        this.isCancelingCredit = false;
+        this.toastService.success('Transação cancelada. Você pode tentar outra forma de pagamento.');
+        // Reset states
+        this.purchaseId = null;
+        this.transacaoPendente = null;
+        this.bloquearOutrosMetodos = false;
+        this.paymentPending = false;
+        
+        // Reset card form
+        this.cardForm.reset();
+      },
+      error: (err) => {
+        this.isCancelingCredit = false;
+        console.error('Error canceling credit', err);
+        this.toastService.error('Erro ao cancelar a transação. Tente novamente.');
       }
     });
   }

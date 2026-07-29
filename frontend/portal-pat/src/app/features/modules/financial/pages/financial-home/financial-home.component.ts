@@ -370,12 +370,26 @@ export class FinancialHomeComponent implements OnInit, OnDestroy {
     }
   }
 
-  continuePayment(tx: ITransaction): void {
-    if (tx.relatedCourseId) {
-      this.closeDetail();
-      this.router.navigate(['/financial/payment', tx.relatedCourseId]);
-    } else {
-      this.triggerToast('ID do curso não encontrado para continuar o pagamento.');
+  cancelAndRetryPayment(tx: ITransaction): void {
+    if (!tx.relatedCourseId) {
+      this.triggerToast('ID do curso não encontrado para tentar novamente.');
+      return;
+    }
+    
+    if (confirm('Deseja cancelar esta tentativa e tentar outra forma de pagamento?')) {
+      this.isCanceling = true;
+      this.financialService.cancelPurchase(Number(tx.id)).subscribe({
+        next: () => {
+          this.isCanceling = false;
+          this.closeDetail();
+          this.router.navigate(['/financial/payment', tx.relatedCourseId]);
+        },
+        error: (err) => {
+          this.isCanceling = false;
+          console.error(err);
+          this.triggerToast('Erro ao cancelar o pagamento anterior.');
+        }
+      });
     }
   }
 

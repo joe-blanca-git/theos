@@ -372,10 +372,12 @@
       </button>
 
       <button *ngIf="selectedTransaction.status === 'Pendente'"
-              class="btn btn-primary rounded-4 py-2.5 fw-bold d-flex align-items-center justify-content-center gap-2"
-              style="font-size: 0.83rem; background-color: #4f46e5; border-color: #4f46e5;"
-              (click)="continuePayment(selectedTransaction)">
-        <i class="fas fa-credit-card"></i> Pagar Agora
+              class="btn btn-warning rounded-4 py-2.5 fw-bold d-flex align-items-center justify-content-center gap-2 text-dark"
+              style="font-size: 0.83rem;"
+              (click)="cancelAndRetryPayment(selectedTransaction)"
+              [disabled]="isCanceling">
+        <span *ngIf="isCanceling" class="spinner-border spinner-border-sm"></span>
+        <i class="fas fa-redo" *ngIf="!isCanceling"></i> Tentar outra forma de pagamento
       </button>
 
       <button *ngIf="selectedTransaction.status === 'Pendente'"
