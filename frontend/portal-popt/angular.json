@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/portal-pop",
+            "outputPath": "dist/portal-popt",
             "baseHref": "/portal-pop/",
             "index": "src/index.html",
             "browser": "src/main.ts",
@@ -75,10 +75,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "portal-pop:build:production"
+              "buildTarget": "portal-popt:build:production"
             },
             "development": {
-              "buildTarget": "portal-pop:build:development"
+              "buildTarget": "portal-popt:build:development"
             }
           },
           "defaultConfiguration": "development"
