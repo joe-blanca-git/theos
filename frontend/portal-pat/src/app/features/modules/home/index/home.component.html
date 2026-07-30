@@ -104,11 +104,28 @@
     </header>
     <!-- Main Content Outlet Area -->
     <app-breadcrumb></app-breadcrumb>
-    <main class="page-content-canvas flex-grow-1 overflow-auto p-3 p-md-4">
+    <main class="page-content-canvas flex-grow-1 overflow-auto p-3 p-md-4 pb-5 pb-md-4 mb-5 mb-md-0">
       
       <router-outlet></router-outlet>
     </main>
   </div>
+
+  <!-- Mobile Bottom Navbar -->
+  <nav class="d-md-none fixed-bottom bg-dark border-top border-secondary border-opacity-25 shadow-lg d-flex justify-content-around align-items-center py-2" style="z-index: 1040; backdrop-filter: blur(10px);">
+    <button class="btn btn-link text-decoration-none d-flex flex-column align-items-center flex-grow-1" [ngClass]="{'text-primary': activeTab === 'dashboard' || activeTab === 'home', 'text-white-50': activeTab !== 'dashboard' && activeTab !== 'home'}" (click)="setActiveTab('home')">
+      <i class="fas fa-home fs-5 mb-1"></i>
+      <span style="font-size: 0.65rem; font-weight: 600;">Início</span>
+    </button>
+    <button class="btn btn-link text-decoration-none d-flex flex-column align-items-center flex-grow-1" [ngClass]="{'text-primary': activeTab === 'courses', 'text-white-50': activeTab !== 'courses'}" (click)="setActiveTab('courses')">
+      <i class="fas fa-graduation-cap fs-5 mb-1"></i>
+      <span style="font-size: 0.65rem; font-weight: 600;">Cursos</span>
+    </button>
+    <button class="btn btn-link text-decoration-none d-flex flex-column align-items-center flex-grow-1" [ngClass]="{'text-primary': activeTab === 'financial' || activeTab === 'payment', 'text-white-50': activeTab !== 'financial' && activeTab !== 'payment'}" (click)="setActiveTab('financial')">
+      <i class="fas fa-wallet fs-5 mb-1"></i>
+      <span style="font-size: 0.65rem; font-weight: 600;">Financeiro</span>
+    </button>
+  </nav>
+
 </div>
 
 
