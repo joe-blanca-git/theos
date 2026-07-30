@@ -4,14 +4,16 @@
         <div class="card w-100 rounded-5 shadow border-0">
             <!-- Mobile Header Logo (visible only on mobile) -->
             <div class="card-header rounded-top-5 d-md-none mb-2 bg-dark d-flex justify-content-center align-items-center py-4">
-                <img width="150" height="auto" src="logos/logo-nobg.png" alt="Logo Mobile">
+                <a href="https://portaltheos.com.br">
+                    <img width="150" height="auto" src="logos/logo-nobg.png" alt="Logo Mobile" style="cursor: pointer;">
+                </a>
             </div>
 
             <div class="card-body p-4 p-md-5">
                 <!-- Title -->
                 <div class="text-center text-md-start mb-4">
                     <h3 class="fw-bold text-white mb-1">Bem-vindo de volta!</h3>
-                    <p class="text-white-50 small">Insira suas credenciais para acessar o portal.</p>
+                    <p class="text-white-50 small">Insira suas credenciais para acessar o Portal do Aluno.</p>
                 </div>
 
                 <form [formGroup]="loginForm">
@@ -74,6 +76,8 @@
     <!-- Right panel (Decorative BG with Logo) -->
     <div class="col-12 col-md-6 bg-dark d-flex flex-column justify-content-center align-items-center login-right">
         <span class="h4 text-light text-uppercase opacity-50">Portal do Aluno</span>
-        <img src="logos/logo-nobg.png" alt="Logo">
+        <a href="https://portaltheos.com.br" class="d-inline-block transition-hover">
+            <img src="logos/logo-nobg.png" alt="Logo" style="cursor: pointer; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+        </a>
     </div>
 </div>
