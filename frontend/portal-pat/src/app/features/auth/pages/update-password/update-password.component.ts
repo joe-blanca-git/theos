@@ -43,7 +43,7 @@ export class UpdatePasswordComponent implements OnInit {
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
       this.email = params['email'] || null;
-      this.token = params['token'] || null;
+      this.token = params['key'] || null;
     });
   }
 
