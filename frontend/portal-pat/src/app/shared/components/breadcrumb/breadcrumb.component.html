@@ -8,7 +8,7 @@
     
     <ng-container *ngFor="let crumb of breadcrumbs; let last = last; let i = index">
       <!-- Evita repetir a home se já mostramos o ícone -->
-      <ng-container *ngIf="crumb.url !== '/home'">
+      <ng-container *ngIf="crumb.url !== '/home' && crumb.url !== '/' && crumb.label !== 'Home' && crumb.label !== 'home'">
         <li class="breadcrumb-item" [class.active]="last" [attr.aria-current]="last ? 'page' : null">
           <a *ngIf="!last" [routerLink]="crumb.url">{{ crumb.label }}</a>
           <span *ngIf="last">{{ crumb.label }}</span>
