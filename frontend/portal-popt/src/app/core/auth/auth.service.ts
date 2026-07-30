@@ -106,7 +106,7 @@ export class AuthService extends BaseService {
 
   forgotPassword(email: string): Observable<any> {
     const url = `${this.urlApiServiceAuth}forgot-password`;
-    const body = { email };
+    const body = { email, idSystem: 2 };
 
     return this.http
       .post(url, body, this.GetAuthHeaderJson())
