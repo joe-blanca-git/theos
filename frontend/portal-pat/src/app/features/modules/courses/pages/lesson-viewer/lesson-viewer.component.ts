@@ -163,6 +163,10 @@ export class LessonViewerComponent implements OnInit, OnDestroy {
 
   // --- Lifecycle ---
   async ngOnInit(): Promise<void> {
+    if (typeof window !== 'undefined') {
+      window.scrollTo(0, 0);
+    }
+
     const courseIdParam = this.route.snapshot.paramMap.get('courseId');
     const lessonIdParam = this.route.snapshot.queryParamMap.get('lessonId');
 
