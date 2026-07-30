@@ -25,19 +25,75 @@
 
 <!-- Course Detail Page Container -->
 <div class="container-fluid p-0 animated-fade-in" *ngIf="!isLoading && course">
-  
-  <!-- Back navigation button -->
-  <div class="row mb-3">
-    <div class="col-12">
-      <button class="btn btn-link text-decoration-none fw-bold p-0 d-flex align-items-center gap-2 text-white-50 back-btn transition"
-              (click)="goBack()">
-        <i class="fas fa-chevron-left small"></i> Voltar para Cursos
-      </button>
-    </div>
-  </div>
 
   <div class="row g-4">
-    <!-- Left Column: Course Banner, Details, and Syllabus -->
+
+       <div class="col-12 col-lg-4">
+      <div class="sticky-top" style="top: 90px; z-index: 10;">
+        
+        <!-- Summary Stats Card widget -->
+        <div class="card border-0 rounded-4 shadow-sm p-4 bg-dark mb-4">
+          <h5 class="fw-extrabold text-white mb-4">Progresso Geral</h5>
+          
+          <!-- Large Circular percentage or bar progress -->
+          <div class="text-center py-2">
+            <div class="display-3 fw-black mb-1 font-monospace" style="color: #6366f1; font-weight: 900; letter-spacing: -2px;">
+              {{ course.progressPercentage }}%
+            </div>
+            <span class="text-white-50 small d-block mb-3">Conclusão acadêmica desta matéria</span>
+          </div>
+
+          <div class="progress rounded-pill bg-secondary bg-opacity-10 mb-4" style="height: 10px; overflow: hidden;">
+            <div class="progress-bar rounded-pill transition"
+                 role="progressbar"
+                 [style.width.%]="course.progressPercentage"
+                 style="background-color: #6366f1; box-shadow: 0 0 10px #6366f180;">
+            </div>
+          </div>
+
+          <!-- Quick statistics rows -->
+          <div class="d-flex flex-column gap-3 mb-4">
+            <div class="d-flex justify-content-between align-items-center py-2 border-bottom border-light">
+              <span class="text-white-50 small"><i class="fas fa-video me-2 text-white-50"></i>Aulas Concluídas</span>
+              <span class="fw-bold text-white font-monospace small">{{ course.completedLessons }} de {{ course.totalLessons }}</span>
+            </div>
+            
+            <!-- Comentado a pedido: funcionalidade de avaliação não será implementada agora -->
+            
+            <div class="d-flex justify-content-between align-items-center py-2 border-bottom border-light">
+              <span class="text-white-50 small"><i class="fas fa-star me-2 text-white-50"></i>Avaliação do Curso</span>
+              <span class="fw-bold text-white font-monospace small"><i class="fas fa-star text-warning me-1"></i>{{ course.rating }} / 5.0</span>
+            </div>
+           
+          </div>
+
+          <!-- Floating primary actions -->
+          <button class="btn w-100 rounded-pill py-2.5 fw-bold text-uppercase d-flex align-items-center justify-content-center gap-2 transition action-course-btn"
+                  style="background-color: #6366f1; color: #ffffff; font-size: 0.8rem; border: 0; box-shadow: 0 8px 16px -4px #6366f160;"
+                  (click)="goToLesson()">
+            <i class="fas" [class.fa-certificate]="course.progressPercentage === 100" [class.fa-play-circle]="course.progressPercentage !== 100"></i>
+            {{ course.progressPercentage === 100 ? 'Gerar Certificado' : (course.lastViewedLesson ? 'Continuar Assistindo' : 'Iniciar Aula') }}
+          </button>
+        </div>
+
+        <!-- Instructor Profile Card widget -->
+        <div class="card border-0 rounded-4 shadow-sm p-4 bg-dark" *ngIf="course.teacher">
+          <h6 class="fw-extrabold text-white mb-3">Seu Professor</h6>
+          <div class="d-flex align-items-center gap-3">
+            <div class="avatar-circle-sm bg-gradient-avatar text-white fw-bold d-flex align-items-center justify-content-center rounded-circle shadow-sm"
+                 style="width: 46px; height: 46px; font-size: 1rem; background-color: #6c757d;">
+              {{ getTeacherInitials(course.teacher) }}
+            </div>
+            <div>
+              <div class="fw-bold text-white" style="font-size: 0.88rem;">{{ course.teacher }}</div>
+              <span class="text-white-50 d-block small" style="font-size: 0.72rem;">Professor do Curso</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
     <div class="col-12 col-lg-8">
       
       <!-- Course Hero Cover -->
@@ -145,72 +201,7 @@
 
     </div>
 
-    <!-- Right Column: Sticky Navigation Cards -->
-    <div class="col-12 col-lg-4">
-      <div class="sticky-top" style="top: 90px; z-index: 10;">
-        
-        <!-- Summary Stats Card widget -->
-        <div class="card border-0 rounded-4 shadow-sm p-4 bg-dark mb-4">
-          <h5 class="fw-extrabold text-white mb-4">Progresso Geral</h5>
-          
-          <!-- Large Circular percentage or bar progress -->
-          <div class="text-center py-2">
-            <div class="display-3 fw-black mb-1 font-monospace" style="color: #6366f1; font-weight: 900; letter-spacing: -2px;">
-              {{ course.progressPercentage }}%
-            </div>
-            <span class="text-white-50 small d-block mb-3">Conclusão acadêmica desta matéria</span>
-          </div>
-
-          <div class="progress rounded-pill bg-secondary bg-opacity-10 mb-4" style="height: 10px; overflow: hidden;">
-            <div class="progress-bar rounded-pill transition"
-                 role="progressbar"
-                 [style.width.%]="course.progressPercentage"
-                 style="background-color: #6366f1; box-shadow: 0 0 10px #6366f180;">
-            </div>
-          </div>
-
-          <!-- Quick statistics rows -->
-          <div class="d-flex flex-column gap-3 mb-4">
-            <div class="d-flex justify-content-between align-items-center py-2 border-bottom border-light">
-              <span class="text-white-50 small"><i class="fas fa-video me-2 text-white-50"></i>Aulas Concluídas</span>
-              <span class="fw-bold text-white font-monospace small">{{ course.completedLessons }} de {{ course.totalLessons }}</span>
-            </div>
-            
-            <!-- Comentado a pedido: funcionalidade de avaliação não será implementada agora -->
-            <!--
-            <div class="d-flex justify-content-between align-items-center py-2 border-bottom border-light">
-              <span class="text-white-50 small"><i class="fas fa-star me-2 text-white-50"></i>Avaliação do Curso</span>
-              <span class="fw-bold text-white font-monospace small"><i class="fas fa-star text-warning me-1"></i>{{ course.rating }} / 5.0</span>
-            </div>
-            -->
-          </div>
-
-          <!-- Floating primary actions -->
-          <button class="btn w-100 rounded-pill py-2.5 fw-bold text-uppercase d-flex align-items-center justify-content-center gap-2 transition action-course-btn"
-                  style="background-color: #6366f1; color: #ffffff; font-size: 0.8rem; border: 0; box-shadow: 0 8px 16px -4px #6366f160;"
-                  (click)="goToLesson()">
-            <i class="fas" [class.fa-certificate]="course.progressPercentage === 100" [class.fa-play-circle]="course.progressPercentage !== 100"></i>
-            {{ course.progressPercentage === 100 ? 'Gerar Certificado' : (course.lastViewedLesson ? 'Continuar Assistindo' : 'Iniciar Aula') }}
-          </button>
-        </div>
-
-        <!-- Instructor Profile Card widget -->
-        <div class="card border-0 rounded-4 shadow-sm p-4 bg-dark" *ngIf="course.teacher">
-          <h6 class="fw-extrabold text-white mb-3">Seu Professor</h6>
-          <div class="d-flex align-items-center gap-3">
-            <div class="avatar-circle-sm bg-gradient-avatar text-white fw-bold d-flex align-items-center justify-content-center rounded-circle shadow-sm"
-                 style="width: 46px; height: 46px; font-size: 1rem; background-color: #6c757d;">
-              {{ getTeacherInitials(course.teacher) }}
-            </div>
-            <div>
-              <div class="fw-bold text-white" style="font-size: 0.88rem;">{{ course.teacher }}</div>
-              <span class="text-white-50 d-block small" style="font-size: 0.72rem;">Professor do Curso</span>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
+ 
   </div>
 
 </div>

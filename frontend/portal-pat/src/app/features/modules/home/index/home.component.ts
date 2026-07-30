@@ -391,7 +391,16 @@ export class HomeComponent implements OnInit {
     if (route.firstChild) {
       return this.getChildTitle(route.firstChild);
     }
-    return route.routeConfig?.title as string || (route.routeConfig?.data ? route.routeConfig.data['title'] : 'Navegação');
+    
+    const title = route.routeConfig?.title as string || (route.routeConfig?.data ? route.routeConfig.data['title'] : null);
+    if (title) return title;
+
+    const url = this.router.url.split('?')[0]; // Remove query params se houver
+    if (url === '/' || url === '/home' || url === '/dashboard' || url === '') {
+      return 'Página Inicial';
+    }
+
+    return 'Navegação';
   }
 
   ngOnInit() {
