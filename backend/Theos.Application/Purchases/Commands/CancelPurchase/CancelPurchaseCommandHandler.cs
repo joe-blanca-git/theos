@@ -41,16 +41,19 @@ public class CancelPurchaseCommandHandler : IRequestHandler<CancelPurchaseComman
             };
         }
 
-        if (string.IsNullOrWhiteSpace(purchase.AsaasPaymentId))
+        if (!string.IsNullOrWhiteSpace(purchase.AsaasPaymentId))
         {
-            return new CancelPurchaseResponseDto
+            try 
             {
-                Success = false,
-                Message = "Pagamento Asaas não encontrado para esta compra."
-            };
+                await _asaasService.CancelPaymentAsync(purchase.AsaasPaymentId, cancellationToken);
+            } 
+            catch (Exception ex) 
+            {
+                // Se der erro ao cancelar no Asaas (ex: já estava cancelado lá, ou erro de rede),
+                // ainda vamos seguir e cancelar no nosso banco para não travar o usuário.
+                Console.WriteLine($"Aviso: Falha ao cancelar no Asaas. {ex.Message}");
+            }
         }
-
-        await _asaasService.CancelPaymentAsync(purchase.AsaasPaymentId, cancellationToken);
 
         purchase.Cancel();
         await _context.SaveChangesAsync(cancellationToken);
