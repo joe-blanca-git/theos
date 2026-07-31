@@ -5,7 +5,7 @@ using Theos.Application.Teachers.Common;
 
 namespace Theos.Application.Teachers.Queries.GetTeachers
 {
-    public record GetTeachersQuery : IRequest<List<TeacherDto>>;
+    public record GetTeachersQuery(bool IsPublic = false) : IRequest<List<TeacherDto>>;
 
     public class GetTeachersQueryHandler : IRequestHandler<GetTeachersQuery, List<TeacherDto>>
     {
@@ -20,6 +20,25 @@ namespace Theos.Application.Teachers.Queries.GetTeachers
 
         public async Task<List<TeacherDto>> Handle(GetTeachersQuery request, CancellationToken cancellationToken)
         {
+            if (request.IsPublic)
+            {
+                return await _context.Teachers
+                    .Where(t => t.Active)
+                    .Select(t => new TeacherDto
+                    {
+                        Id = t.Id,
+                        Name = t.Name,
+                        Role = t.Role,
+                        Position = t.Position,
+                        Avatar = t.Avatar,
+                        Bio = t.Bio,
+                        InstagramLink = t.InstagramLink,
+                        LinkedinLink = t.LinkedinLink,
+                        IdAgivys = t.IdAgivys
+                    })
+                    .ToListAsync(cancellationToken);
+            }
+
             var currentUser = await _userContextService.GetCurrentUserAsync();
             var loggedTeacher = await _context.Teachers.FirstOrDefaultAsync(t => t.IdAgivys == currentUser.ExternalId, cancellationToken);
 

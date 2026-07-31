@@ -17,7 +17,7 @@ public class LandingTeachersController : ApiControllerBase
     [HttpGet]
     public async Task<ActionResult<List<TeacherDto>>> GetTeachers()
     {
-        return await Mediator.Send(new GetTeachersQuery());
+        return await Mediator.Send(new GetTeachersQuery(IsPublic: true));
     }
 
     /// <summary>
@@ -26,7 +26,7 @@ public class LandingTeachersController : ApiControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<TeacherDto>> GetTeacherById(int id)
     {
-        var teacher = await Mediator.Send(new GetTeacherByIdQuery { Id = id });
+        var teacher = await Mediator.Send(new GetTeacherByIdQuery { Id = id, IsPublic = true });
         if (teacher == null) return NotFound();
         return teacher;
     }
