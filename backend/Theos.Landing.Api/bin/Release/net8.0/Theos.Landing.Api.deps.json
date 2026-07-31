@@ -831,12 +831,18 @@
           "Theos.Domain": "1.0.0"
         },
         "runtime": {
-          "Theos.Application.dll": {}
+          "Theos.Application.dll": {
+            "assemblyVersion": "1.0.0",
+            "fileVersion": "1.0.0.0"
+          }
         }
       },
       "Theos.Domain/1.0.0": {
         "runtime": {
-          "Theos.Domain.dll": {}
+          "Theos.Domain.dll": {
+            "assemblyVersion": "1.0.0",
+            "fileVersion": "1.0.0.0"
+          }
         }
       },
       "Theos.Infrastructure/1.0.0": {
@@ -850,7 +856,10 @@
           "Theos.Domain": "1.0.0"
         },
         "runtime": {
-          "Theos.Infrastructure.dll": {}
+          "Theos.Infrastructure.dll": {
+            "assemblyVersion": "1.0.0",
+            "fileVersion": "1.0.0.0"
+          }
         }
       }
     }

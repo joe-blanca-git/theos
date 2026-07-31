@@ -37,6 +37,13 @@
             <param name="contentType">MIME type da imagem (ex: image/jpeg).</param>
             <returns>A URL pública onde o arquivo ficou acessível.</returns>
         </member>
+        <member name="M:Theos.Application.Common.Interfaces.ICloudflareStorageService.DeleteImageAsync(System.String)">
+            <summary>
+            Deleta um arquivo do bucket do Cloudflare R2 a partir da URL pública.
+            </summary>
+            <param name="fileUrl">A URL pública do arquivo.</param>
+            <returns>True se deletado com sucesso, false caso contrário.</returns>
+        </member>
         <member name="P:Theos.Application.Common.Models.Bunny.VideoUploadInformationDto.UploadUrl">
             <summary>
             A URL/Mecanismo oficial suportado pela Bunny Stream para realizar o upload direto (ex: TUS endpoint)
@@ -148,6 +155,10 @@
         <member name="P:Theos.Application.Courses.Commands.CreateLesson.CreateLessonCommand.DurationSeconds">
             <summary>Duração estimada da aula em segundos.</summary>
             <example>600</example>
+        </member>
+        <member name="P:Theos.Application.Courses.Commands.CreateLesson.CreateLessonCommand.Thumbnail">
+            <summary>Link da imagem de miniatura da aula.</summary>
+            <example>https://cdn.example.com/thumbnails/lesson-thumb.jpg</example>
         </member>
         <member name="T:Theos.Application.Courses.Commands.CreateModule.CreateModuleCommand">
             <summary>
@@ -277,6 +288,9 @@
         </member>
         <member name="P:Theos.Application.Courses.Commands.UpdateLesson.UpdateLessonCommand.BunnyVideoId">
             <summary>Novo ID do vídeo Bunny para a aula.</summary>
+        </member>
+        <member name="P:Theos.Application.Courses.Commands.UpdateLesson.UpdateLessonCommand.Thumbnail">
+            <summary>Nova miniatura para a aula.</summary>
         </member>
         <member name="T:Theos.Application.Courses.Commands.UpdateModule.UpdateModuleCommand">
             <summary>

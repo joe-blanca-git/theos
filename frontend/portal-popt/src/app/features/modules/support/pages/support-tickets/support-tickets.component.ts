@@ -57,8 +57,8 @@ export class SupportTicketsComponent implements OnInit {
   }
 
   selectTicket(ticket: IAdminTicket): void {
-    this.supportService.getTicketDetails(ticket.id).subscribe({
-      next: (details) => {
+    this.supportService.getTicketById(ticket.id).subscribe({
+      next: (details: any) => {
         this.selectedTicket = details;
         this.replyForm.reset();
       },
