@@ -1,6 +1,5 @@
 using MediatR;
 using FluentValidation;
-using Theos.Application.Common.Exceptions;
 using Theos.Application.Common.Interfaces;
 using Theos.Domain.Entities;
 
@@ -34,7 +33,7 @@ public class UpdateForumCategoryCommandHandler : IRequestHandler<UpdateForumCate
 
         if (entity == null)
         {
-            throw new NotFoundException(nameof(ForumCategory), request.Id);
+            throw new KeyNotFoundException($"ForumCategory with ID {request.Id} not found.");
         }
 
         entity.Update(request.Name, request.Description);

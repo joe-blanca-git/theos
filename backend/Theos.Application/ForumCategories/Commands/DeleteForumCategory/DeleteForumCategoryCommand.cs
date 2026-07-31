@@ -1,5 +1,4 @@
 using MediatR;
-using Theos.Application.Common.Exceptions;
 using Theos.Application.Common.Interfaces;
 using Theos.Domain.Entities;
 
@@ -23,7 +22,7 @@ public class DeleteForumCategoryCommandHandler : IRequestHandler<DeleteForumCate
 
         if (entity == null)
         {
-            throw new NotFoundException(nameof(ForumCategory), request.Id);
+            throw new KeyNotFoundException($"ForumCategory with ID {request.Id} not found.");
         }
 
         _context.ForumCategories.Remove(entity);
