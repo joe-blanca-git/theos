@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -54,7 +54,7 @@ public class TicketsController : ControllerBase
     /// <summary>
     /// Traz todos os detalhes de um ticket (Histórico, Aluno, Mensagens, Anexos).
     /// </summary>
-    [HttpGet("{id}")]
+    [HttpGet("{id:int}")]
     public async Task<IActionResult> GetTicketDetails(int id)
     {
         var result = await _mediator.Send(new GetAdminTicketDetailsQuery(id));
@@ -75,7 +75,7 @@ public class TicketsController : ControllerBase
     /// <summary>
     /// Professor responde ao ticket. (Muda status para Open e avisa o aluno por e-mail).
     /// </summary>
-    [HttpPost("{id}/messages")]
+    [HttpPost("{id:int}/messages")]
     public async Task<IActionResult> ReplyTicket(int id, [FromBody] AdminReplyTicketCommand command)
     {
         if (id != command.TicketId) return BadRequest(new { message = "O ID da rota e do corpo não conferem." });
@@ -87,7 +87,7 @@ public class TicketsController : ControllerBase
     /// <summary>
     /// Altera o status do ticket (Open, Pending, Answered, Closed).
     /// </summary>
-    [HttpPut("{id}/status")]
+    [HttpPut("{id:int}/status")]
     public async Task<IActionResult> ChangeStatus(int id, [FromBody] ChangeTicketStatusCommand command)
     {
         if (id != command.TicketId) return BadRequest(new { message = "ID inválido." });
@@ -99,7 +99,7 @@ public class TicketsController : ControllerBase
     /// <summary>
     /// Altera a prioridade do ticket (Low, Normal, High, Critical).
     /// </summary>
-    [HttpPut("{id}/priority")]
+    [HttpPut("{id:int}/priority")]
     public async Task<IActionResult> ChangePriority(int id, [FromBody] ChangeTicketPriorityCommand command)
     {
         if (id != command.TicketId) return BadRequest(new { message = "ID inválido." });
@@ -111,7 +111,7 @@ public class TicketsController : ControllerBase
     /// <summary>
     /// Transfere o ticket para outra categoria.
     /// </summary>
-    [HttpPut("{id}/category")]
+    [HttpPut("{id:int}/category")]
     public async Task<IActionResult> ChangeCategory(int id, [FromBody] ChangeTicketCategoryCommand command)
     {
         if (id != command.TicketId) return BadRequest(new { message = "ID inválido." });

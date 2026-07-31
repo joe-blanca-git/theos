@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -51,7 +51,7 @@ public class PortalTicketsController : ApiControllerBase
     /// <summary>
     /// Traz os detalhes completos de um ticket (mensagens, anexos).
     /// </summary>
-    [HttpGet("{id}")]
+    [HttpGet("{id:int}")]
     public async Task<IActionResult> GetTicketDetails(int id)
     {
         var result = await _mediator.Send(new GetTicketDetailsQuery(id));
@@ -72,7 +72,7 @@ public class PortalTicketsController : ApiControllerBase
     /// <summary>
     /// Adiciona uma nova resposta do aluno ao ticket.
     /// </summary>
-    [HttpPost("{id}/messages")]
+    [HttpPost("{id:int}/messages")]
     public async Task<IActionResult> ReplyTicket(int id, [FromBody] ReplyTicketCommand command)
     {
         if (id != command.TicketId) return BadRequest(new { message = "O ID da rota e do corpo não conferem." });
@@ -84,7 +84,7 @@ public class PortalTicketsController : ApiControllerBase
     /// <summary>
     /// Faz upload de anexo para uma resposta.
     /// </summary>
-    [HttpPost("{id}/attachments")]
+    [HttpPost("{id:int}/attachments")]
     public async Task<IActionResult> UploadAttachment(int id, [FromForm] int messageId, [FromForm] IFormFile file)
     {
         if (file == null || file.Length == 0)
@@ -104,7 +104,7 @@ public class PortalTicketsController : ApiControllerBase
     /// <summary>
     /// Lista todo o histórico de eventos/auditoria do ticket.
     /// </summary>
-    [HttpGet("{id}/timeline")]
+    [HttpGet("{id:int}/timeline")]
     public async Task<IActionResult> GetTimeline(int id)
     {
         var result = await _mediator.Send(new GetTicketTimelineQuery(id));
