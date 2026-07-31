@@ -86,7 +86,12 @@ namespace Theos.Application.Courses.Queries.GetCourses
             if (request.FilterByCurrentUserTeacher)
             {
                 var currentUser = await _userContextService.GetCurrentUserAsync();
-                query = query.Where(c => c.CourseTeachers.Any(ct => ct.Teacher.IdAgivys == currentUser.ExternalId));
+                var currentTeacher = await _context.Teachers.FirstOrDefaultAsync(t => t.IdAgivys == currentUser.ExternalId, cancellationToken);
+                
+                if (currentTeacher == null || currentTeacher.Role != "Admin")
+                {
+                    query = query.Where(c => c.CourseTeachers.Any(ct => ct.Teacher.IdAgivys == currentUser.ExternalId));
+                }
             }
 
             return await query
