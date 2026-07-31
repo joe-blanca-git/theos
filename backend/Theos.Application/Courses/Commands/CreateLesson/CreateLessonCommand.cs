@@ -25,6 +25,10 @@ namespace Theos.Application.Courses.Commands.CreateLesson
         /// <summary>Duração estimada da aula em segundos.</summary>
         /// <example>600</example>
         public int? DurationSeconds { get; init; }
+
+        /// <summary>Link da imagem de miniatura da aula.</summary>
+        /// <example>https://cdn.example.com/thumbnails/lesson-thumb.jpg</example>
+        public string? Thumbnail { get; init; }
     }
 
     public class CreateLessonCommandHandler : IRequestHandler<CreateLessonCommand, int>
@@ -65,6 +69,7 @@ namespace Theos.Application.Courses.Commands.CreateLesson
             );
 
             lesson.ModuleId = request.ModuleId;
+            lesson.Thumbnail = request.Thumbnail;
 
             _context.Lessons.Add(lesson);
             await _context.SaveChangesAsync(cancellationToken);

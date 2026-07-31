@@ -81,6 +81,11 @@ export class CoursesComponent implements OnInit {
   selectedLessonVideo: File | null = null;
   lessonVideoError: string | null = null;
 
+  // Lesson Thumbnail State
+  selectedLessonThumbnail: File | null = null;
+  lessonThumbnailPreview: string | null = null;
+  lessonThumbnailError: string | null = null;
+
   // TUS Upload State
   uploadProgress: number = 0;
   uploadStatusMessage: string = '';
@@ -183,7 +188,8 @@ export class CoursesComponent implements OnInit {
       moduleId: ['', Validators.required],
       name: ['', Validators.required],
       description: [''],
-      durationSeconds: [0, [Validators.required, Validators.min(1)]]
+      durationSeconds: [0, [Validators.required, Validators.min(1)]],
+      thumbnail: ['']
     });
 
     this.domainForm = this.fb.group({
@@ -351,14 +357,15 @@ export class CoursesComponent implements OnInit {
     img.src = URL.createObjectURL(file);
     img.onload = () => {
       const ratio = img.width / img.height;
-      if (ratio < 1.7 || ratio > 1.8) { // Target is 1.77 (16:9)
-        this.coverImageError = 'A imagem deve ter a proporção 16:9 (ex: 1280x720).';
+      // Aceita se largura <= 1080 e altura <= 720 OU proporo 16:9
+      if ((img.width <= 1080 && img.height <= 720) || (ratio >= 1.7 && ratio <= 1.8)) {
+        this.selectedCoverImage = file;
+        this.coverImagePreview = img.src;
+      } else {
+        this.coverImageError = 'A imagem deve ter no máximo 1080x720 ou proporção 16:9.';
         this.selectedCoverImage = null;
         this.coverImagePreview = null;
         event.target.value = '';
-      } else {
-        this.selectedCoverImage = file;
-        this.coverImagePreview = img.src;
       }
     };
   }
@@ -559,9 +566,12 @@ export class CoursesComponent implements OnInit {
       this.selectedCourseForLesson = this.selectedCourseForLessons;
     }
     this.lessonToEdit = null;
-    this.lessonForm.reset({ moduleId: '', durationSeconds: 0 });
+    this.lessonForm.reset({ moduleId: '', durationSeconds: 0, thumbnail: '' });
     this.selectedLessonVideo = null;
     this.lessonVideoError = null;
+    this.selectedLessonThumbnail = null;
+    this.lessonThumbnailPreview = null;
+    this.lessonThumbnailError = null;
     this.uploadProgress = 0;
     this.uploadStatusMessage = '';
     this.tusUploadInstance = null;
@@ -578,10 +588,14 @@ export class CoursesComponent implements OnInit {
       moduleId: moduleId,
       name: lesson.name,
       description: lesson.description,
-      durationSeconds: lesson.durationSeconds
+      durationSeconds: lesson.durationSeconds,
+      thumbnail: lesson.thumbnail || ''
     });
     this.selectedLessonVideo = null;
     this.lessonVideoError = null;
+    this.selectedLessonThumbnail = null;
+    this.lessonThumbnailPreview = lesson.thumbnail || null;
+    this.lessonThumbnailError = null;
     this.uploadProgress = 0;
     this.uploadStatusMessage = '';
     this.tusUploadInstance = null;
@@ -644,6 +658,48 @@ export class CoursesComponent implements OnInit {
     video.src = URL.createObjectURL(file);
   }
 
+  onLessonThumbnailChange(event: any) {
+    const file = event.target.files[0];
+    this.lessonThumbnailError = null;
+
+    if (!file) {
+      this.selectedLessonThumbnail = null;
+      this.lessonThumbnailPreview = null;
+      return;
+    }
+
+    if (file.size > 1.5 * 1024 * 1024) {
+      this.lessonThumbnailError = 'A imagem deve ter no máximo 1.5MB.';
+      this.selectedLessonThumbnail = null;
+      this.lessonThumbnailPreview = null;
+      event.target.value = '';
+      return;
+    }
+
+    const img = new Image();
+    img.onload = () => {
+      const ratio = img.width / img.height;
+      if ((img.width <= 1080 && img.height <= 720) || (ratio >= 1.7 && ratio <= 1.8)) {
+        this.selectedLessonThumbnail = file;
+        this.lessonThumbnailPreview = img.src;
+        this.lessonThumbnailError = null;
+      } else {
+        this.lessonThumbnailError = 'A imagem deve ter no máximo 1080x720 ou proporção 16:9.';
+        this.selectedLessonThumbnail = null;
+        this.lessonThumbnailPreview = null;
+        event.target.value = '';
+      }
+    };
+    img.src = URL.createObjectURL(file);
+  }
+
+  removeLessonThumbnail() {
+    this.selectedLessonThumbnail = null;
+    this.lessonThumbnailPreview = null;
+    this.lessonThumbnailError = null;
+    this.lessonForm.patchValue({ thumbnail: '' });
+  }
+
   saveLesson() {
     if (this.lessonForm.invalid) {
       this.lessonForm.markAllAsTouched();
@@ -651,7 +707,25 @@ export class CoursesComponent implements OnInit {
     }
 
     this.isSavingLesson = true;
-    
+
+    if (this.selectedLessonThumbnail) {
+      this.coursesService.uploadImage(this.selectedLessonThumbnail).subscribe({
+        next: (response) => {
+          this.lessonForm.patchValue({ thumbnail: response.url });
+          this.submitLessonForm();
+        },
+        error: (err) => {
+          console.error('Error uploading lesson thumbnail', err);
+          this.toastService.error('Erro ao enviar a imagem de miniatura.');
+          this.isSavingLesson = false;
+        }
+      });
+    } else {
+      this.submitLessonForm();
+    }
+  }
+
+  private submitLessonForm() {
     const payload = this.lessonForm.value;
     payload.moduleId = parseInt(payload.moduleId, 10);
 

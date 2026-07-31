@@ -24,6 +24,9 @@ namespace Theos.Application.Courses.Commands.UpdateLesson
 
         /// <summary>Novo ID do vídeo Bunny para a aula.</summary>
         public string? BunnyVideoId { get; init; }
+
+        /// <summary>Nova miniatura para a aula.</summary>
+        public string? Thumbnail { get; init; }
     }
 
     public class UpdateLessonCommandHandler : IRequestHandler<UpdateLessonCommand, Unit>
@@ -49,6 +52,7 @@ namespace Theos.Application.Courses.Commands.UpdateLesson
             lesson.Description = request.Description;
             lesson.DurationSeconds = request.DurationSeconds;
             lesson.BunnyVideoId = request.BunnyVideoId;
+            lesson.Thumbnail = request.Thumbnail;
             lesson.UpdatedBy = currentUser.Id;
 
             _context.Lessons.Update(lesson);
