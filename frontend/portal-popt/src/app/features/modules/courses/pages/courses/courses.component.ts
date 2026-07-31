@@ -407,6 +407,9 @@ export class CoursesComponent implements OnInit {
 
     if (this.courseToEdit) {
       payload.id = this.courseToEdit.id;
+      if (this.courseToEdit.bunnyLibraryId) {
+        payload.bunnyLibraryId = this.courseToEdit.bunnyLibraryId;
+      }
       this.coursesService.updateCourse(payload).subscribe({
         next: () => {
           this.toastService.success('Curso atualizado com sucesso!');
@@ -479,7 +482,8 @@ export class CoursesComponent implements OnInit {
     if (this.moduleToEdit) {
       const modulePayload = {
         ...this.moduleForm.value,
-        id: this.moduleToEdit.id
+        id: this.moduleToEdit.id,
+        bunnyCollectionId: this.moduleToEdit.bunnyCollectionId || undefined
       };
 
       this.coursesService.updateModule(modulePayload).subscribe({
@@ -732,6 +736,9 @@ export class CoursesComponent implements OnInit {
     if (this.lessonToEdit) {
       this.uploadStatusMessage = 'Atualizando aula...';
       payload.id = this.lessonToEdit.id;
+      if (this.lessonToEdit.bunnyVideoId) {
+        payload.bunnyVideoId = this.lessonToEdit.bunnyVideoId;
+      }
       this.coursesService.updateLesson(payload).subscribe({
         next: () => {
           this.toastService.success('Aula atualizada com sucesso!');

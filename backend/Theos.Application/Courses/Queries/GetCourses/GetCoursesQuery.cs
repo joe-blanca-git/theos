@@ -63,6 +63,7 @@ namespace Theos.Application.Courses.Queries.GetCourses
         public string? Description { get; init; }
         public int? DurationSeconds { get; init; }
         public string? BunnyVideoId { get; init; }
+        public string? Thumbnail { get; init; }
     }
 
     public class GetCoursesQueryHandler : IRequestHandler<GetCoursesQuery, List<CourseDto>>
@@ -125,7 +126,8 @@ namespace Theos.Application.Courses.Queries.GetCourses
                             Name = l.Name,
                             Description = l.Description,
                             DurationSeconds = l.DurationSeconds,
-                            BunnyVideoId = l.BunnyVideoId
+                            BunnyVideoId = l.BunnyVideoId,
+                            Thumbnail = l.Thumbnail
                         }).ToList()
                     }).ToList(),
                     Domains = c.Domains.Select(d => new CourseDomainDto

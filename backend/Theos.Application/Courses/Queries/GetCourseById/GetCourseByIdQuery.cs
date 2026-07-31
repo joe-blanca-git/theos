@@ -81,7 +81,8 @@ namespace Theos.Application.Courses.Queries.GetCourseById
                             Name = l.Name,
                             Description = l.Description,
                             DurationSeconds = l.DurationSeconds,
-                            BunnyVideoId = l.BunnyVideoId
+                            BunnyVideoId = l.BunnyVideoId,
+                            Thumbnail = l.Thumbnail
                         }).ToList()
                     }).ToList(),
                     Domains = c.Domains.Select(d => new CourseDomainDto
