@@ -66,7 +66,7 @@ export class FinancialService extends BaseService {
   }
 
   getMyPortalTransactions(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.urlApiTheos}portal/financial/transactions`, this.GetAuthHeaderJson());
+    return this.http.get<any[]>(`${this.urlApiTheos}financial/transactions`, this.GetAuthHeaderJson());
   }
 
   getApiUrl(): string {

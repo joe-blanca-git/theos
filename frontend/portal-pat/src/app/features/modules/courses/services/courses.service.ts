@@ -13,7 +13,7 @@ export class CoursesService extends BaseService {
 
   async getMyCourses(): Promise<any[]> {
     try {
-      let url = `${this.urlApiTheos}portal/courses`;
+      let url = `${this.urlApiTheos}courses`;
       const response = await firstValueFrom(
         this.httpClient.get<any[]>(url, this.GetAuthHeaderJson())
       );
@@ -25,7 +25,7 @@ export class CoursesService extends BaseService {
 
   async getCourseDetail(id: number): Promise<any> {
     try {
-      let url = `${this.urlApiTheos}portal/courses/course-detail/${id}`;
+      let url = `${this.urlApiTheos}courses/course-detail/${id}`;
       const response = await firstValueFrom(
         this.httpClient.get<any>(url, this.GetAuthHeaderJson())
       );
@@ -37,7 +37,7 @@ export class CoursesService extends BaseService {
 
   async getCourseCheckoutSummary(id: number): Promise<any> {
     try {
-      let url = `${this.urlApiTheos}portal/courses/${id}/checkout-summary`;
+      let url = `${this.urlApiTheos}courses/${id}/checkout-summary`;
       const response = await firstValueFrom(
         this.httpClient.get<any>(url, this.GetAuthHeaderJson())
       );
@@ -61,7 +61,7 @@ export class CoursesService extends BaseService {
 
   async rateCourse(courseId: number, rate: number): Promise<any> {
     try {
-      let url = `${this.urlApiTheos}portal/courses/${courseId}/rate`;
+      let url = `${this.urlApiTheos}courses/${courseId}/rate`;
       const body = { rate: rate };
       const response = await firstValueFrom(
         this.httpClient.post<any>(url, body, this.GetAuthHeaderJson())

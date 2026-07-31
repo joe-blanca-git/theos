@@ -14,7 +14,7 @@ export class HomeService extends BaseService {
 
   async getHomeData(): Promise<IPortalHomeData> {
     try {
-      let url = `${this.urlApiTheos}portal/home`;
+      let url = `${this.urlApiTheos}home`;
       const response = await firstValueFrom(
         this.httpClient.get<IPortalHomeData>(url, this.GetAuthHeaderJson())
       );
@@ -26,7 +26,7 @@ export class HomeService extends BaseService {
 
   async getNewsDetail(id: number): Promise<any> {
     try {
-      let url = `${this.urlApiTheos}portal/home/news/${id}`;
+      let url = `${this.urlApiTheos}home/news/${id}`;
       const response = await firstValueFrom(
         this.httpClient.get<any>(url, this.GetAuthHeaderJson())
       );
