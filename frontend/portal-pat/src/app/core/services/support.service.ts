@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
 import { BaseService } from './base.service';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -46,36 +46,36 @@ export interface IPaginatedList<T> {
   providedIn: 'root'
 })
 export class SupportService extends BaseService {
-  constructor(protected override http: HttpClient) {
-    super(http);
+  constructor(protected override injector: Injector, private http: HttpClient) {
+    super(injector);
   }
 
   getCategories(): Observable<ITicketCategory[]> {
-    return this.get<ITicketCategory[]>('api/v1/portal/ticket-categories');
+    return this.http.get<ITicketCategory[]>(`${this.urlApiTheos}ticket-categories`, this.GetAuthHeaderJson());
   }
 
   createTicket(data: ICreateTicketRequest): Observable<{ ticketId: number }> {
-    return this.post<{ ticketId: number }>('api/v1/portal/tickets', data);
+    return this.http.post<{ ticketId: number }>(`${this.urlApiTheos}tickets`, data, this.GetAuthHeaderJson());
   }
 
   getTickets(status?: string, categoryId?: number, searchText?: string, pageIndex: number = 1, pageSize: number = 20): Observable<IPaginatedList<ISupportTicket>> {
-    let url = `api/v1/portal/tickets?pageIndex=${pageIndex}&pageSize=${pageSize}`;
+    let url = `${this.urlApiTheos}tickets?pageIndex=${pageIndex}&pageSize=${pageSize}`;
     if (status) url += `&status=${status}`;
     if (categoryId) url += `&categoryId=${categoryId}`;
     if (searchText) url += `&searchText=${searchText}`;
     
-    return this.get<IPaginatedList<ISupportTicket>>(url);
+    return this.http.get<IPaginatedList<ISupportTicket>>(url, this.GetAuthHeaderJson());
   }
 
   getTicketDetails(id: number): Observable<ISupportTicketDetails> {
-    return this.get<ISupportTicketDetails>(`api/v1/portal/tickets/${id}`);
+    return this.http.get<ISupportTicketDetails>(`${this.urlApiTheos}tickets/${id}`, this.GetAuthHeaderJson());
   }
 
   replyTicket(id: number, content: string): Observable<{ messageId: number }> {
-    return this.post<{ messageId: number }>(`api/v1/portal/tickets/${id}/messages`, {
+    return this.http.post<{ messageId: number }>(`${this.urlApiTheos}tickets/${id}/messages`, {
       ticketId: id,
       content: content,
       attachments: []
-    });
+    }, this.GetAuthHeaderJson());
   }
 }

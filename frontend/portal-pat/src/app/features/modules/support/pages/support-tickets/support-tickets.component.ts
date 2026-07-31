@@ -102,21 +102,8 @@ export class SupportTicketsComponent implements OnInit {
     });
   }
 
-  changeStatus(newStatus: 'Pendente' | 'Respondido' | 'Cancelado' | 'Finalizado'): void {
-    if (!this.selectedTicket) return;
-    
-    this.supportService.updateTicketStatus(this.selectedTicket.id, newStatus).subscribe({
-      next: () => {
-        this.toastService.success(`Status alterado para ${newStatus}.`);
-        this.selectedTicket!.status = newStatus;
-        const index = this.tickets.findIndex(t => t.id === this.selectedTicket!.id);
-        if (index > -1) this.tickets[index].status = newStatus;
-        this.applyFilters();
-      },
-      error: () => {
-        this.toastService.error('Não foi possível alterar o status.');
-      }
-    });
+  changeStatus(status: string): void {
+    // Disabled in portal-pat
   }
 
   getStatusBadgeClass(status: string): string {
