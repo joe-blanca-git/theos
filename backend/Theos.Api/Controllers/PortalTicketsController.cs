@@ -1,4 +1,4 @@
-using MediatR;
+Ôªøusing MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -37,7 +37,7 @@ public class PortalTicketsController : ApiControllerBase
     }
 
     /// <summary>
-    /// Lista os tickets do aluno com paginaÁ„o e filtros.
+    /// Lista os tickets do aluno com pagina√ß√£o e filtros.
     /// </summary>
     [HttpGet]
     public async Task<IActionResult> GetTickets([FromQuery] TicketStatus? status, [FromQuery] int? categoryId, [FromQuery] string? searchText, [FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 10)
@@ -54,7 +54,7 @@ public class PortalTicketsController : ApiControllerBase
     public async Task<IActionResult> GetTicketDetails(int id)
     {
         var result = await _mediator.Send(new GetTicketDetailsQuery(id));
-        if (result == null) return NotFound(new { message = "Ticket n„o encontrado." });
+        if (result == null) return NotFound(new { message = "Ticket n√£o encontrado." });
         return Ok(result);
     }
 
@@ -64,9 +64,9 @@ public class PortalTicketsController : ApiControllerBase
     [HttpPost("{id:int}/messages")]
     public async Task<IActionResult> ReplyTicket(int id, [FromBody] ReplyTicketCommand command)
     {
-        if (id != command.TicketId) return BadRequest(new { message = "O ID da rota e do corpo n„o conferem." });
+        if (id != command.TicketId) return BadRequest(new { message = "O ID da rota e do corpo n√£o conferem." });
         var messageId = await _mediator.Send(command);
-        if (messageId == 0) return NotFound(new { message = "Ticket n„o encontrado." });
+        if (messageId == 0) return NotFound(new { message = "Ticket n√£o encontrado." });
         return Ok(new { MessageId = messageId });
     }
 
@@ -74,10 +74,10 @@ public class PortalTicketsController : ApiControllerBase
     /// Faz upload de anexo para uma resposta.
     /// </summary>
     [HttpPost("{id:int}/attachments")]
-    public async Task<IActionResult> UploadAttachment(int id, [FromForm] int messageId, [FromForm] IFormFile file)
+    public async Task<IActionResult> UploadAttachment(int id, [FromForm] int messageId, IFormFile file)
     {
         if (file == null || file.Length == 0)
-            return BadRequest(new { message = "Arquivo n„o enviado." });
+            return BadRequest(new { message = "Arquivo n√£o enviado." });
 
         using var ms = new MemoryStream();
         await file.CopyToAsync(ms);
@@ -86,12 +86,12 @@ public class PortalTicketsController : ApiControllerBase
         var command = new UploadTicketAttachmentCommand(id, messageId, file.FileName, file.ContentType, content);
         var attachmentId = await _mediator.Send(command);
 
-        if (attachmentId == 0) return NotFound(new { message = "Ticket ou mensagem n„o encontrado." });
+        if (attachmentId == 0) return NotFound(new { message = "Ticket ou mensagem n√£o encontrado." });
         return Ok(new { AttachmentId = attachmentId });
     }
 
     /// <summary>
-    /// Lista todo o histÛrico de eventos/auditoria do ticket.
+    /// Lista todo o hist√≥rico de eventos/auditoria do ticket.
     /// </summary>
     [HttpGet("{id:int}/timeline")]
     public async Task<IActionResult> GetTimeline(int id)

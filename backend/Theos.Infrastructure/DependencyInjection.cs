@@ -46,7 +46,7 @@ namespace Theos.Infrastructure
                 client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
             });
 
-            services.AddHostedService<OrphanVideoCleanupBackgroundService>();
+            // services.AddHostedService<OrphanVideoCleanupBackgroundService>();
                                 
             return services;
         }
