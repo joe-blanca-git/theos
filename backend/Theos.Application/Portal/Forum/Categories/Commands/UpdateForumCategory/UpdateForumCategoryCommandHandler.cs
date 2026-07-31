@@ -1,4 +1,4 @@
-using MediatR;
+﻿using MediatR;
 using Theos.Application.Common.Interfaces;
 
 namespace Theos.Application.Portal.Forum.Categories.Commands.UpdateForumCategory;
@@ -17,10 +17,11 @@ public class UpdateForumCategoryCommandHandler : IRequestHandler<UpdateForumCate
         var category = await _context.ForumCategories.FindAsync(new object[] { request.Id }, cancellationToken);
 
         if (category == null)
-            throw new Exception("Categoria não encontrada.");
+            throw new Exception("Categoria nÃ£o encontrada.");
 
-        category.Update(request.Name, request.Description);
+        category.Update(request.Name, request.Description, request.Icon);
 
         await _context.SaveChangesAsync(cancellationToken);
     }
 }
+

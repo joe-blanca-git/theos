@@ -5,7 +5,7 @@ using Theos.Domain.Entities;
 
 namespace Theos.Application.ForumCategories.Commands.CreateForumCategory;
 
-public record CreateForumCategoryCommand(string Name, string? Description) : IRequest<int>;
+public record CreateForumCategoryCommand(string Name, string? Description, string? Icon) : IRequest<int>;
 
 public class CreateForumCategoryCommandValidator : AbstractValidator<CreateForumCategoryCommand>
 {
@@ -28,7 +28,7 @@ public class CreateForumCategoryCommandHandler : IRequestHandler<CreateForumCate
 
     public async Task<int> Handle(CreateForumCategoryCommand request, CancellationToken cancellationToken)
     {
-        var entity = ForumCategory.Create(request.Name, request.Description);
+        var entity = ForumCategory.Create(request.Name, request.Description, request.Icon);
 
         _context.ForumCategories.Add(entity);
         await _context.SaveChangesAsync(cancellationToken);

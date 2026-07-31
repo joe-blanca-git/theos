@@ -8,6 +8,7 @@ export interface IForumCategoryDto {
   name: string;
   description: string;
   active: boolean;
+  icon?: string;
 }
 
 export interface IForumTopicSummaryDto {

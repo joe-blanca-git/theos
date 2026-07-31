@@ -1,0 +1,71 @@
+﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
+using Theos.Application.Common.Interfaces;
+using Theos.Application.Common.Models;
+using Theos.Application.Tickets.DTOs;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace Theos.Application.Tickets.Queries.GetAdminTickets;
+
+public class GetAdminTicketsQueryHandler : IRequestHandler<GetAdminTicketsQuery, PaginatedList<TicketAdminSummaryDto>>
+{
+    private readonly ITheosDbContext _context;
+
+    public GetAdminTicketsQueryHandler(ITheosDbContext context)
+    {
+        _context = context;
+    }
+
+    public async Task<PaginatedList<TicketAdminSummaryDto>> Handle(GetAdminTicketsQuery request, CancellationToken cancellationToken)
+    {
+        var query = _context.Tickets
+            .Include(t => t.Category)
+            .Include(t => t.User)
+            .AsNoTracking();
+
+        if (request.Status.HasValue)
+            query = query.Where(t => t.Status == request.Status.Value);
+        
+        if (request.CategoryId.HasValue)
+            query = query.Where(t => t.TicketCategoryId == request.CategoryId.Value);
+
+        if (request.Priority.HasValue)
+            query = query.Where(t => t.Priority == request.Priority.Value);
+
+        if (request.StudentId.HasValue)
+            query = query.Where(t => t.UserId == request.StudentId.Value);
+
+        if (request.StartDate.HasValue)
+            query = query.Where(t => t.CreatedAt >= request.StartDate.Value);
+            
+        if (request.EndDate.HasValue)
+            query = query.Where(t => t.CreatedAt <= request.EndDate.Value);
+
+        if (!string.IsNullOrWhiteSpace(request.SearchText))
+            query = query.Where(t => t.Subject.Contains(request.SearchText) || (t.User.FullName != null && t.User.FullName.Contains(request.SearchText)));
+
+        var totalCount = await query.CountAsync(cancellationToken);
+
+        var items = await query
+            .OrderByDescending(t => t.CreatedAt)
+            .Skip((request.PageIndex - 1) * request.PageSize)
+            .Take(request.PageSize)
+            .Select(t => new TicketAdminSummaryDto
+            {
+                Id = t.Id,
+                Subject = t.Subject,
+                Status = t.Status.ToString(),
+                Priority = t.Priority.ToString(),
+                CategoryName = t.Category.Description,
+                StudentName = t.User.FullName ?? "Aluno",
+                StudentEmail = t.User.Email ?? "",
+                CreatedAt = t.CreatedAt,
+                LastReplyAt = t.LastReplyAt
+            })
+            .ToListAsync(cancellationToken);
+
+        return new PaginatedList<TicketAdminSummaryDto>(items, totalCount, request.PageIndex, request.PageSize);
+    }
+}

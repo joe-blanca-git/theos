@@ -205,6 +205,56 @@
             Desvincula um professor de um curso específico.
             </summary>
         </member>
+        <member name="M:Theos.Admin.Api.Controllers.TicketsController.GetTickets(System.Nullable{Theos.Domain.Enums.TicketStatus},System.Nullable{System.Int32},System.Nullable{Theos.Domain.Enums.TicketPriority},System.Nullable{System.Int32},System.String,System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Int32,System.Int32)">
+            <summary>
+            Lista os tickets com paginação e filtros detalhados.
+            </summary>
+        </member>
+        <member name="M:Theos.Admin.Api.Controllers.TicketsController.SearchTickets(System.String,System.Int32,System.Int32)">
+            <summary>
+            Busca rápida por tickets (assunto ou nome do aluno).
+            </summary>
+        </member>
+        <member name="M:Theos.Admin.Api.Controllers.TicketsController.GetTicketDetails(System.Int32)">
+            <summary>
+            Traz todos os detalhes de um ticket (Histórico, Aluno, Mensagens, Anexos).
+            </summary>
+        </member>
+        <member name="M:Theos.Admin.Api.Controllers.TicketsController.GetCategories">
+            <summary>
+            Lista as categorias ativas (Usado nos filtros do portal).
+            </summary>
+        </member>
+        <member name="M:Theos.Admin.Api.Controllers.TicketsController.ReplyTicket(System.Int32,Theos.Application.Tickets.Commands.AdminReplyTicket.AdminReplyTicketCommand)">
+            <summary>
+            Professor responde ao ticket. (Muda status para Open e avisa o aluno por e-mail).
+            </summary>
+        </member>
+        <member name="M:Theos.Admin.Api.Controllers.TicketsController.ChangeStatus(System.Int32,Theos.Application.Tickets.Commands.ChangeTicketStatus.ChangeTicketStatusCommand)">
+            <summary>
+            Altera o status do ticket (Open, Pending, Answered, Closed).
+            </summary>
+        </member>
+        <member name="M:Theos.Admin.Api.Controllers.TicketsController.ChangePriority(System.Int32,Theos.Application.Tickets.Commands.ChangeTicketPriority.ChangeTicketPriorityCommand)">
+            <summary>
+            Altera a prioridade do ticket (Low, Normal, High, Critical).
+            </summary>
+        </member>
+        <member name="M:Theos.Admin.Api.Controllers.TicketsController.ChangeCategory(System.Int32,Theos.Application.Tickets.Commands.ChangeTicketCategory.ChangeTicketCategoryCommand)">
+            <summary>
+            Transfere o ticket para outra categoria.
+            </summary>
+        </member>
+        <member name="M:Theos.Admin.Api.Controllers.TicketsController.GetDashboard">
+            <summary>
+            Retorna KPIs da tela inicial (Tickets Abertos, Pendentes, Tempo Médio).
+            </summary>
+        </member>
+        <member name="M:Theos.Admin.Api.Controllers.TicketsController.GetStats">
+            <summary>
+            Retorna dados agrupados (Ex: Quantidade por Categoria/Status) para Gráficos.
+            </summary>
+        </member>
         <member name="M:Theos.Admin.Api.Controllers.UsersController.GetUsers">
             <summary>
             Lista todos os usuários.

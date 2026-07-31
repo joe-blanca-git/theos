@@ -88,7 +88,8 @@ export class SettingsHomeComponent implements OnInit {
   initForms() {
     this.categoryForm = this.fb.group({
       name: ['', Validators.required],
-      description: ['']
+      description: [''],
+      icon: ['']
     });
 
     this.teacherForm = this.fb.group({
@@ -186,7 +187,8 @@ export class SettingsHomeComponent implements OnInit {
     this.categoryToEdit = category;
     this.categoryForm.patchValue({
       name: category.name,
-      description: category.description
+      description: category.description,
+      icon: category.icon || ''
     });
     this.categoryModalInstance.show();
   }

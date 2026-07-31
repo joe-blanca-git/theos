@@ -54,6 +54,41 @@
             Reabre um tópico resolvido.
             </summary>
         </member>
+        <member name="M:Theos.Api.Controllers.PortalTicketsController.CreateTicket(Theos.Application.Portal.Tickets.Commands.CreateTicket.CreateTicketCommand)">
+            <summary>
+            Cria um novo ticket de suporte.
+            </summary>
+        </member>
+        <member name="M:Theos.Api.Controllers.PortalTicketsController.GetTickets(System.Nullable{Theos.Domain.Enums.TicketStatus},System.Nullable{System.Int32},System.String,System.Int32,System.Int32)">
+            <summary>
+            Lista os tickets do aluno com paginação e filtros.
+            </summary>
+        </member>
+        <member name="M:Theos.Api.Controllers.PortalTicketsController.GetTicketDetails(System.Int32)">
+            <summary>
+            Traz os detalhes completos de um ticket (mensagens, anexos).
+            </summary>
+        </member>
+        <member name="M:Theos.Api.Controllers.PortalTicketsController.GetCategories">
+            <summary>
+            Lista as categorias ativas de suporte (Usado nos filtros do portal).
+            </summary>
+        </member>
+        <member name="M:Theos.Api.Controllers.PortalTicketsController.ReplyTicket(System.Int32,Theos.Application.Portal.Tickets.Commands.ReplyTicket.ReplyTicketCommand)">
+            <summary>
+            Adiciona uma nova resposta do aluno ao ticket.
+            </summary>
+        </member>
+        <member name="M:Theos.Api.Controllers.PortalTicketsController.UploadAttachment(System.Int32,System.Int32,Microsoft.AspNetCore.Http.IFormFile)">
+            <summary>
+            Faz upload de anexo para uma resposta.
+            </summary>
+        </member>
+        <member name="M:Theos.Api.Controllers.PortalTicketsController.GetTimeline(System.Int32)">
+            <summary>
+            Lista todo o histórico de eventos/auditoria do ticket.
+            </summary>
+        </member>
         <member name="T:Theos.Api.Controllers.PurchasesController">
             <summary>
             Controller responsável pelas operações de compra no Painel do Aluno (PAN).

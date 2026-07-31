@@ -1,0 +1,11 @@
+using System.Threading.Tasks;
+
+namespace Theos.Application.Common.Interfaces;
+
+public interface IEmailService
+{
+    Task SendTicketCreatedAsync(int ticketId, string userEmail, string userName, string subject);
+    Task SendTicketReplyAsync(int ticketId, string userEmail, string userName, string replyContent);
+    Task SendTicketClosedAsync(int ticketId, string userEmail, string userName);
+    Task SendTicketStatusChangedAsync(int ticketId, string userEmail, string userName, string newStatus);
+}

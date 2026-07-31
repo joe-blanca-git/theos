@@ -308,6 +308,12 @@
             <textarea class="form-control bg-white" rows="3" formControlName="description" placeholder="Opcional"></textarea>
           </div>
           
+          <div class="mb-4" *ngIf="activeCategoryTab === 'forums'">
+            <label class="form-label fw-semibold">Ícone (FontAwesome)</label>
+            <input type="text" class="form-control bg-white" formControlName="icon" placeholder="Ex: fa-solid fa-code">
+            <small class="text-muted d-block mt-1">Deixe em branco para usar o ícone padrão.</small>
+          </div>
+          
           <div class="d-flex justify-content-end gap-2">
             <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
             <button type="submit" class="btn btn-primary px-4" [disabled]="isSubmittingCategory">

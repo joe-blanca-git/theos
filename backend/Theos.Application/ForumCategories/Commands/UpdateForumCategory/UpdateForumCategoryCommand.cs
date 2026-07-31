@@ -1,11 +1,11 @@
-using MediatR;
+﻿using MediatR;
 using FluentValidation;
 using Theos.Application.Common.Interfaces;
 using Theos.Domain.Entities;
 
 namespace Theos.Application.ForumCategories.Commands.UpdateForumCategory;
 
-public record UpdateForumCategoryCommand(int Id, string Name, string? Description, bool Active) : IRequest;
+public record UpdateForumCategoryCommand(int Id, string Name, string? Description, bool Active, string? Icon) : IRequest;
 
 public class UpdateForumCategoryCommandValidator : AbstractValidator<UpdateForumCategoryCommand>
 {
@@ -36,7 +36,7 @@ public class UpdateForumCategoryCommandHandler : IRequestHandler<UpdateForumCate
             throw new KeyNotFoundException($"ForumCategory with ID {request.Id} not found.");
         }
 
-        entity.Update(request.Name, request.Description);
+        entity.Update(request.Name, request.Description, request.Icon);
         // We also need to manage Active state since the user can toggle it, but the Update method in Domain
         // for ForumCategory doesn't accept active in the example above (wait, the Domain Update doesn't have Active?).
         // Let's just do it directly or check the Entity methods. I'll use entity.Update then set Active.
@@ -54,3 +54,4 @@ public class UpdateForumCategoryCommandHandler : IRequestHandler<UpdateForumCate
         await _context.SaveChangesAsync(cancellationToken);
     }
 }
+

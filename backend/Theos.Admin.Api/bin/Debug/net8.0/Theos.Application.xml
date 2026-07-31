@@ -156,6 +156,10 @@
             <summary>Duração estimada da aula em segundos.</summary>
             <example>600</example>
         </member>
+        <member name="P:Theos.Application.Courses.Commands.CreateLesson.CreateLessonCommand.Thumbnail">
+            <summary>Link da imagem de miniatura da aula.</summary>
+            <example>https://cdn.example.com/thumbnails/lesson-thumb.jpg</example>
+        </member>
         <member name="T:Theos.Application.Courses.Commands.CreateModule.CreateModuleCommand">
             <summary>
             Comando para criação de um novo módulo em um curso existente.
@@ -284,6 +288,9 @@
         </member>
         <member name="P:Theos.Application.Courses.Commands.UpdateLesson.UpdateLessonCommand.BunnyVideoId">
             <summary>Novo ID do vídeo Bunny para a aula.</summary>
+        </member>
+        <member name="P:Theos.Application.Courses.Commands.UpdateLesson.UpdateLessonCommand.Thumbnail">
+            <summary>Nova miniatura para a aula.</summary>
         </member>
         <member name="T:Theos.Application.Courses.Commands.UpdateModule.UpdateModuleCommand">
             <summary>

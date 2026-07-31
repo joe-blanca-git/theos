@@ -45,11 +45,11 @@ export class SettingsService extends BaseService {
     return this.http.get<any>(`${this.urlApiTheos}ForumCategories/${id}`, this.GetAuthHeaderJson());
   }
 
-  createForumCategory(categoryData: { name: string, description?: string }): Observable<number> {
+  createForumCategory(categoryData: { name: string, description?: string, icon?: string }): Observable<number> {
     return this.http.post<number>(`${this.urlApiTheos}ForumCategories`, categoryData, this.GetAuthHeaderJson());
   }
 
-  updateForumCategory(id: number, categoryData: { id: number, name: string, description?: string, active?: boolean }): Observable<any> {
+  updateForumCategory(id: number, categoryData: { id: number, name: string, description?: string, active?: boolean, icon?: string }): Observable<any> {
     return this.http.put<any>(`${this.urlApiTheos}ForumCategories/${id}`, categoryData, this.GetAuthHeaderJson());
   }
 

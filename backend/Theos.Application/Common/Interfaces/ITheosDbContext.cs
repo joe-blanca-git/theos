@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Theos.Domain.Entities;
 
 namespace Theos.Application.Common.Interfaces
@@ -26,6 +26,12 @@ namespace Theos.Application.Common.Interfaces
         DbSet<AppRole> AppRoles { get; }
         DbSet<AppUserRole> AppUserRoles { get; }
 
-        Task<int> SaveChangesAsync(CancellationToken cancellationToken);
+            DbSet<TicketCategory> TicketCategories { get; }
+    DbSet<Ticket> Tickets { get; }
+    DbSet<TicketMessage> TicketMessages { get; }
+    DbSet<TicketAttachment> TicketAttachments { get; }
+    DbSet<TicketTimeline> TicketTimelines { get; }
+    Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }
 }
+
