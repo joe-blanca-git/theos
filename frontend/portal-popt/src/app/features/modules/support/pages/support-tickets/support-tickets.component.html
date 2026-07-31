@@ -12,10 +12,10 @@
       </div>
       <select class="form-select form-select-sm border-secondary border-opacity-25 rounded-pill shadow-sm" (change)="onFilterStatus($event)">
         <option value="">Todos os status</option>
-        <option value="Pendente">Pendente</option>
-        <option value="Respondido">Respondido</option>
-        <option value="Finalizado">Finalizado</option>
-        <option value="Cancelado">Cancelado</option>
+        <option value="1">Aberto</option>
+        <option value="2">Pendente</option>
+        <option value="3">Respondido</option>
+        <option value="4">Finalizado</option>
       </select>
     </div>
 
@@ -30,30 +30,30 @@
       </div>
 
       <!-- Empty State -->
-      <div *ngIf="!isLoading && filteredTickets.length === 0" class="text-center py-5 px-3 text-muted">
+      <div *ngIf="!isLoading && tickets.length === 0" class="text-center py-5 px-3 text-muted">
         <i class="fas fa-inbox fs-1 mb-3 text-secondary opacity-50"></i>
         <p class="mb-0">Nenhum chamado encontrado.</p>
       </div>
 
       <!-- Tickets Items -->
       <div class="list-group list-group-flush rounded-0" *ngIf="!isLoading">
-        <button *ngFor="let ticket of filteredTickets" 
+        <button *ngFor="let ticket of tickets" 
                 class="list-group-item list-group-item-action p-3 border-bottom ticket-item"
                 [class.active-ticket]="selectedTicket?.id === ticket.id"
                 (click)="selectTicket(ticket)">
           <div class="d-flex justify-content-between align-items-center mb-1">
             <h6 class="mb-0 fw-bold text-truncate me-2" [class.text-primary]="selectedTicket?.id === ticket.id" style="font-size: 0.95rem;">
-              {{ ticket.userName }}
+              {{ ticket.studentName }}
             </h6>
             <small class="text-muted" style="font-size: 0.75rem;">{{ ticket.createdAt | date:'shortDate' }}</small>
           </div>
-          <div class="fw-semibold text-dark text-truncate mb-1" style="font-size: 0.85rem;">{{ ticket.title }}</div>
+          <div class="fw-semibold text-dark text-truncate mb-1" style="font-size: 0.85rem;">{{ ticket.subject }}</div>
           <div class="d-flex justify-content-between align-items-center mt-2">
             <span class="badge border border-opacity-25 rounded-pill" [ngClass]="getStatusBadgeClass(ticket.status)">
-              {{ ticket.status }}
+              {{ getStatusName(ticket.status) }}
             </span>
             <small class="text-muted" style="font-size: 0.75rem;">
-              <i class="fas fa-tag me-1"></i>{{ ticket.subject }}
+              <i class="fas fa-tag me-1"></i>{{ ticket.categoryName }}
             </small>
           </div>
         </button>
@@ -79,12 +79,12 @@
       <div class="p-4 border-bottom bg-white shadow-sm z-1">
         <div class="d-flex justify-content-between align-items-start mb-3">
           <div>
-            <h5 class="fw-bold mb-1">{{ selectedTicket.title }}</h5>
+            <h5 class="fw-bold mb-1">{{ selectedTicket.subject }}</h5>
             <div class="d-flex align-items-center gap-2">
               <span class="badge border border-opacity-25 rounded-pill" [ngClass]="getStatusBadgeClass(selectedTicket.status)">
-                {{ selectedTicket.status }}
+                {{ getStatusName(selectedTicket.status) }}
               </span>
-              <span class="text-muted small"><i class="fas fa-folder me-1"></i>{{ selectedTicket.subject }}</span>
+              <span class="text-muted small"><i class="fas fa-folder me-1"></i>{{ selectedTicket.categoryName }}</span>
             </div>
           </div>
           <button class="btn btn-sm btn-light rounded-circle shadow-sm d-md-none" (click)="closeTicketView()">
@@ -94,33 +94,33 @@
         
         <div class="d-flex align-items-center mt-3 pt-3 border-top">
           <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center me-3 fw-bold shadow-sm" style="width: 45px; height: 45px;">
-            {{ selectedTicket.userName.charAt(0) }}
+            {{ selectedTicket.studentName.charAt(0) }}
           </div>
           <div>
-            <div class="fw-bold">{{ selectedTicket.userName }}</div>
-            <div class="text-muted small">{{ selectedTicket.userEmail }} &bull; {{ selectedTicket.createdAt | date:'short' }}</div>
+            <div class="fw-bold">{{ selectedTicket.studentName }}</div>
+            <div class="text-muted small">{{ selectedTicket.studentEmail }} &bull; {{ selectedTicket.createdAt | date:'short' }}</div>
           </div>
         </div>
       </div>
 
       <!-- Histórico de Mensagens -->
       <div class="flex-grow-1 p-4 overflow-auto custom-scrollbar bg-light bg-opacity-50">
-        <div *ngFor="let msg of selectedTicket.messages" class="mb-4 d-flex" [ngClass]="{'justify-content-end': msg.sender === 'Support'}">
+        <div *ngFor="let msg of selectedTicket.messages" class="mb-4 d-flex" [ngClass]="{'justify-content-end': msg.origin === 'Backoffice'}">
           
           <!-- Avatar Usuário -->
-          <div *ngIf="msg.sender === 'User'" class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center me-3 shadow-sm flex-shrink-0" style="width: 40px; height: 40px;">
+          <div *ngIf="msg.origin !== 'Backoffice'" class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center me-3 shadow-sm flex-shrink-0" style="width: 40px; height: 40px;">
             <i class="fas fa-user"></i>
           </div>
 
           <!-- Balão de Mensagem -->
           <div class="p-3 rounded-4 shadow-sm" 
                style="max-width: 80%;"
-               [ngClass]="msg.sender === 'Support' ? 'bg-primary text-white rounded-bottom-end-0' : 'bg-white border rounded-bottom-start-0'">
+               [ngClass]="msg.origin === 'Backoffice' ? 'bg-primary text-white rounded-bottom-end-0' : 'bg-white border rounded-bottom-start-0'">
             <div class="d-flex justify-content-between align-items-center mb-2 gap-3">
-              <span class="fw-bold small" [ngClass]="msg.sender === 'Support' ? 'text-white-50' : 'text-muted'">
-                {{ msg.senderName }}
+              <span class="fw-bold small" [ngClass]="msg.origin === 'Backoffice' ? 'text-white-50' : 'text-muted'">
+                {{ msg.senderName || (msg.origin === 'Backoffice' ? 'Suporte' : selectedTicket.studentName) }}
               </span>
-              <span class="small" [ngClass]="msg.sender === 'Support' ? 'text-white-50' : 'text-muted'" style="font-size: 0.7rem;">
+              <span class="small" [ngClass]="msg.origin === 'Backoffice' ? 'text-white-50' : 'text-muted'" style="font-size: 0.7rem;">
                 {{ msg.createdAt | date:'shortTime' }}
               </span>
             </div>
@@ -128,7 +128,7 @@
           </div>
 
           <!-- Avatar Suporte -->
-          <div *ngIf="msg.sender === 'Support'" class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center ms-3 shadow-sm flex-shrink-0" style="width: 40px; height: 40px;">
+          <div *ngIf="msg.origin === 'Backoffice'" class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center ms-3 shadow-sm flex-shrink-0" style="width: 40px; height: 40px;">
             <i class="fas fa-headset"></i>
           </div>
 
@@ -149,14 +149,9 @@
             <!-- Ações de Status -->
             <div class="d-flex gap-2">
               <button type="button" class="btn btn-outline-success rounded-pill fw-semibold shadow-sm d-inline-flex align-items-center" 
-                      *ngIf="selectedTicket.status !== 'Finalizado'"
-                      (click)="changeStatus('Finalizado')">
+                      *ngIf="selectedTicket.status !== '4'"
+                      (click)="changeStatus('4')">
                 <i class="fas fa-check-circle me-2"></i> Finalizar
-              </button>
-              <button type="button" class="btn btn-outline-danger rounded-pill fw-semibold shadow-sm d-inline-flex align-items-center"
-                      *ngIf="selectedTicket.status !== 'Cancelado'"
-                      (click)="changeStatus('Cancelado')">
-                <i class="fas fa-ban me-2"></i> Cancelar
               </button>
             </div>
             

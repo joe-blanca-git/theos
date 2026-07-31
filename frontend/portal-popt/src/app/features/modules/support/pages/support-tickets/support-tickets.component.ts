@@ -1,7 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { SupportService, SupportTicket } from '../../services/support.service';
+import { SupportService, IAdminTicket, IAdminTicketDetails, IPaginatedList } from '../../services/support.service';
 import { ToastService } from '../../../../../core/services/toast.service';
 
 @Component({
@@ -16,9 +16,8 @@ export class SupportTicketsComponent implements OnInit {
   private fb = inject(FormBuilder);
   private toastService = inject(ToastService);
 
-  tickets: SupportTicket[] = [];
-  filteredTickets: SupportTicket[] = [];
-  selectedTicket: SupportTicket | null = null;
+  tickets: IAdminTicket[] = [];
+  selectedTicket: IAdminTicketDetails | null = null;
   isLoading = true;
   isReplying = false;
 
@@ -35,10 +34,9 @@ export class SupportTicketsComponent implements OnInit {
 
   loadTickets(): void {
     this.isLoading = true;
-    this.supportService.getTickets().subscribe({
+    this.supportService.getTickets(this.statusFilter || undefined, undefined, this.searchQuery || undefined).subscribe({
       next: (data) => {
-        this.tickets = data;
-        this.applyFilters();
+        this.tickets = data.items;
         this.isLoading = false;
       },
       error: () => {
@@ -48,28 +46,26 @@ export class SupportTicketsComponent implements OnInit {
     });
   }
 
-  applyFilters(): void {
-    this.filteredTickets = this.tickets.filter(t => {
-      const matchesSearch = t.title.toLowerCase().includes(this.searchQuery.toLowerCase()) || 
-                            t.userName.toLowerCase().includes(this.searchQuery.toLowerCase());
-      const matchesStatus = this.statusFilter ? t.status === this.statusFilter : true;
-      return matchesSearch && matchesStatus;
-    }).sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-  }
-
   onSearch(event: any): void {
     this.searchQuery = event.target.value;
-    this.applyFilters();
+    this.loadTickets();
   }
 
   onFilterStatus(event: any): void {
     this.statusFilter = event.target.value;
-    this.applyFilters();
+    this.loadTickets();
   }
 
-  selectTicket(ticket: SupportTicket): void {
-    this.selectedTicket = ticket;
-    this.replyForm.reset();
+  selectTicket(ticket: IAdminTicket): void {
+    this.supportService.getTicketDetails(ticket.id).subscribe({
+      next: (details) => {
+        this.selectedTicket = details;
+        this.replyForm.reset();
+      },
+      error: () => {
+        this.toastService.error('Erro ao carregar detalhes do chamado.');
+      }
+    });
   }
 
   closeTicketView(): void {
@@ -83,14 +79,11 @@ export class SupportTicketsComponent implements OnInit {
     const content = this.replyForm.value.content;
 
     this.supportService.replyTicket(this.selectedTicket.id, content).subscribe({
-      next: (updatedTicket) => {
+      next: () => {
         this.toastService.success('Resposta enviada com sucesso!');
-        this.selectedTicket = updatedTicket;
-        const index = this.tickets.findIndex(t => t.id === updatedTicket.id);
-        if (index > -1) this.tickets[index] = updatedTicket;
-        this.applyFilters();
-        this.replyForm.reset();
+        this.selectTicket(this.selectedTicket!);
         this.isReplying = false;
+        this.loadTickets();
       },
       error: () => {
         this.toastService.error('Não foi possível enviar a resposta.');
@@ -99,16 +92,15 @@ export class SupportTicketsComponent implements OnInit {
     });
   }
 
-  changeStatus(newStatus: 'Pendente' | 'Respondido' | 'Cancelado' | 'Finalizado'): void {
+  changeStatus(newStatus: string): void {
     if (!this.selectedTicket) return;
     
     this.supportService.updateTicketStatus(this.selectedTicket.id, newStatus).subscribe({
       next: () => {
-        this.toastService.success(`Status alterado para ${newStatus}.`);
+        this.toastService.success(`Status alterado.`);
         this.selectedTicket!.status = newStatus;
         const index = this.tickets.findIndex(t => t.id === this.selectedTicket!.id);
         if (index > -1) this.tickets[index].status = newStatus;
-        this.applyFilters();
       },
       error: () => {
         this.toastService.error('Não foi possível alterar o status.');
@@ -118,11 +110,21 @@ export class SupportTicketsComponent implements OnInit {
 
   getStatusBadgeClass(status: string): string {
     switch (status) {
-      case 'Pendente': return 'bg-warning bg-opacity-10 text-warning border-warning';
-      case 'Respondido': return 'bg-info bg-opacity-10 text-info border-info';
-      case 'Finalizado': return 'bg-success bg-opacity-10 text-success border-success';
-      case 'Cancelado': return 'bg-danger bg-opacity-10 text-danger border-danger';
+      case '1': return 'bg-warning bg-opacity-10 text-warning border-warning';
+      case '2': return 'bg-info bg-opacity-10 text-info border-info';
+      case '3': return 'bg-primary bg-opacity-10 text-primary border-primary';
+      case '4': return 'bg-success bg-opacity-10 text-success border-success';
       default: return 'bg-secondary bg-opacity-10 text-secondary border-secondary';
+    }
+  }
+  
+  getStatusName(status: string): string {
+    switch (status) {
+      case '1': return 'Aberto';
+      case '2': return 'Pendente';
+      case '3': return 'Respondido';
+      case '4': return 'Finalizado';
+      default: return 'Desconhecido';
     }
   }
 }

@@ -5,7 +5,37 @@ import { catchError, delay } from 'rxjs/operators';
 import { BaseService } from '../../../../core/services/base.service';
 import { SupportTicket, ForumTopic, UserAccess, MOCK_TICKETS, MOCK_TOPICS, MOCK_USERS_ACCESS } from './support.mocks';
 
-export type { SupportTicket, TicketMessage, ForumTopic, ForumMessage, UserAccess, PurchasedCourse } from './support.mocks';
+export type { ForumTopic, ForumMessage, UserAccess, PurchasedCourse } from './support.mocks';
+
+export interface IPaginatedList<T> {
+  items: T[];
+  totalCount: number;
+  pageIndex: number;
+  totalPages: number;
+}
+
+export interface IAdminTicket {
+  id: number;
+  subject: string;
+  categoryName: string;
+  studentName: string;
+  studentEmail: string;
+  status: string;
+  createdAt: string;
+  lastUpdatedAt: string;
+}
+
+export interface IAdminTicketDetails extends IAdminTicket {
+  messages: IAdminTicketMessage[];
+}
+
+export interface IAdminTicketMessage {
+  id: number;
+  content: string;
+  origin: string; // 'Portal', 'Backoffice', 'Email'
+  createdAt: string;
+  senderName?: string;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -23,49 +53,27 @@ export class SupportService extends BaseService {
 
   // --- TICKETS (CHAMADOS) ---
 
-  getTickets(): Observable<SupportTicket[]> {
-    return this.http.get<SupportTicket[]>(`${this.urlApiTheos}support-tickets`, this.GetAuthHeaderJson()).pipe(
-      catchError(() => of(this.mockTickets).pipe(delay(600)))
-    );
+  getTickets(status?: string, categoryId?: number, searchText?: string, pageIndex: number = 1, pageSize: number = 50): Observable<IPaginatedList<IAdminTicket>> {
+    let url = `${this.urlApiTheos}tickets?pageIndex=${pageIndex}&pageSize=${pageSize}`;
+    if (status) url += `&status=${status}`;
+    if (categoryId) url += `&categoryId=${categoryId}`;
+    if (searchText) url += `&searchText=${searchText}`;
+    
+    return this.http.get<IPaginatedList<IAdminTicket>>(url, this.GetAuthHeaderJson());
   }
 
-  getTicketById(id: number): Observable<SupportTicket> {
-    return this.http.get<SupportTicket>(`${this.urlApiTheos}support-tickets/${id}`, this.GetAuthHeaderJson()).pipe(
-      catchError(() => {
-        const ticket = this.mockTickets.find(t => t.id === id);
-        return ticket ? of(ticket).pipe(delay(300)) : throwError(() => new Error('Not found'));
-      })
-    );
+  getTicketById(id: number): Observable<IAdminTicketDetails> {
+    return this.http.get<IAdminTicketDetails>(`${this.urlApiTheos}tickets/${id}`, this.GetAuthHeaderJson());
   }
 
-  replyTicket(id: number, content: string): Observable<SupportTicket> {
-    const payload = { content };
-    return this.http.post<SupportTicket>(`${this.urlApiTheos}support-tickets/${id}/reply`, payload, this.GetAuthHeaderJson()).pipe(
-      catchError(() => {
-        const ticket = this.mockTickets.find(t => t.id === id);
-        if (ticket) {
-          ticket.messages.push({
-            id: Date.now(),
-            sender: 'Support',
-            senderName: 'Analista de Suporte',
-            content,
-            createdAt: new Date().toISOString()
-          });
-          ticket.status = 'Respondido';
-        }
-        return of(ticket!).pipe(delay(600));
-      })
-    );
+  replyTicket(id: number, content: string): Observable<{ messageId: number }> {
+    const payload = { ticketId: id, content, attachments: [] };
+    return this.http.post<{ messageId: number }>(`${this.urlApiTheos}tickets/${id}/messages`, payload, this.GetAuthHeaderJson());
   }
 
-  updateTicketStatus(id: number, status: 'Pendente' | 'Respondido' | 'Cancelado' | 'Finalizado'): Observable<any> {
-    return this.http.patch(`${this.urlApiTheos}support-tickets/${id}/status`, { status }, this.GetAuthHeaderJson()).pipe(
-      catchError(() => {
-        const ticket = this.mockTickets.find(t => t.id === id);
-        if (ticket) ticket.status = status;
-        return of({ success: true }).pipe(delay(400));
-      })
-    );
+  updateTicketStatus(id: number, status: string): Observable<any> {
+    const payload = { ticketId: id, status: parseInt(status) };
+    return this.http.put(`${this.urlApiTheos}tickets/${id}/status`, payload, this.GetAuthHeaderJson());
   }
 
   // --- FORUM TOPICS ---
