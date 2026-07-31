@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { SupportService, ITicketCategory } from '../../../../core/services/support.service';
+import { StateUtil } from '../../../../core/utils/UserState.util';
 
 // ─── Interfaces ────────────────────────────────────────────────────────────────
 
@@ -43,6 +45,11 @@ export interface ISupportChannel {
 })
 export class SupportHomeComponent implements OnInit {
 
+  constructor(
+    private supportService: SupportService,
+    private stateUtil: StateUtil
+  ) {}
+
   // ─── State ────────────────────────────────────────────────────────────────
   isLoading = true;
   searchTerm = '';
@@ -53,7 +60,8 @@ export class SupportHomeComponent implements OnInit {
   contactEmail = '';
   contactSubject = '';
   contactMessage = '';
-  contactCategory = 'Dúvida Geral';
+  contactCategoryId: number | null = null;
+  ticketCategories: ITicketCategory[] = [];
   toastMessage = '';
   showToast = false;
 
@@ -63,6 +71,23 @@ export class SupportHomeComponent implements OnInit {
   channels: ISupportChannel[] = [];
 
   ngOnInit(): void {
+    this.stateUtil.getUser().subscribe(user => {
+      if (user) {
+        this.contactName = user.name || '';
+        this.contactEmail = user.email || '';
+      }
+    });
+
+    this.supportService.getCategories().subscribe({
+      next: (cats) => {
+        this.ticketCategories = cats;
+        if (cats.length > 0) {
+          this.contactCategoryId = cats[0].id;
+        }
+      },
+      error: (err) => console.error('Erro ao buscar categorias de suporte', err)
+    });
+
     setTimeout(() => {
       this.faqCategories = [
         { id: 'Todas', name: 'Todas', icon: 'fa-th', color: '#6366f1' },
@@ -156,7 +181,7 @@ export class SupportHomeComponent implements OnInit {
           responseTime: 'Resposta em até 24 horas úteis',
           isOnline: true,
           actionLabel: 'Enviar Mensagem',
-          actionHref: 'mailto:suporte@theos.com.br'
+          actionHref: 'mailto:suporte@portaltheos.com.br'
         },
         {
           id: 'forum',
@@ -215,16 +240,27 @@ export class SupportHomeComponent implements OnInit {
 
   submitContactForm(event: Event): void {
     event.preventDefault();
-    if (!this.contactName.trim() || !this.contactEmail.trim() || !this.contactMessage.trim()) {
+    if (!this.contactName.trim() || !this.contactEmail.trim() || !this.contactMessage.trim() || !this.contactCategoryId || !this.contactSubject.trim()) {
       this.triggerToast('Por favor, preencha todos os campos obrigatórios.');
       return;
     }
-    this.triggerToast('Mensagem enviada com sucesso! Responderemos em breve.');
-    this.contactName = '';
-    this.contactEmail = '';
-    this.contactSubject = '';
-    this.contactMessage = '';
+
+    this.supportService.createTicket({
+      categoryId: this.contactCategoryId,
+      subject: this.contactSubject,
+      content: this.contactMessage
+    }).subscribe({
+      next: () => {
+        this.triggerToast('Mensagem enviada com sucesso! Responderemos em breve.');
+        this.contactSubject = '';
+        this.contactMessage = '';
+      },
+      error: () => {
+        this.triggerToast('Erro ao enviar mensagem. Tente novamente mais tarde.');
+      }
+    });
   }
+
 
   // ─── Toast ────────────────────────────────────────────────────────────────
 

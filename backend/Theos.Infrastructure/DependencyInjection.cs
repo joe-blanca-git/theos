@@ -31,8 +31,8 @@ namespace Theos.Infrastructure
             });
             services.AddScoped<ICloudflareStorageService, CloudflareStorageService>();
             
-            // Dummy Helpdesk services (Para rodar o Migration e inicializar a API sem Cloudflare/Resend ainda)
-            services.AddScoped<IEmailService, DummyEmailService>();
+            // Helpdesk services
+            services.AddHttpClient<IEmailService, ResendEmailService>();
             services.AddScoped<IFileStorageService, DummyFileStorageService>();
             
             services.AddHttpClient<IBunnyNetService, BunnyNetService>(client =>
