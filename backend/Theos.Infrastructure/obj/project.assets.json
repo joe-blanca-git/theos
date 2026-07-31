@@ -3000,11 +3000,11 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "c:\\Users\\joeder-blanca\\Documents\\projetos-joe\\git\\theos\\backend\\Theos.Application\\Theos.Application.csproj": {
-              "projectPath": "c:\\Users\\joeder-blanca\\Documents\\projetos-joe\\git\\theos\\backend\\Theos.Application\\Theos.Application.csproj"
+            "C:\\Users\\joeder-blanca\\Documents\\projetos-joe\\git\\theos\\backend\\Theos.Application\\Theos.Application.csproj": {
+              "projectPath": "C:\\Users\\joeder-blanca\\Documents\\projetos-joe\\git\\theos\\backend\\Theos.Application\\Theos.Application.csproj"
             },
-            "c:\\Users\\joeder-blanca\\Documents\\projetos-joe\\git\\theos\\backend\\Theos.Domain\\Theos.Domain.csproj": {
-              "projectPath": "c:\\Users\\joeder-blanca\\Documents\\projetos-joe\\git\\theos\\backend\\Theos.Domain\\Theos.Domain.csproj"
+            "C:\\Users\\joeder-blanca\\Documents\\projetos-joe\\git\\theos\\backend\\Theos.Domain\\Theos.Domain.csproj": {
+              "projectPath": "C:\\Users\\joeder-blanca\\Documents\\projetos-joe\\git\\theos\\backend\\Theos.Domain\\Theos.Domain.csproj"
             }
           }
         }

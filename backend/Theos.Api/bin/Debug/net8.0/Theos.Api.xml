@@ -54,6 +54,11 @@
             Reabre um tópico resolvido.
             </summary>
         </member>
+        <member name="M:Theos.Api.Controllers.PortalTicketCategoriesController.GetCategories">
+            <summary>
+            Lista as categorias ativas de suporte.
+            </summary>
+        </member>
         <member name="M:Theos.Api.Controllers.PortalTicketsController.CreateTicket(Theos.Application.Portal.Tickets.Commands.CreateTicket.CreateTicketCommand)">
             <summary>
             Cria um novo ticket de suporte.
@@ -67,11 +72,6 @@
         <member name="M:Theos.Api.Controllers.PortalTicketsController.GetTicketDetails(System.Int32)">
             <summary>
             Traz os detalhes completos de um ticket (mensagens, anexos).
-            </summary>
-        </member>
-        <member name="M:Theos.Api.Controllers.PortalTicketsController.GetCategories">
-            <summary>
-            Lista as categorias ativas de suporte (Usado nos filtros do portal).
             </summary>
         </member>
         <member name="M:Theos.Api.Controllers.PortalTicketsController.ReplyTicket(System.Int32,Theos.Application.Portal.Tickets.Commands.ReplyTicket.ReplyTicketCommand)">

@@ -62,15 +62,7 @@ public class TicketsController : ControllerBase
         return Ok(result);
     }
 
-    /// <summary>
-    /// Lista as categorias ativas (Usado nos filtros do portal).
-    /// </summary>
-    [HttpGet("/api/v1/ticket-categories")]
-    public async Task<IActionResult> GetCategories()
-    {
-        var result = await _mediator.Send(new GetActiveTicketCategoriesQuery());
-        return Ok(result);
-    }
+
 
     /// <summary>
     /// Professor responde ao ticket. (Muda status para Open e avisa o aluno por e-mail).

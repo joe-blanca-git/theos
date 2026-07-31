@@ -205,6 +205,11 @@
             Desvincula um professor de um curso específico.
             </summary>
         </member>
+        <member name="M:Theos.Admin.Api.Controllers.TicketCategoriesController.GetCategories">
+            <summary>
+            Lista as categorias ativas de suporte.
+            </summary>
+        </member>
         <member name="M:Theos.Admin.Api.Controllers.TicketsController.GetTickets(System.Nullable{Theos.Domain.Enums.TicketStatus},System.Nullable{System.Int32},System.Nullable{Theos.Domain.Enums.TicketPriority},System.Nullable{System.Int32},System.String,System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Int32,System.Int32)">
             <summary>
             Lista os tickets com paginação e filtros detalhados.
@@ -218,11 +223,6 @@
         <member name="M:Theos.Admin.Api.Controllers.TicketsController.GetTicketDetails(System.Int32)">
             <summary>
             Traz todos os detalhes de um ticket (Histórico, Aluno, Mensagens, Anexos).
-            </summary>
-        </member>
-        <member name="M:Theos.Admin.Api.Controllers.TicketsController.GetCategories">
-            <summary>
-            Lista as categorias ativas (Usado nos filtros do portal).
             </summary>
         </member>
         <member name="M:Theos.Admin.Api.Controllers.TicketsController.ReplyTicket(System.Int32,Theos.Application.Tickets.Commands.AdminReplyTicket.AdminReplyTicketCommand)">
