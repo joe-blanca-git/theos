@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -15,7 +15,7 @@ using Theos.Domain.Enums;
 namespace Theos.Api.Controllers;
 
 [Authorize]
-[Route("api/v1/portal/tickets")]
+[Route("api/v1/tickets")]
 [Tags("Portal Pan - Tickets (Helpdesk)")]
 public class PortalTicketsController : ApiControllerBase
 {

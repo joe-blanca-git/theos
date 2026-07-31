@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Theos.Api")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c8758fb9befe73630f5d90b1732de2d0e1c53819")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fb9f7a414ef6b687f18bff1f831b08b8dd01a110")]
 [assembly: System.Reflection.AssemblyProductAttribute("Theos.Api")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Theos.Api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

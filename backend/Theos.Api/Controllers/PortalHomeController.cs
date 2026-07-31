@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace Theos.Api.Controllers;
 
 [Authorize]
-[Route("api/v1/portal/home")]
+[Route("api/v1/home")]
 [Tags("Portal Pan - Home")]
 public class PortalHomeController : ApiControllerBase
 {

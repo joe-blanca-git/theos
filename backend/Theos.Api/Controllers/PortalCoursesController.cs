@@ -6,7 +6,7 @@ using Theos.Application.Portal.Courses.Queries.GetMyCourses;
 namespace Theos.Api.Controllers;
 
 [Authorize]
-[Route("api/v1/portal/courses")]
+[Route("api/v1/courses")]
 [Tags("Portal Pan - Cursos")]
 public class PortalCoursesController : ApiControllerBase
 {

@@ -7,7 +7,7 @@ using Theos.Application.Tickets.Queries.GetActiveTicketCategories;
 namespace Theos.Api.Controllers;
 
 [Authorize]
-[Route("api/v1/portal/ticket-categories")]
+[Route("api/v1/ticket-categories")]
 [Tags("Portal Pan - Tickets (Helpdesk)")]
 public class PortalTicketCategoriesController : ApiControllerBase
 {
