@@ -11,7 +11,7 @@ using Theos.Application.ForumCategories.Queries.GetForumCategoryById;
 namespace Theos.Admin.Api.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/v1/[controller]")]
 [Authorize]
 public class ForumCategoriesController : ControllerBase
 {
