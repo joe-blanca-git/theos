@@ -118,7 +118,7 @@
               <th scope="col">Professores</th>
               <th scope="col">Preço</th>
               <th scope="col" class="text-center">Status</th>
-              <th scope="col" class="pe-4 text-end">Ações</th>
+              <th scope="col" class="pe-4 text-end" *ngIf="isAdmin">Ações</th>
             </tr>
           </thead>
           <tbody>
@@ -197,7 +197,7 @@
                   {{ course.active ? 'Ativo' : 'Inativo' }}
                 </span>
               </td>
-              <td class="pe-4 text-end">
+              <td class="pe-4 text-end" *ngIf="isAdmin">
                 <button class="btn btn-sm border shadow-sm rounded-pill px-4 fw-semibold transition-all"
                         [ngClass]="course.active ? 'btn-outline-danger hover-danger' : 'btn-outline-success hover-success'"
                         (click)="toggleCourseStatus(course)">

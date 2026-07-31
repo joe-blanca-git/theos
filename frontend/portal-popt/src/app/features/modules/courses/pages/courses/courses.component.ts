@@ -6,6 +6,7 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 import { CoursesService } from '../../services/courses.service';
 import { Course } from '../../models/course.model';
 import { ToastService } from '../../../../../core/services/toast.service';
+import { AuthUtil } from '../../../../../core/auth/auth.util';
 
 // Declare bootstrap variable to use native Bootstrap modals
 declare var bootstrap: any;
@@ -22,6 +23,9 @@ export class CoursesComponent implements OnInit {
   private fb = inject(FormBuilder);
   private cdr = inject(ChangeDetectorRef);
   private toastService = inject(ToastService);
+  private authUtil = inject(AuthUtil);
+  
+  isAdmin = false;
   
   courses: Course[] = [];
   isLoading = true;
@@ -123,9 +127,21 @@ export class CoursesComponent implements OnInit {
 
   ngOnInit(): void {
     this.initForms();
+    this.checkAdminStatus();
     this.loadCategories();
     this.loadTeachers();
     this.loadCourses();
+  }
+
+  checkAdminStatus() {
+    const token = this.authUtil.getCookieAuth();
+    if (token) {
+      const decoded = this.authUtil.decodeToken(token);
+      if (decoded) {
+        const roles = decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] || decoded['role'] || [];
+        this.isAdmin = Array.isArray(roles) ? roles.includes('Admin') : roles === 'Admin';
+      }
+    }
   }
 
   ngAfterViewInit() {

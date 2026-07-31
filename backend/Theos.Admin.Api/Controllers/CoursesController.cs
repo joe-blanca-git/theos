@@ -148,7 +148,7 @@ namespace Theos.Admin.Api.Controllers
         /// Alterna o status (Ativo/Inativo) de um curso.
         /// </summary>
         /// <param name="id">ID do curso</param>
-        [Authorize(Roles = "Teacher")]
+        [Authorize(Roles = "Admin")]
         [HttpPatch("{id}/toggle-status")]
         [SwaggerOperation(Summary = "Alterna status do curso", Description = "Ativa um curso inativo ou inativa um curso ativo.")]
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
