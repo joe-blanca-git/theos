@@ -65,6 +65,9 @@ export class SupportHomeComponent implements OnInit {
   toastMessage = '';
   showToast = false;
 
+  totalTickets = 0;
+  pendingTickets = 0;
+
   // ─── Data ─────────────────────────────────────────────────────────────────
   faqCategories: IFaqCategory[] = [];
   faqItems: IFaqItem[] = [];
@@ -86,6 +89,20 @@ export class SupportHomeComponent implements OnInit {
         }
       },
       error: (err: any) => console.error('Erro ao buscar categorias de suporte', err)
+    });
+
+    this.supportService.getTickets().subscribe({
+      next: (res) => {
+        this.totalTickets = res.totalCount;
+        this.pendingTickets = res.items.filter(t => t.status === '1').length; 
+        
+        // Update the tickets channel description if channels is already populated
+        const ticketsChannel = this.channels.find(c => c.id === 'tickets');
+        if (ticketsChannel) {
+          ticketsChannel.description = `Total de chamados: ${this.totalTickets} (${this.pendingTickets} em aberto)`;
+        }
+      },
+      error: (err: any) => console.error('Erro ao buscar chamados', err)
     });
 
     setTimeout(() => {
@@ -175,9 +192,9 @@ export class SupportHomeComponent implements OnInit {
         {
           id: 'email',
           name: 'Suporte por E-mail',
-          description: 'Envie uma mensagem detalhada sobre seu problema. Nossa equipe analisa e responde com todas as informações necessárias para a resolução.',
-          icon: 'fa-envelope',
+          icon: 'fa-envelope-open-text',
           color: '#6366f1',
+          description: 'Não encontrou o que precisa? Nossa equipe está pronta para te ajudar.',
           responseTime: 'Resposta em até 24 horas úteis',
           isOnline: true,
           actionLabel: 'Enviar Mensagem',
@@ -186,13 +203,24 @@ export class SupportHomeComponent implements OnInit {
         {
           id: 'forum',
           name: 'Fórum da Comunidade',
-          description: 'Publique sua dúvida no fórum e receba ajuda de professores e colegas. A maioria das dúvidas já foi respondida lá!',
           icon: 'fa-comments',
-          color: '#10b981',
-          responseTime: 'Resposta normalmente em horas',
+          color: '#f59e0b',
+          description: 'Participe das discussões e tire dúvidas com outros alunos e tutores.',
+          responseTime: 'Respostas da comunidade',
           isOnline: true,
           actionLabel: 'Acessar Fórum',
-          actionHref: '/forum'
+          actionHref: '/support/forum'
+        },
+        {
+          id: 'tickets',
+          name: 'Meus Chamados',
+          icon: 'fa-headset',
+          color: '#10b981',
+          description: `Total de chamados: ${this.totalTickets} (${this.pendingTickets} em aberto)`,
+          responseTime: 'Acompanhe suas solicitações',
+          isOnline: true,
+          actionLabel: 'Ver Chamados',
+          actionHref: '/support/tickets'
         }
         /*
         ,{
