@@ -8,4 +8,5 @@ public interface IEmailService
     Task SendTicketReplyAsync(int ticketId, string userEmail, string userName, string replyContent);
     Task SendTicketClosedAsync(int ticketId, string userEmail, string userName);
     Task SendTicketStatusChangedAsync(int ticketId, string userEmail, string userName, string newStatus);
+    Task SendTicketUnregisteredUserAsync(string toEmail);
 }

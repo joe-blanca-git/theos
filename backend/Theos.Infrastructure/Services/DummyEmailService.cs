@@ -16,4 +16,10 @@ public class DummyEmailService : IEmailService
 
     public Task SendTicketStatusChangedAsync(int ticketId, string studentEmail, string studentName, string newStatus)
         => Task.CompletedTask;
+
+    public Task SendTicketUnregisteredUserAsync(string toEmail)
+    {
+        System.Console.WriteLine($"[EmailService] Avisando {toEmail} que não está cadastrado no Portal Theos.");
+        return Task.CompletedTask;
+    }
 }

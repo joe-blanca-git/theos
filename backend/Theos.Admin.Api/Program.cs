@@ -9,8 +9,16 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models;
+using Theos.Infrastructure.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
+
+var agivysEmail = builder.Configuration["Agivys:Email"];
+var agivysPassword = builder.Configuration["Agivys:Password"];
+if (!string.IsNullOrEmpty(agivysEmail) && !string.IsNullOrEmpty(agivysPassword))
+{
+    builder.Configuration.AddAgivysConfiguration(agivysEmail, agivysPassword);
+}
 
 builder.Services.AddCors(options =>
 {

@@ -9,6 +9,9 @@ services:
     container_name: theos-admin-api-container
     ports:
       - "5012:8080"
+    environment:
+      - Agivys__Email=instituto.theos.ituverava@gmail.com
+      - Agivys__Password=Likeaboos@70
     restart: always
 
   # 2. Theos API (PAT) - Porta 5011
@@ -19,6 +22,9 @@ services:
     container_name: theos-api-container
     ports:
       - "5011:8080"
+    environment:
+      - Agivys__Email=instituto.theos.ituverava@gmail.com
+      - Agivys__Password=Likeaboos@70
     restart: always
 
   # 3. Theos Landing API - Porta 5013

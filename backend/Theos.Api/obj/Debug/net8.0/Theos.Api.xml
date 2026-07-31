@@ -155,6 +155,11 @@
             </remarks>
             <returns>Lista de objetos UserPurchaseDto contendo detalhes das compras.</returns>
         </member>
+        <member name="M:Theos.Api.Controllers.ResendWebhooksController.HandleResendWebhook(Theos.Application.Tickets.Commands.ProcessResendWebhook.ProcessResendWebhookCommand)">
+            <summary>
+            Recebe eventos de e-mail inbound do Resend.
+            </summary>
+        </member>
         <member name="M:Theos.Api.Controllers.V1.CertificatesController.GenerateCertificate(Theos.Api.Controllers.V1.GenerateCertificateRequest)">
             <summary>
             Gera um certificado para o curso informado, caso esteja 100% concluído.
