@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { SupportService, ITicketCategory } from '../../../../core/services/support.service';
-import { StateUtil } from '../../../../core/utils/UserState.util';
+import { SupportService, ITicketCategory } from '../../../../../core/services/support.service';
+import { StateUtil } from '../../../../../core/utils/UserState.util';
 
 // ─── Interfaces ────────────────────────────────────────────────────────────────
 
@@ -71,7 +71,7 @@ export class SupportHomeComponent implements OnInit {
   channels: ISupportChannel[] = [];
 
   ngOnInit(): void {
-    this.stateUtil.getUser().subscribe(user => {
+    this.stateUtil.getUser().subscribe((user: any) => {
       if (user) {
         this.contactName = user.name || '';
         this.contactEmail = user.email || '';
@@ -79,13 +79,13 @@ export class SupportHomeComponent implements OnInit {
     });
 
     this.supportService.getCategories().subscribe({
-      next: (cats) => {
+      next: (cats: ITicketCategory[]) => {
         this.ticketCategories = cats;
         if (cats.length > 0) {
           this.contactCategoryId = cats[0].id;
         }
       },
-      error: (err) => console.error('Erro ao buscar categorias de suporte', err)
+      error: (err: any) => console.error('Erro ao buscar categorias de suporte', err)
     });
 
     setTimeout(() => {
