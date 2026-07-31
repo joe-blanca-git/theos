@@ -113,6 +113,12 @@ A organização segue a divisão lógica recomendada pela equipe do Angular:
 ### Módulo de Cursos (`/courses`)
 - **Home de Cursos (`/courses`):** Ambiente inicial preparado para gestão de cursos e turmas do professor.
 
+### Outros Módulos
+- **Blog (`/blog`)**
+- **Perfil (`/profile`)**
+- **Configurações (`/settings`)**
+- **Suporte (`/support`)**
+
 ---
 
 ## 6. Componentes Compartilhados
@@ -134,10 +140,9 @@ Componentes mantidos na pasta `src/app/shared/components/`:
 5. O `AuthGuardService` avalia se existe token válido; se não, bloqueia e redireciona ao `/auth`.
 6. O `BaseService` injeta o token (`GetAuthHeaderJson`) automaticamente em todas as chamadas.
 
-### Fluxo de Interação no Fórum
-1. Acesso à home do Fórum. O serviço carrega categorias e topicos (`IForumTopicSummaryDto`).
-2. Cálculos de UI mapeiam os *status* ("Resolvido", "Sem resposta", "Em andamento") dependendo da resposta da API (que checa `status` do tópico e quantidade `replyCount`).
-3. Ao visualizar um tópico, o dono do tópico visualiza regras de negócio exclusivas (ex: botões de Encerrar/Reabrir tópico).
+### Gestão de Conteúdo (Cursos)
+1. Professores gerenciam a base de conhecimento e estrutura dos cursos.
+2. Interações com alunos e acompanhamento de progresso de turmas.
 
 ---
 
@@ -153,10 +158,8 @@ Componentes mantidos na pasta `src/app/shared/components/`:
 ## 9. Regras de Negócio
 
 - **Autenticação:** O sistema desloga automaticamente em retornos `401 Unauthorized`.
-- **Fórum (Status e Propriedade):**
-  - Botão "Marcar como Resolvido" só surge se `topic.isOwn == true` e se não estiver "Resolved".
-  - Botão "Reabrir Tópico" só surge se `topic.isOwn == true` e o status for "Resolved".
-  - O cálculo do card "Sem Resposta" filtra tópicos cuja propriedade `replyCount === 0`.
+- **Cursos e Autoria:**
+  - O professor visualiza apenas os módulos e cursos vinculados a sua propriedade ou docência.
 - **Navegação (Lazy Loading):** Partes do sistema só são carregadas em RAM e via rede se o usuário efetivamente clicar no link do menu, economizando tráfego de dados.
 
 ---
@@ -165,7 +168,7 @@ Componentes mantidos na pasta `src/app/shared/components/`:
 
 O projeto adota uma arquitetura acoplada ao Core.
 - O Módulo `Auth` não depende de nenhuma feature.
-- Todos os módulos (`courses`, `forum`, `financial`) dependem estritamente do `CoreModule` e de `Shared`. Não há dependência cruzada (*circular dependency*) entre módulos (ex: `courses` não importa componentes de `forum`).
+- Todos os módulos (`courses`, `blog`, `profile`, `settings`, `support`) dependem estritamente do `CoreModule` e de `Shared`. Não há dependência cruzada (*circular dependency*) entre módulos.
 
 ### Diagrama de Dependências
 ```mermaid
@@ -173,14 +176,14 @@ graph BT
   Shared[Shared Components]
   Core[Core / Services / Guards]
   
-  Forum[Feature: Forum] --> Shared
-  Forum --> Core
+  Blog[Feature: Blog] --> Shared
+  Blog --> Core
   
   Courses[Feature: Courses] --> Shared
   Courses --> Core
   
-  Financial[Feature: Financial] --> Shared
-  Financial --> Core
+  Profile[Feature: Profile] --> Shared
+  Profile --> Core
 ```
 
 ---
@@ -194,8 +197,8 @@ O projeto Angular 18 é iniciado primariamente via CLI.
 - **Scripts do `package.json`:**
   - `npm start`: Inicia o servidor local CSR (Client-Side) (`ng serve`).
   - `npm run watch`: Modo contínuo de build para desenvolvimento SSR.
-  - `npm run serve:ssr:portal-pan`: Executa a compilação universal no lado do servidor via Node.
-- **Processo de Deploy:** Envolve o build estático somado ao bundle de servidor SSR (`dist/portal-pan/server/server.mjs`), que deve ser invocado via host PM2 ou contêiner (Dockerfile incluído no root).
+  - `npm run serve:ssr:portal-popt`: Executa a compilação universal no lado do servidor via Node.
+- **Processo de Deploy:** Envolve o build estático somado ao bundle de servidor SSR (`dist/portal-popt/server/server.mjs`), que deve ser invocado via host PM2 ou contêiner (Dockerfile incluído no root).
 
 ---
 
@@ -294,4 +297,4 @@ Todo modal criado na aplicação deve possuir a seguinte estrutura de cabeçalho
 5. **Harmonia Visual:** Empregue intensamente transparências do Bootstrap (`bg-opacity-10`) combinadas com cores sólidas nos textos/ícones internos para um aspecto visual refinado (Glassmorphism sutil).
 
 ---
-*Documentação mantida e atualizada para o ecossistema Portal Pan.*
+*Documentação mantida e atualizada para o ecossistema Portal do Professor Theos (POP).*
