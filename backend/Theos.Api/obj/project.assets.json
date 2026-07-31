@@ -3826,11 +3826,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "c:\\Users\\joeder-blanca\\Documents\\projetos-joe\\git\\theos\\backend\\Theos.Api\\Theos.Api.csproj",
+      "projectUniqueName": "C:\\Users\\joeder-blanca\\Documents\\projetos-joe\\git\\theos\\backend\\Theos.Api\\Theos.Api.csproj",
       "projectName": "Theos.Api",
-      "projectPath": "c:\\Users\\joeder-blanca\\Documents\\projetos-joe\\git\\theos\\backend\\Theos.Api\\Theos.Api.csproj",
+      "projectPath": "C:\\Users\\joeder-blanca\\Documents\\projetos-joe\\git\\theos\\backend\\Theos.Api\\Theos.Api.csproj",
       "packagesPath": "C:\\Users\\joeder-blanca\\.nuget\\packages\\",
-      "outputPath": "c:\\Users\\joeder-blanca\\Documents\\projetos-joe\\git\\theos\\backend\\Theos.Api\\obj\\",
+      "outputPath": "C:\\Users\\joeder-blanca\\Documents\\projetos-joe\\git\\theos\\backend\\Theos.Api\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\joeder-blanca\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -3845,11 +3845,11 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "c:\\Users\\joeder-blanca\\Documents\\projetos-joe\\git\\theos\\backend\\Theos.Application\\Theos.Application.csproj": {
-              "projectPath": "c:\\Users\\joeder-blanca\\Documents\\projetos-joe\\git\\theos\\backend\\Theos.Application\\Theos.Application.csproj"
+            "C:\\Users\\joeder-blanca\\Documents\\projetos-joe\\git\\theos\\backend\\Theos.Application\\Theos.Application.csproj": {
+              "projectPath": "C:\\Users\\joeder-blanca\\Documents\\projetos-joe\\git\\theos\\backend\\Theos.Application\\Theos.Application.csproj"
             },
-            "c:\\Users\\joeder-blanca\\Documents\\projetos-joe\\git\\theos\\backend\\Theos.Infrastructure\\Theos.Infrastructure.csproj": {
-              "projectPath": "c:\\Users\\joeder-blanca\\Documents\\projetos-joe\\git\\theos\\backend\\Theos.Infrastructure\\Theos.Infrastructure.csproj"
+            "C:\\Users\\joeder-blanca\\Documents\\projetos-joe\\git\\theos\\backend\\Theos.Infrastructure\\Theos.Infrastructure.csproj": {
+              "projectPath": "C:\\Users\\joeder-blanca\\Documents\\projetos-joe\\git\\theos\\backend\\Theos.Infrastructure\\Theos.Infrastructure.csproj"
             }
           }
         }

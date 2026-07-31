@@ -29,7 +29,8 @@ namespace Theos.Infrastructure.Persistence
         public DbSet<ForumMessage> ForumMessages => Set<ForumMessage>();
         public DbSet<CourseRate> CourseRates => Set<CourseRate>();
         public DbSet<Certificate> Certificates => Set<Certificate>();
-
+        public DbSet<AppRole> AppRoles => Set<AppRole>();
+        public DbSet<AppUserRole> AppUserRoles => Set<AppUserRole>();
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(TheosDbContext).Assembly);

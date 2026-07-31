@@ -23,6 +23,8 @@ namespace Theos.Application.Common.Interfaces
         DbSet<ForumMessage> ForumMessages { get; }
         DbSet<CourseRate> CourseRates { get; }
         DbSet<Certificate> Certificates { get; }
+        DbSet<AppRole> AppRoles { get; }
+        DbSet<AppUserRole> AppUserRoles { get; }
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }

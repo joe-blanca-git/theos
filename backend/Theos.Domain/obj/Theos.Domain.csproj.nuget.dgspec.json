@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "c:\\Users\\joeder-blanca\\Documents\\projetos-joe\\git\\theos\\backend\\Theos.Domain\\Theos.Domain.csproj": {}
+    "C:\\Users\\joeder-blanca\\Documents\\projetos-joe\\git\\theos\\backend\\Theos.Domain\\Theos.Domain.csproj": {}
   },
   "projects": {
-    "c:\\Users\\joeder-blanca\\Documents\\projetos-joe\\git\\theos\\backend\\Theos.Domain\\Theos.Domain.csproj": {
+    "C:\\Users\\joeder-blanca\\Documents\\projetos-joe\\git\\theos\\backend\\Theos.Domain\\Theos.Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\joeder-blanca\\Documents\\projetos-joe\\git\\theos\\backend\\Theos.Domain\\Theos.Domain.csproj",
+        "projectUniqueName": "C:\\Users\\joeder-blanca\\Documents\\projetos-joe\\git\\theos\\backend\\Theos.Domain\\Theos.Domain.csproj",
         "projectName": "Theos.Domain",
-        "projectPath": "c:\\Users\\joeder-blanca\\Documents\\projetos-joe\\git\\theos\\backend\\Theos.Domain\\Theos.Domain.csproj",
+        "projectPath": "C:\\Users\\joeder-blanca\\Documents\\projetos-joe\\git\\theos\\backend\\Theos.Domain\\Theos.Domain.csproj",
         "packagesPath": "C:\\Users\\joeder-blanca\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\joeder-blanca\\Documents\\projetos-joe\\git\\theos\\backend\\Theos.Domain\\obj\\",
+        "outputPath": "C:\\Users\\joeder-blanca\\Documents\\projetos-joe\\git\\theos\\backend\\Theos.Domain\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\joeder-blanca\\AppData\\Roaming\\NuGet\\NuGet.Config"
