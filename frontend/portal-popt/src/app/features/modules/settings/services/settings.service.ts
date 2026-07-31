@@ -35,6 +35,28 @@ export class SettingsService extends BaseService {
     return this.http.delete<any>(`${this.urlApiTheos}course-categories/${id}`, this.GetAuthHeaderJson());
   }
 
+  // --- Forum Categories ---
+
+  getForumCategories(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.urlApiTheos}ForumCategories`, this.GetAuthHeaderJson());
+  }
+
+  getForumCategoryById(id: number): Observable<any> {
+    return this.http.get<any>(`${this.urlApiTheos}ForumCategories/${id}`, this.GetAuthHeaderJson());
+  }
+
+  createForumCategory(categoryData: { name: string, description?: string }): Observable<number> {
+    return this.http.post<number>(`${this.urlApiTheos}ForumCategories`, categoryData, this.GetAuthHeaderJson());
+  }
+
+  updateForumCategory(id: number, categoryData: { id: number, name: string, description?: string, active?: boolean }): Observable<any> {
+    return this.http.put<any>(`${this.urlApiTheos}ForumCategories/${id}`, categoryData, this.GetAuthHeaderJson());
+  }
+
+  deleteForumCategory(id: number): Observable<any> {
+    return this.http.delete<any>(`${this.urlApiTheos}ForumCategories/${id}`, this.GetAuthHeaderJson());
+  }
+
   // --- Teachers ---
 
   getTeachers(): Observable<any[]> {

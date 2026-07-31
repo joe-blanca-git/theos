@@ -1,9 +1,11 @@
 import { Component, OnInit, inject, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { forkJoin } from 'rxjs';
 import { SettingsService } from '../../services/settings.service';
 import { ToastService } from '../../../../../core/services/toast.service';
 import { BreadcrumbComponent } from '../../../../../shared/components/breadcrumb/breadcrumb.component';
+import { AgivysService, AgivysRole } from '../../services/agivys.service';
 
 declare var bootstrap: any;
 
@@ -19,23 +21,30 @@ export class SettingsHomeComponent implements OnInit {
   private fb = inject(FormBuilder);
   private cdr = inject(ChangeDetectorRef);
   private toastService = inject(ToastService);
+  private agivysService = inject(AgivysService);
 
-  activeTab: 'categories' | 'teachers' = 'categories';
+  activeTab: 'categories' | 'teachers' | 'administrators' = 'categories';
+  activeCategoryTab: 'courses' | 'forums' = 'courses';
   isLoading = false;
 
   categories: any[] = [];
+  forumCategories: any[] = [];
   teachers: any[] = [];
   systemUsers: any[] = [];
+  agivysRoles: AgivysRole[] = [];
   avatarPreview: string | null = null;
 
   categoryForm!: FormGroup;
   teacherForm!: FormGroup;
+  adminForm!: FormGroup;
 
   categoryToEdit: any | null = null;
   categoryToDelete: any | null = null;
 
   teacherToEdit: any | null = null;
   teacherToDelete: any | null = null;
+  
+  adminToDelete: any | null = null;
 
   isSubmittingCategory = false;
   isDeletingCategory = false;
@@ -43,20 +52,28 @@ export class SettingsHomeComponent implements OnInit {
   isSubmittingTeacher = false;
   isDeletingTeacher = false;
 
+  isSubmittingAdmin = false;
+  isDeletingAdmin = false;
+
   @ViewChild('categoryModal') categoryModalRef!: ElementRef;
   @ViewChild('confirmDeleteCategoryModal') confirmDeleteCategoryModalRef!: ElementRef;
   @ViewChild('teacherModal') teacherModalRef!: ElementRef;
   @ViewChild('confirmDeleteTeacherModal') confirmDeleteTeacherModalRef!: ElementRef;
+  @ViewChild('adminModal') adminModalRef!: ElementRef;
+  @ViewChild('confirmDeleteAdminModal') confirmDeleteAdminModalRef!: ElementRef;
 
   private categoryModalInstance: any;
   private confirmDeleteCategoryModalInstance: any;
   private teacherModalInstance: any;
   private confirmDeleteTeacherModalInstance: any;
+  private adminModalInstance: any;
+  private confirmDeleteAdminModalInstance: any;
 
   ngOnInit(): void {
     this.initForms();
-    this.loadData();
     this.loadSystemUsers();
+    this.loadAgivysRoles();
+    this.loadData();
   }
 
   ngAfterViewInit() {
@@ -64,6 +81,8 @@ export class SettingsHomeComponent implements OnInit {
     this.confirmDeleteCategoryModalInstance = new bootstrap.Modal(this.confirmDeleteCategoryModalRef.nativeElement);
     this.teacherModalInstance = new bootstrap.Modal(this.teacherModalRef.nativeElement);
     this.confirmDeleteTeacherModalInstance = new bootstrap.Modal(this.confirmDeleteTeacherModalRef.nativeElement);
+    this.adminModalInstance = new bootstrap.Modal(this.adminModalRef.nativeElement);
+    this.confirmDeleteAdminModalInstance = new bootstrap.Modal(this.confirmDeleteAdminModalRef.nativeElement);
   }
 
   initForms() {
@@ -82,44 +101,66 @@ export class SettingsHomeComponent implements OnInit {
       linkedinLink: [''],
       idAgivys: ['']
     });
+
+    this.adminForm = this.fb.group({
+      teacherId: ['', Validators.required],
+      roleName: ['', Validators.required]
+    });
   }
 
-  switchTab(tab: 'categories' | 'teachers') {
+  switchTab(tab: 'categories' | 'teachers' | 'administrators') {
     this.activeTab = tab;
-    this.loadData();
+  }
+
+  switchCategoryTab(tab: 'courses' | 'forums') {
+    this.activeCategoryTab = tab;
   }
 
   loadData() {
     this.isLoading = true;
-    if (this.activeTab === 'categories') {
-      this.settingsService.getCategories().subscribe({
-        next: (data) => {
-          this.categories = data;
-          this.isLoading = false;
-          this.cdr.detectChanges();
-        },
-        error: (err) => {
-          console.error('Error loading categories', err);
-          this.toastService.error('Erro ao carregar categorias.');
-          this.isLoading = false;
-          this.cdr.detectChanges();
-        }
-      });
-    } else {
-      this.settingsService.getTeachers().subscribe({
-        next: (data) => {
-          this.teachers = data;
-          this.isLoading = false;
-          this.cdr.detectChanges();
-        },
-        error: (err) => {
-          console.error('Error loading teachers', err);
-          this.toastService.error('Erro ao carregar professores.');
-          this.isLoading = false;
-          this.cdr.detectChanges();
-        }
-      });
-    }
+    this.categories = [];
+    this.forumCategories = [];
+    this.teachers = [];
+    
+    forkJoin({
+      categories: this.settingsService.getCategories(),
+      forumCategories: this.settingsService.getForumCategories(),
+      teachers: this.settingsService.getTeachers()
+    }).subscribe({
+      next: (res) => {
+        this.categories = res.categories;
+        this.forumCategories = res.forumCategories;
+        this.teachers = res.teachers;
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Error loading data', err);
+        this.toastService.error('Erro ao carregar dados do sistema.');
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  get administrators() {
+    return this.teachers.filter(t => t.role === 'Admin');
+  }
+
+  get nonAdminTeachers() {
+    return this.teachers.filter(t => t.role !== 'Admin');
+  }
+
+  loadAgivysRoles() {
+    this.agivysService.getRoles().subscribe({
+      next: (roles) => {
+        this.agivysRoles = roles;
+      },
+      error: (err) => {
+        console.error('Error loading Agivys roles', err);
+        this.toastService.error('Erro ao carregar roles do Agivys.');
+      }
+    });
   }
 
   loadSystemUsers() {
@@ -161,7 +202,12 @@ export class SettingsHomeComponent implements OnInit {
 
     if (this.categoryToEdit) {
       payload.id = this.categoryToEdit.id;
-      this.settingsService.updateCategory(this.categoryToEdit.id, payload).subscribe({
+      
+      const updateRequest = this.activeCategoryTab === 'courses' 
+        ? this.settingsService.updateCategory(this.categoryToEdit.id, payload)
+        : this.settingsService.updateForumCategory(this.categoryToEdit.id, { ...payload, active: this.categoryToEdit.active });
+
+      updateRequest.subscribe({
         next: () => {
           this.toastService.success('Categoria atualizada com sucesso!');
           this.isSubmittingCategory = false;
@@ -175,7 +221,11 @@ export class SettingsHomeComponent implements OnInit {
         }
       });
     } else {
-      this.settingsService.createCategory(payload).subscribe({
+      const createRequest = this.activeCategoryTab === 'courses'
+        ? this.settingsService.createCategory(payload)
+        : this.settingsService.createForumCategory(payload);
+
+      createRequest.subscribe({
         next: () => {
           this.toastService.success('Categoria criada com sucesso!');
           this.isSubmittingCategory = false;
@@ -200,7 +250,12 @@ export class SettingsHomeComponent implements OnInit {
     if (!this.categoryToDelete) return;
 
     this.isDeletingCategory = true;
-    this.settingsService.deleteCategory(this.categoryToDelete.id).subscribe({
+    
+    const deleteRequest = this.activeCategoryTab === 'courses'
+      ? this.settingsService.deleteCategory(this.categoryToDelete.id)
+      : this.settingsService.deleteForumCategory(this.categoryToDelete.id);
+
+    deleteRequest.subscribe({
       next: () => {
         this.toastService.success('Categoria excluída com sucesso!');
         this.isDeletingCategory = false;
@@ -326,6 +381,111 @@ export class SettingsHomeComponent implements OnInit {
         console.error('Error deleting teacher', err);
         this.toastService.error('Erro ao inativar professor.');
         this.isDeletingTeacher = false;
+      }
+    });
+  }
+
+  // --- Administrator Methods ---
+
+  openAddAdminModal() {
+    this.adminForm.reset();
+    this.adminForm.patchValue({ teacherId: '', roleName: 'Admin' });
+    this.adminModalInstance.show();
+  }
+
+  saveAdmin() {
+    if (this.adminForm.invalid) {
+      this.adminForm.markAllAsTouched();
+      return;
+    }
+
+    const payload = this.adminForm.getRawValue();
+    const teacher = this.teachers.find(t => t.id === parseInt(payload.teacherId, 10));
+
+    if (!teacher) {
+      this.toastService.error('Professor não encontrado.');
+      return;
+    }
+
+    if (!teacher.idAgivys) {
+      this.toastService.error('Professor selecionado não possui ID do Agivys vinculado.');
+      return;
+    }
+
+    this.isSubmittingAdmin = true;
+
+    // 1. Vincular Role no Agivys
+    this.agivysService.assignRole(teacher.idAgivys, payload.roleName).subscribe({
+      next: () => {
+        // 2. Atualizar Role no Theos para 'Admin'
+        const updatedTeacher = { ...teacher, role: 'Admin' };
+        this.settingsService.updateTeacher(teacher.id, updatedTeacher).subscribe({
+          next: () => {
+            this.toastService.success('Privilégio de Administrador concedido com sucesso!');
+            this.isSubmittingAdmin = false;
+            this.adminModalInstance.hide();
+            this.loadData();
+          },
+          error: (err) => {
+            console.error('Error updating Theos teacher role', err);
+            this.toastService.error('A role foi vinculada no Agivys, mas falhou ao atualizar no Theos.');
+            this.isSubmittingAdmin = false;
+          }
+        });
+      },
+      error: (err) => {
+        console.error('Error assigning Agivys role', err);
+        this.toastService.error('Erro ao vincular role no Agivys. Verifique se o usuário já possui a role.');
+        this.isSubmittingAdmin = false;
+      }
+    });
+  }
+
+  confirmDeleteAdmin(admin: any) {
+    this.adminToDelete = admin;
+    this.confirmDeleteAdminModalInstance.show();
+  }
+
+  executeDeleteAdmin() {
+    if (!this.adminToDelete) return;
+
+    if (!this.adminToDelete.idAgivys) {
+      this.toastService.error('Professor não possui ID do Agivys vinculado para revogar.');
+      return;
+    }
+
+    this.isDeletingAdmin = true;
+    
+    // Revogar role no Agivys. Nota: Precisaríamos saber a roleName exata. 
+    // Como a UI não armazena a roleName do Agivys na tabela Theos, vamos remover 'Admin'
+    // que é a role padrão correspondente a aba de Administradores.
+    const roleToRemove = 'Admin'; 
+
+    this.agivysService.removeRole(this.adminToDelete.idAgivys, roleToRemove).subscribe({
+      next: () => {
+        // Atualizar Theos para 'Teacher'
+        const updatedTeacher = { ...this.adminToDelete, role: 'Teacher' };
+        this.settingsService.updateTeacher(this.adminToDelete.id, updatedTeacher).subscribe({
+          next: () => {
+            this.toastService.success('Privilégio revogado com sucesso!');
+            this.isDeletingAdmin = false;
+            this.confirmDeleteAdminModalInstance.hide();
+            this.adminToDelete = null;
+            this.loadData();
+          },
+          error: (err) => {
+            console.error('Error updating Theos role to Teacher', err);
+            this.toastService.error('Role removida no Agivys, mas falha ao atualizar no Theos.');
+            this.isDeletingAdmin = false;
+          }
+        });
+      },
+      error: (err) => {
+        console.error('Error removing Agivys role', err);
+        // Mesmo se falhar (ex: role não encontrada), queremos forçar a atualização local?
+        // Neste fluxo, bloqueamos se a API falhar.
+        this.toastService.error('Erro ao revogar role no Agivys.');
+        this.isDeletingAdmin = false;
       }
     });
   }
