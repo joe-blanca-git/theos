@@ -32,6 +32,7 @@ export interface IForumTopicUI {
   replyCount: number;
   viewCount: number;
   date: string;
+  rawDate: string;
   status: TopicStatus;
   isUnread: boolean;
   isOwn: boolean;
@@ -156,6 +157,7 @@ export class ForumHomeComponent implements OnInit {
       replyCount: repliesCount,
       viewCount: 0, 
       date: new Date(dto.createdAt).toLocaleDateString(),
+      rawDate: dto.createdAt,
       status: status,
       isUnread: isUnread,
       isOwn: isOwn,
@@ -171,9 +173,31 @@ export class ForumHomeComponent implements OnInit {
         favoriteTopics: 0,
         unreadReplies: 0
     };
-    
     this.categories.forEach(c => {
-       c.topicCount = this.topics.filter(t => t.categoryName === c.name).length;
+       const catTopics = this.topics.filter(t => t.categoryName === c.name);
+       c.topicCount = catTopics.length;
+       
+       const uniqueMembers = new Set(catTopics.map(t => t.authorName));
+       c.memberCount = uniqueMembers.size;
+       
+       if (catTopics.length > 0) {
+           const latestTopic = catTopics.reduce((latest, t) => 
+               new Date(t.rawDate) > new Date(latest.rawDate) ? t : latest
+           );
+           
+           const now = new Date();
+           const lastAct = new Date(latestTopic.rawDate);
+           const diffHours = Math.floor((now.getTime() - lastAct.getTime()) / (1000 * 60 * 60));
+           const diffDays = Math.floor(diffHours / 24);
+           
+           if (diffHours < 24) {
+               c.lastActivity = diffHours === 0 ? 'Agora mesmo' : `Há ${diffHours}h`;
+           } else {
+               c.lastActivity = diffDays === 1 ? 'Ontem' : `Há ${diffDays}d`;
+           }
+       } else {
+           c.lastActivity = '-';
+       }
     });
   }
 
