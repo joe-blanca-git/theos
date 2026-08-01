@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Theos.Domain.Enums;
 
@@ -32,6 +32,7 @@ public class TicketMessageDto
 {
     public int Id { get; set; }
     public string Origin { get; set; } = string.Empty;
+    public string SenderName { get; set; } = string.Empty;
     public string Content { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; }
     public List<TicketAttachmentDto> Attachments { get; set; } = new();

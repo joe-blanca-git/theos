@@ -1,15 +1,27 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { IMenuItem } from '../../features/shared/components/menu-side/menu-side.component';
 import { Router } from '@angular/router';
+import { AuthUtil } from '../auth/auth.util';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MenuService {
+  private authUtil = inject(AuthUtil);
 
   constructor(private router: Router) { }
 
   getMenu(): IMenuItem[] {
+    const token = this.authUtil.getCookieAuth();
+    let isAdmin = false;
+
+    if (token) {
+      const decoded = this.authUtil.decodeToken(token);
+      if (decoded && decoded.roles && decoded.roles.includes('Admin')) {
+        isAdmin = true;
+      }
+    }
+
     const menuMock = [
       {
         id: 1,
@@ -42,6 +54,11 @@ export class MenuService {
         route: '/support'
       }
     ];
+
+    if (!isAdmin) {
+      return menuMock.filter(m => m.route !== '/settings');
+    }
+
     return menuMock;
   }
 

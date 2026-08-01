@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Theos.Application.Common.Interfaces;
 using Theos.Application.Portal.Tickets.DTOs;
@@ -30,6 +30,8 @@ public class GetTicketDetailsQueryHandler : IRequestHandler<GetTicketDetailsQuer
             .Include(t => t.Timelines)
             .Include(t => t.Messages)
                 .ThenInclude(m => m.Attachments)
+            .Include(t => t.Messages)
+                .ThenInclude(m => m.User)
             .AsNoTracking()
             .FirstOrDefaultAsync(t => t.Id == request.Id && t.UserId == user.Id, cancellationToken);
 
@@ -60,6 +62,7 @@ public class GetTicketDetailsQueryHandler : IRequestHandler<GetTicketDetailsQuer
             {
                 Id = msg.Id,
                 Origin = msg.Origin.ToString(),
+                SenderName = msg.User?.FullName ?? msg.User?.Name ?? "Usuário",
                 Content = msg.Content,
                 CreatedAt = msg.CreatedAt
             };

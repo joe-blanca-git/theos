@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Theos.Application.Common.Interfaces;
 using Theos.Domain.Entities;
@@ -38,7 +38,7 @@ public class AdminReplyTicketCommandHandler : IRequestHandler<AdminReplyTicketCo
             _context.TicketTimelines.Add(TicketTimeline.Create(ticket.Id, admin.Id, TicketTimelineEvent.Reopened, "Ticket reaberto via nova resposta do suporte."));
         }
 
-        var message = TicketMessage.Create(ticket.Id, admin.Id, TicketOrigin.Portal, request.Content, null);
+        var message = TicketMessage.Create(ticket.Id, admin.Id, TicketOrigin.Backoffice, request.Content, null);
         _context.TicketMessages.Add(message);
 
         _context.TicketTimelines.Add(TicketTimeline.Create(ticket.Id, admin.Id, TicketTimelineEvent.Replied, "Ticket respondido pelo suporte."));

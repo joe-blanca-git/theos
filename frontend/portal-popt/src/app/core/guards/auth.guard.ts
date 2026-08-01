@@ -9,6 +9,7 @@ import { StateUtil } from '../utils/UserState.util';
 import { MenuService } from '../services/menu.service';
 import { AuthService } from '../auth/auth.service';
 import { ToastService } from '../services/toast.service';
+import { AuthUtil } from '../auth/auth.util';
 
 const defaultPath = '/';
 
@@ -20,6 +21,7 @@ export class AuthGuardService {
   private menuService = inject(MenuService);
   private authService = inject(AuthService);
   private platformId = inject(PLATFORM_ID);
+  private authUtil = inject(AuthUtil);
 
   constructor(
     private router: Router,
@@ -51,6 +53,18 @@ export class AuthGuardService {
         this.router.navigate(['/auth/login']);
       }
       return false;
+    }
+
+    if (isLoggedIn && state.url.includes('/settings')) {
+      const token = this.authUtil.getCookieAuth();
+      if (token) {
+        const decoded = this.authUtil.decodeToken(token);
+        if (!decoded || !decoded.roles || !decoded.roles.includes('Admin')) {
+          this.toastService.error('Você não tem permissão para acessar esta página.');
+          this.router.navigate([defaultPath]);
+          return false;
+        }
+      }
     }
 
     return true;
