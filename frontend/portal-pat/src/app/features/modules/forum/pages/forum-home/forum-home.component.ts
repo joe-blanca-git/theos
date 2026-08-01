@@ -126,7 +126,7 @@ export class ForumHomeComponent implements OnInit {
       id: dto.id,
       name: dto.name,
       description: dto.description || '',
-      icon: dto.icon || icons[idx] || 'fa-comments',
+      icon: dto.icon || 'fa-comments',
       color: colors[idx] || '#6366f1',
       topicCount: 0, 
       memberCount: 0,
