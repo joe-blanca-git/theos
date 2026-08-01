@@ -36,6 +36,7 @@ namespace Theos.Landing.Api.Middlewares
             {
                 ValidationException => (int)HttpStatusCode.BadRequest,
                 UnauthorizedAccessException => (int)HttpStatusCode.Unauthorized,
+                Theos.Application.Common.Exceptions.NotFoundException => (int)HttpStatusCode.NotFound,
                 _ => (int)HttpStatusCode.InternalServerError
             };
 
