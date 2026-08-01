@@ -49,10 +49,6 @@ namespace Theos.Application.Teachers.Queries.GetTeachers
 
             var query = _context.Teachers.Where(t => t.Active);
 
-            if (loggedTeacher.Role != "Admin")
-            {
-                query = query.Where(t => t.Id == loggedTeacher.Id);
-            }
 
             return await query
                 .Select(t => new TeacherDto
