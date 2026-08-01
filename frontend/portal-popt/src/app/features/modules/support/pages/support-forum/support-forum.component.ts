@@ -20,7 +20,7 @@ export class SupportForumComponent implements OnInit {
   isLoading = true;
 
   showTopicModal = false;
-  selectedTopic: ForumTopic | null = null;
+  selectedTopic: any | null = null;
   isReplying = false;
   replyForm!: FormGroup;
 
@@ -45,10 +45,18 @@ export class SupportForumComponent implements OnInit {
     });
   }
 
-  openTopicModal(topic: ForumTopic): void {
-    this.selectedTopic = topic;
-    this.showTopicModal = true;
-    this.replyForm.reset();
+  openTopicModal(topic: any): void {
+    // Carrega os detalhes completos com mensagens
+    this.supportService.getForumTopicById(topic.id).subscribe({
+      next: (fullTopic) => {
+        this.selectedTopic = fullTopic;
+        this.showTopicModal = true;
+        this.replyForm.reset();
+      },
+      error: () => {
+        this.toastService.error('Erro ao carregar detalhes do tópico.');
+      }
+    });
   }
 
   closeModal(): void {
@@ -63,11 +71,20 @@ export class SupportForumComponent implements OnInit {
     const content = this.replyForm.value.content;
 
     this.supportService.replyForumTopic(this.selectedTopic.id, content).subscribe({
-      next: (updatedTopic) => {
+      next: (res) => {
         this.toastService.success('Resposta publicada no fórum com sucesso!');
-        this.selectedTopic = updatedTopic;
-        const index = this.topics.findIndex(t => t.id === updatedTopic.id);
-        if (index > -1) this.topics[index] = updatedTopic;
+        // O backend retorna apenas { id }. Precisamos adicionar a msg na lista atual.
+        this.selectedTopic.messages.push({
+          id: res.id,
+          content: content,
+          authorName: 'Suporte',
+          createdAt: new Date().toISOString()
+        });
+        
+        // Atualiza a contagem na listagem geral
+        const index = this.topics.findIndex(t => t.id === this.selectedTopic!.id);
+        if (index > -1) this.topics[index].repliesCount++;
+        
         this.replyForm.reset();
         this.isReplying = false;
       },
@@ -78,12 +95,12 @@ export class SupportForumComponent implements OnInit {
     });
   }
 
-  changeStatus(newStatus: 'Aguardando resposta' | 'Em atendimento' | 'Finalizado'): void {
+  changeStatus(newStatus: 'Open' | 'Resolved'): void {
     if (!this.selectedTopic) return;
     
     this.supportService.updateForumTopicStatus(this.selectedTopic.id, newStatus).subscribe({
       next: () => {
-        this.toastService.success(`Tópico marcado como ${newStatus}.`);
+        this.toastService.success(`Status alterado com sucesso.`);
         this.selectedTopic!.status = newStatus;
         const index = this.topics.findIndex(t => t.id === this.selectedTopic!.id);
         if (index > -1) this.topics[index].status = newStatus;
@@ -96,9 +113,8 @@ export class SupportForumComponent implements OnInit {
 
   getStatusBadgeClass(status: string): string {
     switch (status) {
-      case 'Aguardando resposta': return 'bg-warning bg-opacity-10 text-warning border-warning';
-      case 'Em atendimento': return 'bg-info bg-opacity-10 text-info border-info';
-      case 'Finalizado': return 'bg-success bg-opacity-10 text-success border-success';
+      case 'Open': return 'bg-info bg-opacity-10 text-info border-info';
+      case 'Resolved': return 'bg-success bg-opacity-10 text-success border-success';
       default: return 'bg-secondary bg-opacity-10 text-secondary border-secondary';
     }
   }

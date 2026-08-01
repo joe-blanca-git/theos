@@ -78,50 +78,22 @@ export class SupportService extends BaseService {
 
   // --- FORUM TOPICS ---
 
-  getForumTopics(): Observable<ForumTopic[]> {
-    return this.http.get<ForumTopic[]>(`${this.urlApiTheos}support-forum`, this.GetAuthHeaderJson()).pipe(
-      catchError(() => of(this.mockTopics).pipe(delay(600)))
-    );
+  getForumTopics(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.urlApiTheos}support-forum`, this.GetAuthHeaderJson());
   }
 
-  getForumTopicById(id: number): Observable<ForumTopic> {
-    return this.http.get<ForumTopic>(`${this.urlApiTheos}support-forum/${id}`, this.GetAuthHeaderJson()).pipe(
-      catchError(() => {
-        const topic = this.mockTopics.find(t => t.id === id);
-        return topic ? of(topic).pipe(delay(300)) : throwError(() => new Error('Not found'));
-      })
-    );
+  getForumTopicById(id: number): Observable<any> {
+    return this.http.get<any>(`${this.urlApiTheos}support-forum/${id}`, this.GetAuthHeaderJson());
   }
 
-  replyForumTopic(id: number, content: string): Observable<ForumTopic> {
+  replyForumTopic(id: number, content: string): Observable<any> {
     const payload = { content };
-    return this.http.post<ForumTopic>(`${this.urlApiTheos}support-forum/${id}/reply`, payload, this.GetAuthHeaderJson()).pipe(
-      catchError(() => {
-        const topic = this.mockTopics.find(t => t.id === id);
-        if (topic) {
-          topic.messages.push({
-            id: Date.now(),
-            sender: 'Support',
-            senderName: 'Analista de Suporte',
-            content,
-            createdAt: new Date().toISOString()
-          });
-          topic.replyCount++;
-          topic.status = 'Em atendimento';
-        }
-        return of(topic!).pipe(delay(600));
-      })
-    );
+    // The backend returns { id: resultId }
+    return this.http.post<any>(`${this.urlApiTheos}support-forum/${id}/reply`, payload, this.GetAuthHeaderJson());
   }
 
-  updateForumTopicStatus(id: number, status: 'Aguardando resposta' | 'Em atendimento' | 'Finalizado'): Observable<any> {
-    return this.http.patch(`${this.urlApiTheos}support-forum/${id}/status`, { status }, this.GetAuthHeaderJson()).pipe(
-      catchError(() => {
-        const topic = this.mockTopics.find(t => t.id === id);
-        if (topic) topic.status = status;
-        return of({ success: true }).pipe(delay(400));
-      })
-    );
+  updateForumTopicStatus(id: number, status: string): Observable<any> {
+    return this.http.patch(`${this.urlApiTheos}support-forum/${id}/status`, { status }, this.GetAuthHeaderJson());
   }
 
   // --- USER ACCESS ---
