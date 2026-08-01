@@ -20,17 +20,18 @@ export interface TicketMessage {
 export interface ForumTopic {
   id: number;
   title: string;
+  subject?: string;
   authorName: string;
+  categoryName?: string;
   createdAt: string;
-  replyCount: number;
-  status: 'Aguardando resposta' | 'Em atendimento' | 'Finalizado';
+  repliesCount: number;
+  status: 'Open' | 'Resolved';
   messages: ForumMessage[];
 }
 
 export interface ForumMessage {
   id: number;
-  sender: 'User' | 'Support';
-  senderName: string;
+  authorName: string;
   content: string;
   createdAt: string;
 }
@@ -280,18 +281,6 @@ export const MOCK_TICKETS: SupportTicket[] = [
 
 export const MOCK_TOPICS: ForumTopic[] = [
   {
-    id: 2001,
-    title: 'Erro na reprodução do vídeo da Aula 3',
-    authorName: 'Carlos Mendes',
-    createdAt: new Date(Date.now() - 250000000).toISOString(),
-    replyCount: 2,
-    status: 'Em atendimento',
-    messages: [
-      {
-        id: 1,
-        sender: 'User',
-        senderName: 'Carlos Mendes',
-        content: 'O vídeo fica travando e não carrega depois do minuto 5.',
         createdAt: new Date(Date.now() - 250000000).toISOString()
       },
       {
