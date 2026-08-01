@@ -10,13 +10,20 @@
         <input type="text" class="form-control border-start-0 border-secondary border-opacity-25 ps-0 bg-white" 
                placeholder="Buscar chamados..." (keyup)="onSearch($event)">
       </div>
-      <select class="form-select form-select-sm border-secondary border-opacity-25 rounded-pill shadow-sm" (change)="onFilterStatus($event)">
+      <select class="form-select form-select-sm border-secondary border-opacity-25 rounded-pill shadow-sm mb-2" (change)="onFilterStatus($event)">
         <option value="">Todos os status</option>
-        <option value="0">Aberto</option>
-        <option value="1">Pendente</option>
-        <option value="2">Respondido</option>
-        <option value="3">Finalizado</option>
+        <option value="Open">Aberto</option>
+        <option value="InProgress">Em Atendimento</option>
+        <option value="WaitingOnCustomer">Aguardando Cliente</option>
+        <option value="Resolved">Resolvido</option>
+        <option value="Closed">Fechado</option>
       </select>
+      <div class="form-check ms-2 mt-1">
+        <input class="form-check-input" type="checkbox" id="noReplyCheck" (change)="onFilterNoReply($event)">
+        <label class="form-check-label text-muted small" for="noReplyCheck">
+          Sem resposta
+        </label>
+      </div>
     </div>
 
     <!-- Lista -->
@@ -49,9 +56,17 @@
           </div>
           <div class="fw-semibold text-dark text-truncate mb-1" style="font-size: 0.85rem;">{{ ticket.subject }}</div>
           <div class="d-flex justify-content-between align-items-center mt-2">
-            <span class="badge border border-opacity-25 rounded-pill" [ngClass]="getStatusBadgeClass(ticket.status)">
-              {{ getStatusName(ticket.status) }}
-            </span>
+            <div>
+              <span class="badge border border-opacity-25 rounded-pill me-1" [ngClass]="getStatusBadgeClass(ticket.status)">
+                {{ getStatusName(ticket.status) }}
+              </span>
+              <span class="badge border border-info border-opacity-25 bg-info bg-opacity-10 text-info rounded-pill" *ngIf="ticket.status === 'Open' && ticket.lastReplyAt">
+                Em Atendimento
+              </span>
+              <span class="badge border border-warning border-opacity-25 bg-warning bg-opacity-10 text-warning rounded-pill" *ngIf="ticket.status === 'Open' && !ticket.lastReplyAt">
+                Atendimento não iniciado
+              </span>
+            </div>
             <small class="text-muted" style="font-size: 0.75rem;">
               <i class="fas fa-tag me-1"></i>{{ ticket.categoryName }}
             </small>
@@ -84,7 +99,13 @@
               <span class="badge border border-opacity-25 rounded-pill" [ngClass]="getStatusBadgeClass(selectedTicket.status)">
                 {{ getStatusName(selectedTicket.status) }}
               </span>
-              <span class="text-muted small"><i class="fas fa-folder me-1"></i>{{ selectedTicket.categoryName }}</span>
+              <span class="badge border border-info border-opacity-25 bg-info bg-opacity-10 text-info rounded-pill" *ngIf="selectedTicket.status === 'Open' && selectedTicket.lastReplyAt">
+                Em Atendimento
+              </span>
+              <span class="badge border border-warning border-opacity-25 bg-warning bg-opacity-10 text-warning rounded-pill" *ngIf="selectedTicket.status === 'Open' && !selectedTicket.lastReplyAt">
+                Atendimento não iniciado
+              </span>
+              <span class="text-muted small ms-2"><i class="fas fa-folder me-1"></i>{{ selectedTicket.categoryName }}</span>
             </div>
           </div>
           <button class="btn btn-sm btn-light rounded-circle shadow-sm d-md-none" (click)="closeTicketView()">
@@ -149,8 +170,8 @@
             <!-- Ações de Status -->
             <div class="d-flex gap-2">
               <button type="button" class="btn btn-outline-success rounded-pill fw-semibold shadow-sm d-inline-flex align-items-center" 
-                      *ngIf="selectedTicket.status !== '3'"
-                      (click)="changeStatus('3')">
+                      *ngIf="selectedTicket.status !== 'Resolved' && selectedTicket.status !== 'Closed'"
+                      (click)="changeStatus('Resolved')">
                 <i class="fas fa-check-circle me-2"></i> Finalizar
               </button>
             </div>
