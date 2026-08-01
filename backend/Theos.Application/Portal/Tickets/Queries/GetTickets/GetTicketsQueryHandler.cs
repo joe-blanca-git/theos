@@ -45,21 +45,32 @@ public class GetTicketsQueryHandler : IRequestHandler<GetTicketsQuery, Paginated
 
         var totalCount = await query.CountAsync(cancellationToken);
 
-        var items = await query
+        var dbItems = await query
             .OrderByDescending(t => t.CreatedAt)
             .Skip((request.PageIndex - 1) * request.PageSize)
             .Take(request.PageSize)
-            .Select(t => new TicketSummaryDto
+            .Select(t => new
             {
-                Id = t.Id,
-                Subject = t.Subject,
-                Status = ((int)t.Status).ToString(),
-                Priority = t.Priority.ToString(),
+                t.Id,
+                t.Subject,
+                t.Status,
+                t.Priority,
                 CategoryName = t.Category.Description,
-                CreatedAt = t.CreatedAt,
-                LastReplyAt = t.LastReplyAt
+                t.CreatedAt,
+                t.LastReplyAt
             })
             .ToListAsync(cancellationToken);
+
+        var items = dbItems.Select(t => new TicketSummaryDto
+        {
+            Id = t.Id,
+            Subject = t.Subject,
+            Status = ((int)t.Status).ToString(),
+            Priority = t.Priority.ToString(),
+            CategoryName = t.CategoryName,
+            CreatedAt = t.CreatedAt,
+            LastReplyAt = t.LastReplyAt
+        }).ToList();
 
         return new PaginatedList<TicketSummaryDto>(items, totalCount, request.PageIndex, request.PageSize);
     }

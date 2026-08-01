@@ -48,23 +48,36 @@ public class GetAdminTicketsQueryHandler : IRequestHandler<GetAdminTicketsQuery,
 
         var totalCount = await query.CountAsync(cancellationToken);
 
-        var items = await query
+        var dbItems = await query
             .OrderByDescending(t => t.CreatedAt)
             .Skip((request.PageIndex - 1) * request.PageSize)
             .Take(request.PageSize)
-            .Select(t => new TicketAdminSummaryDto
+            .Select(t => new
             {
-                Id = t.Id,
-                Subject = t.Subject,
-                Status = ((int)t.Status).ToString(),
-                Priority = t.Priority.ToString(),
+                t.Id,
+                t.Subject,
+                t.Status,
+                t.Priority,
                 CategoryName = t.Category.Description,
-                StudentName = t.User.FullName ?? "Aluno",
-                StudentEmail = t.User.Email ?? "",
-                CreatedAt = t.CreatedAt,
-                LastReplyAt = t.LastReplyAt
+                StudentName = t.User.FullName,
+                StudentEmail = t.User.Email,
+                t.CreatedAt,
+                t.LastReplyAt
             })
             .ToListAsync(cancellationToken);
+
+        var items = dbItems.Select(t => new TicketAdminSummaryDto
+        {
+            Id = t.Id,
+            Subject = t.Subject,
+            Status = ((int)t.Status).ToString(),
+            Priority = t.Priority.ToString(),
+            CategoryName = t.CategoryName,
+            StudentName = t.StudentName ?? "Aluno",
+            StudentEmail = t.StudentEmail ?? "",
+            CreatedAt = t.CreatedAt,
+            LastReplyAt = t.LastReplyAt
+        }).ToList();
 
         return new PaginatedList<TicketAdminSummaryDto>(items, totalCount, request.PageIndex, request.PageSize);
     }

@@ -135,4 +135,10 @@ export class SupportTicketsComponent implements OnInit {
     if (parts.length === 1) return parts[0].substring(0, 2).toUpperCase();
     return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
   }
+
+  isSupportMessage(msg: any): boolean {
+    if (msg.origin === 'Backoffice') return true;
+    if (msg.senderName && msg.senderName !== this.selectedTicket?.studentName) return true;
+    return false;
+  }
 }

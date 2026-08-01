@@ -94,7 +94,7 @@ export class SupportHomeComponent implements OnInit {
     this.supportService.getTickets().subscribe({
       next: (res) => {
         this.totalTickets = res.totalCount;
-        this.pendingTickets = res.items.filter(t => t.status === '1').length; 
+        this.pendingTickets = res.items.filter(t => t.status !== '3').length; 
         
         // Update the tickets channel description if channels is already populated
         const ticketsChannel = this.channels.find(c => c.id === 'tickets');
