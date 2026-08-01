@@ -63,7 +63,7 @@ public class GetAdminTicketDetailsQueryHandler : IRequestHandler<GetAdminTicketD
             {
                 Id = msg.Id,
                 Origin = msg.Origin.ToString(),
-                SenderName = msg.User?.FullName ?? msg.User?.Name ?? "Usuário",
+                SenderName = msg.User?.FullName ?? "Usuário",
                 Content = msg.Content,
                 CreatedAt = msg.CreatedAt
             };

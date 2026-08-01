@@ -1,7 +1,8 @@
-﻿namespace Theos.Domain.Enums;
+namespace Theos.Domain.Enums;
 
 public enum TicketOrigin
 {
     Portal,
-    Email
+    Email,
+    Backoffice
 }
