@@ -23,6 +23,6 @@ public class GetForumCategoryByIdQueryHandler : IRequestHandler<GetForumCategory
         if (entity == null)
             return null;
 
-        return new ForumCategoryDto(entity.Id, entity.Name, entity.Description, entity.Active);
+        return new ForumCategoryDto(entity.Id, entity.Name, entity.Description, entity.Active, entity.Icon);
     }
 }

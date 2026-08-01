@@ -20,7 +20,7 @@ public class GetForumCategoriesQueryHandler : IRequestHandler<GetForumCategories
     {
         return await _context.ForumCategories
             .OrderBy(x => x.Name)
-            .Select(x => new ForumCategoryDto(x.Id, x.Name, x.Description, x.Active))
+            .Select(x => new ForumCategoryDto(x.Id, x.Name, x.Description, x.Active, x.Icon))
             .ToListAsync(cancellationToken);
     }
 }
