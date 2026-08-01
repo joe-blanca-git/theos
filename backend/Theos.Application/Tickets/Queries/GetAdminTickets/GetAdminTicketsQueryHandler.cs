@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Theos.Application.Common.Interfaces;
 using Theos.Application.Common.Models;
@@ -56,7 +56,7 @@ public class GetAdminTicketsQueryHandler : IRequestHandler<GetAdminTicketsQuery,
             {
                 Id = t.Id,
                 Subject = t.Subject,
-                Status = t.Status.ToString(),
+                Status = ((int)t.Status).ToString(),
                 Priority = t.Priority.ToString(),
                 CategoryName = t.Category.Description,
                 StudentName = t.User.FullName ?? "Aluno",

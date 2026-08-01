@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Theos.Application.Common.Interfaces;
 using Theos.Application.Common.Models;
@@ -53,7 +53,7 @@ public class GetTicketsQueryHandler : IRequestHandler<GetTicketsQuery, Paginated
             {
                 Id = t.Id,
                 Subject = t.Subject,
-                Status = t.Status.ToString(),
+                Status = ((int)t.Status).ToString(),
                 Priority = t.Priority.ToString(),
                 CategoryName = t.Category.Description,
                 CreatedAt = t.CreatedAt,

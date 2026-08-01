@@ -12,10 +12,10 @@
       </div>
       <select class="form-select form-select-sm border-secondary border-opacity-25 rounded-pill shadow-sm" (change)="onFilterStatus($event)">
         <option value="">Todos os status</option>
-        <option value="1">Aberto</option>
-        <option value="2">Pendente</option>
-        <option value="3">Respondido</option>
-        <option value="4">Finalizado</option>
+        <option value="0">Aberto</option>
+        <option value="1">Pendente</option>
+        <option value="2">Respondido</option>
+        <option value="3">Finalizado</option>
       </select>
     </div>
 
@@ -149,8 +149,8 @@
             <!-- Ações de Status -->
             <div class="d-flex gap-2">
               <button type="button" class="btn btn-outline-success rounded-pill fw-semibold shadow-sm d-inline-flex align-items-center" 
-                      *ngIf="selectedTicket.status !== '4'"
-                      (click)="changeStatus('4')">
+                      *ngIf="selectedTicket.status !== '3'"
+                      (click)="changeStatus('3')">
                 <i class="fas fa-check-circle me-2"></i> Finalizar
               </button>
             </div>

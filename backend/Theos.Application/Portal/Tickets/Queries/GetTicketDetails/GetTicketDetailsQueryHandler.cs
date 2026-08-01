@@ -41,7 +41,7 @@ public class GetTicketDetailsQueryHandler : IRequestHandler<GetTicketDetailsQuer
         {
             Id = ticket.Id,
             Subject = ticket.Subject,
-            Status = ticket.Status.ToString(),
+            Status = ((int)ticket.Status).ToString(),
             Priority = ticket.Priority.ToString(),
             CategoryName = ticket.Category.Description,
             CreatedAt = ticket.CreatedAt,

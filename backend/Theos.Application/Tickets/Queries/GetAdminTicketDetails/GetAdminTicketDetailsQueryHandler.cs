@@ -39,7 +39,7 @@ public class GetAdminTicketDetailsQueryHandler : IRequestHandler<GetAdminTicketD
         {
             Id = ticket.Id,
             Subject = ticket.Subject,
-            Status = ticket.Status.ToString(),
+            Status = ((int)ticket.Status).ToString(),
             Priority = ticket.Priority.ToString(),
             CategoryName = ticket.Category.Description,
             CategoryId = ticket.Category.Id,

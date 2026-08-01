@@ -110,20 +110,20 @@ export class SupportTicketsComponent implements OnInit {
 
   getStatusBadgeClass(status: string): string {
     switch (status) {
-      case '1': return 'bg-warning bg-opacity-10 text-warning border-warning';
-      case '2': return 'bg-info bg-opacity-10 text-info border-info';
-      case '3': return 'bg-primary bg-opacity-10 text-primary border-primary';
-      case '4': return 'bg-success bg-opacity-10 text-success border-success';
+      case '0': return 'bg-warning bg-opacity-10 text-warning border-warning';
+      case '1': return 'bg-info bg-opacity-10 text-info border-info';
+      case '2': return 'bg-primary bg-opacity-10 text-primary border-primary';
+      case '3': return 'bg-success bg-opacity-10 text-success border-success';
       default: return 'bg-secondary bg-opacity-10 text-secondary border-secondary';
     }
   }
   
   getStatusName(status: string): string {
     switch (status) {
-      case '1': return 'Aberto';
-      case '2': return 'Pendente';
-      case '3': return 'Respondido';
-      case '4': return 'Finalizado';
+      case '0': return 'Aberto';
+      case '1': return 'Pendente';
+      case '2': return 'Respondido';
+      case '3': return 'Finalizado';
       default: return 'Desconhecido';
     }
   }

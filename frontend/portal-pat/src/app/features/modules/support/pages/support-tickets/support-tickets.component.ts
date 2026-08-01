@@ -108,8 +108,9 @@ export class SupportTicketsComponent implements OnInit {
 
   getStatusBadgeClass(status: string): string {
     switch (status) {
-      case '1': return 'bg-warning text-dark'; // Pendente
-      case '2': return 'bg-info text-white'; // EmAndamento
+      case '0': return 'bg-warning text-dark'; // Aberto
+      case '1': return 'bg-info text-white'; // Pendente
+      case '2': return 'bg-primary text-white'; // EmAndamento
       case '3': return 'bg-success text-white'; // Fechado
       default: return 'bg-secondary text-white';
     }

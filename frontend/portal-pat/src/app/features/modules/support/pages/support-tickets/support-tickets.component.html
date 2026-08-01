@@ -50,7 +50,7 @@
           <div class="fw-semibold text-dark text-truncate mb-1" style="font-size: 0.85rem;">{{ ticket.categoryName }}</div>
           <div class="d-flex justify-content-between align-items-center mt-2">
             <span class="badge border border-opacity-25 rounded-pill" [ngClass]="getStatusBadgeClass(ticket.status)">
-              {{ ticket.status }}
+              {{ ticket.status === '0' ? 'Aberto' : (ticket.status === '1' ? 'Pendente' : (ticket.status === '2' ? 'Respondido' : 'Finalizado')) }}
             </span>
             <small class="text-muted" style="font-size: 0.75rem;">
               <i class="fas fa-tag me-1"></i>{{ ticket.categoryName }}
@@ -82,7 +82,7 @@
             <h5 class="fw-bold mb-1">{{ selectedTicket.subject }}</h5>
             <div class="d-flex align-items-center gap-2">
               <span class="badge border border-opacity-25 rounded-pill" [ngClass]="getStatusBadgeClass(selectedTicket.status)">
-                {{ selectedTicket.status }}
+                {{ selectedTicket.status === '0' ? 'Aberto' : (selectedTicket.status === '1' ? 'Pendente' : (selectedTicket.status === '2' ? 'Respondido' : 'Finalizado')) }}
               </span>
               <span class="text-muted small"><i class="fas fa-folder me-1"></i>{{ selectedTicket.categoryName }}</span>
             </div>
