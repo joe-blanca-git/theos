@@ -40,7 +40,7 @@
           <div class="text-muted text-truncate mb-2" style="font-size: 0.8rem;">{{ user.email }}</div>
           <div class="d-flex align-items-center">
             <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-25 rounded-pill" style="font-size: 0.7rem;">
-              {{ user.courses.length }} curso(s)
+              {{ user.enrolledCoursesCount }} curso(s)
             </span>
           </div>
         </button>
@@ -66,14 +66,13 @@
       <div class="p-4 border-bottom bg-white shadow-sm z-1">
         <div class="d-flex align-items-center">
           <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center me-3 shadow-sm flex-shrink-0 fw-bold fs-5" style="width: 60px; height: 60px;">
-            {{ selectedUser.name.charAt(0) }}
+            {{ selectedUser.name.charAt(0) | uppercase }}
           </div>
           <div>
             <h4 class="fw-bold mb-1">{{ selectedUser.name }}</h4>
             <div class="text-muted">
               <i class="fas fa-envelope me-1"></i> {{ selectedUser.email }} &nbsp;&bull;&nbsp; 
-              <i class="fas fa-calendar-alt me-1"></i> Cadastro: {{ selectedUser.createdAt | date:'shortDate' }} &nbsp;&bull;&nbsp; 
-              <i class="fas fa-graduation-cap me-1"></i> {{ selectedUser.courses.length }} cursos adquiridos
+              <i class="fas fa-graduation-cap me-1"></i> {{ selectedUser.enrolledCoursesCount }} cursos liberados
             </div>
           </div>
         </div>
@@ -81,31 +80,42 @@
 
       <!-- Tabela de Cursos (Padrão Ouro) -->
       <div class="flex-grow-1 p-4 overflow-auto custom-scrollbar">
-        <div class="table-responsive bg-white rounded-3 shadow-sm border border-secondary border-opacity-10">
+        <!-- Loading state for courses -->
+        <div *ngIf="isLoadingCourses" class="text-center py-5">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Carregando cursos...</span>
+          </div>
+        </div>
+
+        <!-- Empty state -->
+        <div *ngIf="!isLoadingCourses && userCourses.length === 0" class="text-center py-5 text-muted bg-white rounded-3 border border-secondary border-opacity-10 shadow-sm">
+          <i class="fas fa-box-open fs-3 mb-2 text-secondary opacity-50"></i>
+          <p class="mb-0">Nenhum curso encontrado no sistema.</p>
+        </div>
+
+        <div *ngIf="!isLoadingCourses && userCourses.length > 0" class="table-responsive bg-white rounded-3 shadow-sm border border-secondary border-opacity-10">
           <table class="table table-hover align-middle mb-0">
             <thead class="table-light">
               <tr>
                 <th scope="col" class="ps-4">Curso</th>
-                <th scope="col">Data</th>
                 <th scope="col">Pagamento</th>
                 <th scope="col">Acesso</th>
                 <th scope="col" class="text-end pe-4">Ações</th>
               </tr>
             </thead>
             <tbody>
-              <tr *ngIf="selectedUser.courses.length === 0">
-                <td colspan="5" class="text-center py-5 text-muted">Este usuário não possui cursos.</td>
-              </tr>
-              <tr *ngFor="let course of selectedUser.courses">
+              <tr *ngFor="let course of userCourses">
                 <td class="ps-4">
                   <div class="fw-semibold text-dark">{{ course.name }}</div>
-                  <small class="text-muted">{{ course.price | currency:'BRL' }} &bull; {{ course.paymentMethod }}</small>
                 </td>
-                <td class="text-muted">{{ course.purchaseDate | date:'shortDate' }}</td>
                 <td>
-                  <span class="badge border border-opacity-25 rounded-pill" [ngClass]="getPaymentBadgeClass(course.paymentStatus)">
-                    {{ course.paymentStatus }}
-                  </span>
+                  <div *ngIf="course.purchaseValue !== undefined && course.purchaseValue !== null">
+                    <span class="d-block fw-semibold">{{ course.purchaseValue | currency:'BRL' }}</span>
+                    <small class="text-muted">{{ course.paymentMethod }}</small>
+                  </div>
+                  <div *ngIf="course.purchaseValue === undefined || course.purchaseValue === null" class="text-muted fst-italic" style="font-size: 0.85rem;">
+                    Sem compra vinculada
+                  </div>
                 </td>
                 <td>
                   <span class="badge border border-opacity-25 rounded-pill" [ngClass]="getAccessBadgeClass(course.accessStatus)">
@@ -114,11 +124,15 @@
                   </span>
                 </td>
                 <td class="text-end pe-4">
-                  <!-- Botão de Liberação Manual (Apenas se pendente/cancelado E bloqueado) -->
-                  <button class="btn btn-sm btn-outline-primary rounded-pill fw-semibold shadow-sm px-3"
-                          *ngIf="course.accessStatus === 'Bloqueado' && (course.paymentStatus === 'Pendente' || course.paymentStatus === 'Cancelado')"
-                          (click)="openGrantModal(course)">
+                  <button *ngIf="course.accessStatus === 'Bloqueado'" 
+                          class="btn btn-sm btn-outline-primary rounded-pill fw-semibold shadow-sm px-3" 
+                          (click)="openConfirmModal(course, 'grant')">
                     Liberar Curso
+                  </button>
+                  <button *ngIf="course.accessStatus === 'Liberado'" 
+                          class="btn btn-sm btn-outline-danger rounded-pill fw-semibold shadow-sm px-3" 
+                          (click)="openConfirmModal(course, 'revoke')">
+                    Remover Acesso
                   </button>
                 </td>
               </tr>
@@ -131,33 +145,44 @@
   </div>
 </div>
 
-<!-- Modal de Confirmação de Liberação -->
-<div class="custom-modal-backdrop animated-fade-in d-flex align-items-center justify-content-center" *ngIf="showConfirmModal" (click)="closeGrantModal()">
-  <div class="card bg-white border-0 shadow-lg rounded-4 overflow-hidden" 
-       style="width: 100%; max-width: 450px;" 
-       (click)="$event.stopPropagation()">
-    
-    <div class="card-body p-4 text-center">
-      <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 70px; height: 70px;">
-        <i class="fas fa-key fs-2"></i>
-      </div>
-      <h4 class="fw-bold mb-3">Liberação Manual</h4>
-      <p class="text-muted mb-1">Você está prestes a liberar manualmente o acesso ao curso:</p>
-      <p class="fw-semibold text-dark mb-4">{{ courseToGrant?.name }}</p>
-      
-      <div class="alert alert-warning border-warning border-opacity-25 text-start small mb-4" role="alert">
-        <i class="fas fa-exclamation-triangle me-2"></i> <strong>Atenção:</strong> O status do pagamento continuará como <strong>{{ courseToGrant?.paymentStatus }}</strong>, apenas o acesso ao conteúdo será liberado.
-      </div>
-      
-      <div class="d-flex gap-2 w-100">
-        <button type="button" class="btn btn-light border flex-grow-1 rounded-pill fw-semibold" (click)="closeGrantModal()" [disabled]="isGranting">
-          Cancelar
-        </button>
-        <button type="button" class="btn btn-primary flex-grow-1 rounded-pill fw-semibold shadow-sm d-flex justify-content-center align-items-center" (click)="confirmGrantAccess()" [disabled]="isGranting">
-          <span class="spinner-border spinner-border-sm me-2" *ngIf="isGranting"></span>
-          {{ isGranting ? 'Liberando...' : 'Confirmar Liberação' }}
-        </button>
+<!-- Confirmation Modal -->
+  <div class="modal fade" [class.show]="showConfirmModal" [style.display]="showConfirmModal ? 'block' : 'none'" tabindex="-1" style="background: rgba(0,0,0,0.4); backdrop-filter: blur(2px);">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+        <div class="modal-header border-bottom-0 pb-0" [ngClass]="actionType === 'grant' ? 'bg-primary text-white' : 'bg-danger text-white'">
+          <h5 class="modal-title fw-semibold">
+            <i class="fas me-2" [ngClass]="actionType === 'grant' ? 'fa-unlock' : 'fa-lock'"></i> 
+            {{ actionType === 'grant' ? 'Confirmar Liberação' : 'Remover Acesso' }}
+          </h5>
+          <button type="button" class="btn-close btn-close-white" (click)="closeConfirmModal()" aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-4 text-center">
+          <div class="mb-4">
+            <div class="d-inline-flex align-items-center justify-content-center rounded-circle mb-3" 
+                 [ngClass]="actionType === 'grant' ? 'bg-primary bg-opacity-10 text-primary' : 'bg-danger bg-opacity-10 text-danger'" 
+                 style="width: 80px; height: 80px; font-size: 2rem;">
+              <i class="fas" [ngClass]="actionType === 'grant' ? 'fa-shield-check' : 'fa-shield-xmark'"></i>
+            </div>
+            <h5 class="fw-semibold text-dark mb-1">{{ courseToProcess?.name }}</h5>
+            <p class="text-muted mb-0">Para o usuário <strong>{{ selectedUser?.name }}</strong></p>
+          </div>
+          
+          <p class="mb-0 text-dark">
+            {{ actionType === 'grant' ? 'Isso criará uma matrícula manual para este aluno sem gerar cobranças financeiras. Deseja prosseguir?' : 'Isso revogará o acesso deste aluno ao curso. Deseja prosseguir?' }}
+          </p>
+        </div>
+        <div class="modal-footer border-top-0 bg-light d-flex justify-content-between p-3">
+          <button type="button" class="btn btn-light fw-medium px-4 rounded-pill" (click)="closeConfirmModal()" [disabled]="isProcessing">
+            Cancelar
+          </button>
+          <button type="button" class="btn fw-medium px-4 rounded-pill d-flex align-items-center" 
+                  [ngClass]="actionType === 'grant' ? 'btn-primary' : 'btn-danger'" 
+                  (click)="confirmAction()" 
+                  [disabled]="isProcessing">
+            <span *ngIf="isProcessing" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+            {{ actionType === 'grant' ? 'Sim, Liberar Curso' : 'Sim, Remover Acesso' }}
+          </button>
+        </div>
       </div>
     </div>
   </div>
-</div>

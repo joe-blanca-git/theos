@@ -16,7 +16,9 @@ export class SupportForumComponent implements OnInit {
   private fb = inject(FormBuilder);
   private toastService = inject(ToastService);
 
+  allTopics: ForumTopic[] = [];
   topics: ForumTopic[] = [];
+  categories: any[] = [];
   isLoading = true;
 
   showTopicModal = false;
@@ -24,18 +26,30 @@ export class SupportForumComponent implements OnInit {
   isReplying = false;
   replyForm!: FormGroup;
 
+  searchQuery = '';
+  categoryIdFilter: number | null = null;
+
   ngOnInit(): void {
     this.replyForm = this.fb.group({
       content: ['', Validators.required]
     });
+    this.loadCategories();
     this.loadTopics();
+  }
+
+  loadCategories(): void {
+    this.supportService.getForumCategories().subscribe({
+      next: (data) => this.categories = data,
+      error: () => console.error('Failed to load forum categories')
+    });
   }
 
   loadTopics(): void {
     this.isLoading = true;
-    this.supportService.getForumTopics().subscribe({
+    this.supportService.getForumTopics(this.categoryIdFilter || undefined).subscribe({
       next: (data) => {
-        this.topics = data;
+        this.allTopics = data;
+        this.applyFilters();
         this.isLoading = false;
       },
       error: () => {
@@ -43,6 +57,34 @@ export class SupportForumComponent implements OnInit {
         this.isLoading = false;
       }
     });
+  }
+
+  onSearch(event: any): void {
+    this.searchQuery = event.target.value.toLowerCase().trim();
+    this.applyFilters();
+  }
+
+  applyFilters(): void {
+    if (!this.searchQuery) {
+      this.topics = [...this.allTopics];
+      return;
+    }
+    
+    this.topics = this.allTopics.filter(t => {
+      const searchTerms = this.searchQuery;
+      return (
+        (t.title && t.title.toLowerCase().includes(searchTerms)) ||
+        (t.authorName && t.authorName.toLowerCase().includes(searchTerms)) ||
+        (t.status && this.getStatusName(t.status).toLowerCase().includes(searchTerms)) ||
+        (t.createdAt && new Date(t.createdAt).toLocaleDateString().includes(searchTerms))
+      );
+    });
+  }
+
+  onFilterCategory(event: any): void {
+    const val = event.target.value;
+    this.categoryIdFilter = val ? parseInt(val) : null;
+    this.loadTopics();
   }
 
   openTopicModal(topic: any): void {
@@ -102,13 +144,26 @@ export class SupportForumComponent implements OnInit {
       next: () => {
         this.toastService.success(`Status alterado com sucesso.`);
         this.selectedTopic!.status = newStatus;
-        const index = this.topics.findIndex(t => t.id === this.selectedTopic!.id);
+        
+        // Atualiza na lista principal e na lista de exibição
+        let index = this.topics.findIndex(t => t.id === this.selectedTopic!.id);
         if (index > -1) this.topics[index].status = newStatus;
+        
+        let allIndex = this.allTopics.findIndex(t => t.id === this.selectedTopic!.id);
+        if (allIndex > -1) this.allTopics[allIndex].status = newStatus;
       },
       error: () => {
         this.toastService.error('Não foi possível alterar o status do tópico.');
       }
     });
+  }
+
+  getStatusName(status: string): string {
+    switch (status) {
+      case 'Open': return 'Aberto';
+      case 'Resolved': return 'Resolvido';
+      default: return 'Desconhecido';
+    }
   }
 
   getStatusBadgeClass(status: string): string {

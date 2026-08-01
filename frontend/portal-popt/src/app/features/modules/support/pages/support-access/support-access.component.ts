@@ -22,8 +22,9 @@ export class SupportAccessComponent implements OnInit {
   searchQuery = '';
   
   showConfirmModal = false;
-  courseToGrant: PurchasedCourse | null = null;
-  isGranting = false;
+  courseToProcess: PurchasedCourse | null = null;
+  actionType: 'grant' | 'revoke' = 'grant';
+  isProcessing = false;
 
   ngOnInit(): void {
     this.loadUsers();
@@ -58,19 +59,29 @@ export class SupportAccessComponent implements OnInit {
       .sort((a, b) => a.name.localeCompare(b.name));
   }
 
+  userCourses: PurchasedCourse[] = [];
+  isLoadingCourses = false;
+
   selectUser(user: UserAccess): void {
     this.selectedUser = user;
+    this.loadUserCourses(user.id);
   }
 
-  getPaymentBadgeClass(status: string): string {
-    switch (status) {
-      case 'Pago': return 'bg-success bg-opacity-10 text-success border-success';
-      case 'Pendente': return 'bg-warning bg-opacity-10 text-warning border-warning';
-      case 'Cancelado': return 'bg-danger bg-opacity-10 text-danger border-danger';
-      case 'Reembolsado': return 'bg-secondary bg-opacity-10 text-secondary border-secondary';
-      default: return 'bg-light text-secondary border-secondary';
-    }
+  loadUserCourses(userId: number): void {
+    this.isLoadingCourses = true;
+    this.supportService.getUserCourses(userId).subscribe({
+      next: (courses) => {
+        this.userCourses = courses;
+        this.isLoadingCourses = false;
+      },
+      error: () => {
+        this.toastService.error('Erro ao carregar cursos do usuário.');
+        this.isLoadingCourses = false;
+      }
+    });
   }
+
+  // (Removido o método getPaymentBadgeClass se não for necessário na listagem nova, ou podemos manter para uso futuro)
 
   getAccessBadgeClass(status: string): string {
     return status === 'Liberado' 
@@ -78,33 +89,52 @@ export class SupportAccessComponent implements OnInit {
       : 'bg-danger bg-opacity-10 text-danger border-danger';
   }
 
-  openGrantModal(course: PurchasedCourse): void {
-    this.courseToGrant = course;
+  openConfirmModal(course: PurchasedCourse, action: 'grant' | 'revoke'): void {
+    this.courseToProcess = course;
+    this.actionType = action;
     this.showConfirmModal = true;
   }
 
-  closeGrantModal(): void {
+  closeConfirmModal(): void {
     this.showConfirmModal = false;
-    this.courseToGrant = null;
+    this.courseToProcess = null;
   }
 
-  confirmGrantAccess(): void {
-    if (!this.selectedUser || !this.courseToGrant) return;
+  confirmAction(): void {
+    if (!this.selectedUser || !this.courseToProcess) return;
 
-    this.isGranting = true;
-    this.supportService.grantCourseAccess(this.selectedUser.id, this.courseToGrant.id).subscribe({
-      next: (updatedUser) => {
-        this.toastService.success('Curso liberado com sucesso!');
-        // Update local reference to immediately reflect changes
-        this.courseToGrant!.accessStatus = 'Liberado';
-        this.isGranting = false;
-        this.closeGrantModal();
-      },
-      error: () => {
-        this.toastService.error('Ocorreu um erro ao tentar liberar o curso.');
-        this.isGranting = false;
-        this.closeGrantModal();
-      }
-    });
+    this.isProcessing = true;
+    
+    if (this.actionType === 'grant') {
+      this.supportService.grantCourseAccess(this.selectedUser.id, this.courseToProcess.id).subscribe({
+        next: () => {
+          this.toastService.success('Curso liberado com sucesso!');
+          this.courseToProcess!.accessStatus = 'Liberado';
+          this.selectedUser!.enrolledCoursesCount++;
+          this.isProcessing = false;
+          this.closeConfirmModal();
+        },
+        error: () => {
+          this.toastService.error('Erro ao tentar liberar o curso.');
+          this.isProcessing = false;
+          this.closeConfirmModal();
+        }
+      });
+    } else {
+      this.supportService.revokeCourseAccess(this.selectedUser.id, this.courseToProcess.id).subscribe({
+        next: () => {
+          this.toastService.success('Acesso removido com sucesso!');
+          this.courseToProcess!.accessStatus = 'Bloqueado';
+          if (this.selectedUser!.enrolledCoursesCount > 0) this.selectedUser!.enrolledCoursesCount--;
+          this.isProcessing = false;
+          this.closeConfirmModal();
+        },
+        error: () => {
+          this.toastService.error('Erro ao tentar remover o acesso.');
+          this.isProcessing = false;
+          this.closeConfirmModal();
+        }
+      });
+    }
   }
 }

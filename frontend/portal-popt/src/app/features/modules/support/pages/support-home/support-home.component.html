@@ -16,9 +16,9 @@
     </div>
     
     <div class="card-body p-0 bg-light bg-opacity-50 flex-grow-1 d-flex flex-column" style="min-height: 0;">
-      <app-support-tickets *ngIf="activeTab === 'tickets'" class="flex-grow-1 d-flex flex-column overflow-hidden" style="min-height: 0;"></app-support-tickets>
-      <app-support-forum *ngIf="activeTab === 'forum'" class="flex-grow-1 d-flex flex-column overflow-hidden" style="min-height: 0;"></app-support-forum>
-      <app-support-access *ngIf="activeTab === 'access'" class="flex-grow-1 d-flex flex-column overflow-hidden" style="min-height: 0;"></app-support-access>
+      <app-support-tickets [class.d-none]="activeTab !== 'tickets'" class="flex-grow-1 d-flex flex-column overflow-hidden" style="min-height: 0;"></app-support-tickets>
+      <app-support-forum [class.d-none]="activeTab !== 'forum'" class="flex-grow-1 d-flex flex-column overflow-hidden" style="min-height: 0;"></app-support-forum>
+      <app-support-access [class.d-none]="activeTab !== 'access'" class="flex-grow-1 d-flex flex-column overflow-hidden" style="min-height: 0;"></app-support-access>
     </div>
   </div>
 </div>

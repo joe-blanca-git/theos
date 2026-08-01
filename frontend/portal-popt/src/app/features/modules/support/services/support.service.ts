@@ -3,15 +3,30 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError, delay } from 'rxjs/operators';
 import { BaseService } from '../../../../core/services/base.service';
-import { SupportTicket, ForumTopic, UserAccess, MOCK_TICKETS, MOCK_TOPICS, MOCK_USERS_ACCESS } from './support.mocks';
+import { SupportTicket, ForumTopic, MOCK_TICKETS, MOCK_TOPICS } from './support.mocks';
 
-export type { ForumTopic, ForumMessage, UserAccess, PurchasedCourse } from './support.mocks';
+export type { ForumTopic, ForumMessage } from './support.mocks';
 
 export interface IPaginatedList<T> {
   items: T[];
   totalCount: number;
   pageIndex: number;
   totalPages: number;
+}
+
+export interface UserAccess {
+  id: number;
+  name: string;
+  email: string;
+  enrolledCoursesCount: number;
+}
+
+export interface PurchasedCourse {
+  id: number;
+  name: string;
+  accessStatus: string;
+  purchaseValue?: number;
+  paymentMethod?: string;
 }
 
 export interface IAdminTicket {
@@ -46,7 +61,6 @@ export class SupportService extends BaseService {
   // Mock Data reference for stateful updates
   private mockTickets = MOCK_TICKETS;
   private mockTopics = MOCK_TOPICS;
-  private mockUsersAccess = MOCK_USERS_ACCESS;
 
   constructor(protected override injector: Injector, private http: HttpClient) {
     super(injector);
@@ -82,8 +96,19 @@ export class SupportService extends BaseService {
 
   // --- FORUM TOPICS ---
 
-  getForumTopics(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.urlApiTheos}support-forum`, this.GetAuthHeaderJson());
+  getForumTopics(categoryId?: number, searchTitle?: string): Observable<any[]> {
+    let params = new HttpParams();
+    if (categoryId) params = params.set('categoryId', categoryId.toString());
+    if (searchTitle) params = params.set('searchTitle', searchTitle);
+    
+    return this.http.get<any[]>(`${this.urlApiTheos}support-forum`, {
+      ...this.GetAuthHeaderJson(),
+      params
+    });
+  }
+
+  getForumCategories(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.urlApiTheos}ForumCategories`, this.GetAuthHeaderJson());
   }
 
   getForumTopicById(id: number): Observable<any> {
@@ -103,23 +128,18 @@ export class SupportService extends BaseService {
   // --- USER ACCESS ---
 
   getUsersAccess(): Observable<UserAccess[]> {
-    return this.http.get<UserAccess[]>(`${this.urlApiTheos}support-access`, this.GetAuthHeaderJson()).pipe(
-      catchError(() => of(this.mockUsersAccess).pipe(delay(600)))
-    );
+    return this.http.get<UserAccess[]>(`${this.urlApiTheos}support-access`, this.GetAuthHeaderJson());
   }
 
-  grantCourseAccess(userId: number, courseId: number): Observable<UserAccess> {
-    return this.http.post<UserAccess>(`${this.urlApiTheos}support-access/${userId}/grant/${courseId}`, {}, this.GetAuthHeaderJson()).pipe(
-      catchError(() => {
-        const user = this.mockUsersAccess.find(u => u.id === userId);
-        if (user) {
-          const course = user.courses.find(c => c.id === courseId);
-          if (course) {
-            course.accessStatus = 'Liberado';
-          }
-        }
-        return of(user!).pipe(delay(600));
-      })
-    );
+  getUserCourses(userId: number): Observable<PurchasedCourse[]> {
+    return this.http.get<PurchasedCourse[]>(`${this.urlApiTheos}support-access/${userId}/courses`, this.GetAuthHeaderJson());
+  }
+
+  grantCourseAccess(userId: number, courseId: number): Observable<any> {
+    return this.http.post(`${this.urlApiTheos}support-access/${userId}/grant/${courseId}`, {}, this.GetAuthHeaderJson());
+  }
+
+  revokeCourseAccess(userId: number, courseId: number): Observable<any> {
+    return this.http.post(`${this.urlApiTheos}support-access/${userId}/revoke/${courseId}`, {}, this.GetAuthHeaderJson());
   }
 }
