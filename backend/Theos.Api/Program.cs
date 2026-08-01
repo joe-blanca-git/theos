@@ -72,16 +72,6 @@ builder.Services.AddSwaggerSetup();
 
 var app = builder.Build();
 
-// Apply pending migrations automatically on startup
-using (var scope = app.Services.CreateScope())
-{
-    var dbContext = scope.ServiceProvider.GetRequiredService<Theos.Application.Common.Interfaces.ITheosDbContext>() as Microsoft.EntityFrameworkCore.DbContext;
-    if (dbContext != null)
-    {
-        dbContext.Database.Migrate();
-    }
-}
-
 // Removida a verificação IsDevelopment() para garantir que a correção do proxy 
 // seja aplicada mesmo rodando como Development no Docker.
 app.UseSwagger(c =>
