@@ -10,13 +10,18 @@
         <input type="text" class="form-control border-start-0 border-secondary border-opacity-25 ps-0 bg-white" 
                placeholder="Buscar chamados..." (keyup)="onSearch($event)">
       </div>
-      <select class="form-select form-select-sm border-secondary border-opacity-25 rounded-pill shadow-sm" (change)="onFilterStatus($event)">
-        <option value="">Todos os status</option>
-        <option value="Pendente">Pendente</option>
-        <option value="Respondido">Respondido</option>
-        <option value="Finalizado">Finalizado</option>
-        <option value="Cancelado">Cancelado</option>
-      </select>
+      <div class="d-flex gap-2">
+        <select class="form-select form-select-sm border-secondary border-opacity-25 rounded-pill shadow-sm" (change)="onFilterStatus($event)">
+          <option value="">Todos os status</option>
+          <option value="Pendente">Pendente</option>
+          <option value="Respondido">Respondido</option>
+          <option value="Finalizado">Finalizado</option>
+          <option value="Cancelado">Cancelado</option>
+        </select>
+        <button class="btn btn-primary btn-sm rounded-pill px-3 shadow-sm text-nowrap fw-bold" (click)="openNewTicketModal()">
+          <i class="fas fa-plus"></i> Novo
+        </button>
+      </div>
     </div>
 
     <!-- Lista -->
@@ -161,5 +166,42 @@
       </div>
     </ng-container>
 
+  </div>
+</div>
+
+<!-- Modal Novo Chamado -->
+<div class="modal fade show" style="display: block; background: rgba(0,0,0,0.5);" *ngIf="showNewTicketModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content rounded-4 border-0 shadow-lg">
+      <div class="modal-header border-bottom border-secondary border-opacity-10">
+        <h5 class="modal-title fw-bold">Novo Chamado</h5>
+        <button type="button" class="btn-close" (click)="closeNewTicketModal()"></button>
+      </div>
+      <div class="modal-body p-4">
+        <form (submit)="submitNewTicket($event)">
+          <div class="mb-3">
+            <label class="form-label fw-semibold text-muted small">Categoria *</label>
+            <select class="form-select rounded-3 bg-light border-0 shadow-none py-2" [(ngModel)]="contactCategoryId" name="categoryId" required style="font-size: 0.85rem;">
+              <option *ngFor="let cat of ticketCategories" [value]="cat.id">{{ cat.description }}</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold text-muted small">Assunto *</label>
+            <input type="text" class="form-control rounded-3 bg-light border-0 shadow-none py-2" placeholder="Descreva brevemente..." [(ngModel)]="contactSubject" name="subject" required style="font-size: 0.85rem;">
+          </div>
+          <div class="mb-4">
+            <label class="form-label fw-semibold text-muted small">Mensagem *</label>
+            <textarea class="form-control rounded-3 bg-light border-0 shadow-none py-2" rows="4" placeholder="Detalhes do problema..." [(ngModel)]="contactMessage" name="message" required style="font-size: 0.85rem; resize: none;"></textarea>
+          </div>
+          <div class="d-flex justify-content-end gap-2">
+            <button type="button" class="btn btn-light rounded-pill px-4 fw-semibold" (click)="closeNewTicketModal()" [disabled]="isCreatingTicket">Cancelar</button>
+            <button type="submit" class="btn btn-primary rounded-pill px-4 fw-semibold d-flex align-items-center" [disabled]="isCreatingTicket || !contactSubject || !contactMessage">
+              <span class="spinner-border spinner-border-sm me-2" *ngIf="isCreatingTicket"></span>
+              {{ isCreatingTicket ? 'Enviando...' : 'Abrir Chamado' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
 </div>

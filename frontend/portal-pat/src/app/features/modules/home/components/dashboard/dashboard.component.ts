@@ -66,7 +66,7 @@ export class DashboardComponent implements OnChanges {
 
   buildInfo() {
     this.info = {
-      myCourses: this.coursesSummary?.totalCourses || 0,
+      myCourses: (this.coursesSummary?.coursesInProgress || 0) + (this.coursesSummary?.completedCourses || 0),
       progressMyCourses: this.coursesSummary?.overallProgress || 0,
       myForums: 0,
       myCertificates: 0,

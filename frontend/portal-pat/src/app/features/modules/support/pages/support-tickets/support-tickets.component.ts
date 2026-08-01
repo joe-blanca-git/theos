@@ -1,13 +1,13 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormsModule } from '@angular/forms';
 import { SupportService, ISupportTicket, ISupportTicketDetails } from '../../../../../core/services/support.service';
 import { ToastService } from '../../../../../core/services/toast.service';
 
 @Component({
   selector: 'app-support-tickets',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule],
   templateUrl: './support-tickets.component.html',
   styleUrl: './support-tickets.component.scss'
 })
@@ -25,6 +25,14 @@ export class SupportTicketsComponent implements OnInit {
   replyForm!: FormGroup;
   searchQuery = '';
   statusFilter = '';
+
+  // Novo Chamado Modal
+  showNewTicketModal = false;
+  ticketCategories: any[] = [];
+  contactCategoryId: number | null = null;
+  contactSubject = '';
+  contactMessage = '';
+  isCreatingTicket = false;
 
   ngOnInit(): void {
     this.replyForm = this.fb.group({
@@ -118,5 +126,48 @@ export class SupportTicketsComponent implements OnInit {
 
   isSupportMessage(msg: any): boolean {
     return msg.origin !== 'Portal';
+  }
+
+  // ─── Novo Chamado Modal ──────────────────────────────────────────────────
+  openNewTicketModal(): void {
+    if (this.ticketCategories.length === 0) {
+      this.supportService.getCategories().subscribe(cats => {
+        this.ticketCategories = cats;
+        if (cats.length > 0) this.contactCategoryId = cats[0].id;
+      });
+    }
+    this.showNewTicketModal = true;
+  }
+
+  closeNewTicketModal(): void {
+    this.showNewTicketModal = false;
+    this.contactSubject = '';
+    this.contactMessage = '';
+  }
+
+  submitNewTicket(event: Event): void {
+    event.preventDefault();
+    if (!this.contactSubject.trim() || !this.contactMessage.trim() || !this.contactCategoryId) {
+      this.toastService.error('Preencha os campos obrigatórios.');
+      return;
+    }
+    
+    this.isCreatingTicket = true;
+    this.supportService.createTicket({
+      categoryId: this.contactCategoryId,
+      subject: this.contactSubject,
+      content: this.contactMessage
+    }).subscribe({
+      next: () => {
+        this.toastService.success('Chamado aberto com sucesso!');
+        this.closeNewTicketModal();
+        this.isCreatingTicket = false;
+        this.loadTickets(); // recarregar a lista
+      },
+      error: () => {
+        this.toastService.error('Erro ao abrir chamado.');
+        this.isCreatingTicket = false;
+      }
+    });
   }
 }
