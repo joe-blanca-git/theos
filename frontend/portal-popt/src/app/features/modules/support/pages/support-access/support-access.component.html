@@ -119,21 +119,22 @@
                 </td>
                 <td>
                   <span class="badge border border-opacity-25 rounded-pill" [ngClass]="getAccessBadgeClass(course.accessStatus)">
-                    <i class="fas me-1" [ngClass]="course.accessStatus === 'Liberado' ? 'fa-unlock' : 'fa-lock'"></i>
+                    <i class="fas me-1" [ngClass]="course.isFree ? 'fa-gift' : (course.accessStatus === 'Liberado' ? 'fa-unlock' : 'fa-lock')"></i>
                     {{ course.accessStatus }}
                   </span>
                 </td>
                 <td class="text-end pe-4">
-                  <button *ngIf="course.accessStatus === 'Bloqueado'" 
+                  <button *ngIf="!course.isFree && course.accessStatus === 'Bloqueado'" 
                           class="btn btn-sm btn-outline-primary rounded-pill fw-semibold shadow-sm px-3" 
                           (click)="openConfirmModal(course, 'grant')">
                     Liberar Curso
                   </button>
-                  <button *ngIf="course.accessStatus === 'Liberado'" 
+                  <button *ngIf="!course.isFree && course.accessStatus === 'Liberado'" 
                           class="btn btn-sm btn-outline-danger rounded-pill fw-semibold shadow-sm px-3" 
                           (click)="openConfirmModal(course, 'revoke')">
                     Remover Acesso
                   </button>
+                  <span *ngIf="course.isFree" class="text-muted small fst-italic">Acesso Livre</span>
                 </td>
               </tr>
             </tbody>

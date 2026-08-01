@@ -117,8 +117,6 @@ export class SupportTicketsComponent implements OnInit {
   }
 
   isSupportMessage(msg: any): boolean {
-    if (msg.origin === 'Backoffice') return true;
-    if (msg.senderName && msg.senderName !== this.selectedTicket?.studentName) return true;
-    return false;
+    return msg.origin !== 'Portal';
   }
 }

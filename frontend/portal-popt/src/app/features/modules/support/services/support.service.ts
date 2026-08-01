@@ -27,6 +27,7 @@ export interface PurchasedCourse {
   accessStatus: string;
   purchaseValue?: number;
   paymentMethod?: string;
+  isFree?: boolean;
 }
 
 export interface IAdminTicket {

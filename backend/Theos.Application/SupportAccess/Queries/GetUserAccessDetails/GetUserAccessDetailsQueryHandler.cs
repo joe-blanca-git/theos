@@ -37,13 +37,16 @@ public class GetUserAccessDetailsQueryHandler : IRequestHandler<GetUserAccessDet
             var enrollment = enrollments.FirstOrDefault(e => e.CourseId == course.Id && e.Active);
             var purchase = purchases.FirstOrDefault(p => p.CourseId == course.Id);
 
+            bool isFree = course.PriceSingle == 0;
+            
             result.Add(new SupportCourseAccessDto
             {
                 Id = course.Id,
                 Name = course.Name,
-                AccessStatus = enrollment != null ? "Liberado" : "Bloqueado",
+                AccessStatus = isFree ? "Gratuito" : (enrollment != null ? "Liberado" : "Bloqueado"),
                 PurchaseValue = purchase?.Amount,
-                PaymentMethod = purchase?.PaymentMethod
+                PaymentMethod = purchase?.PaymentMethod,
+                IsFree = isFree
             });
         }
 

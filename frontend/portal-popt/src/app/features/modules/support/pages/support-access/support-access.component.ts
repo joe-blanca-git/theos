@@ -84,6 +84,7 @@ export class SupportAccessComponent implements OnInit {
   // (Removido o método getPaymentBadgeClass se não for necessário na listagem nova, ou podemos manter para uso futuro)
 
   getAccessBadgeClass(status: string): string {
+    if (status === 'Gratuito') return 'bg-info bg-opacity-10 text-info border-info';
     return status === 'Liberado' 
       ? 'bg-success bg-opacity-10 text-success border-success' 
       : 'bg-danger bg-opacity-10 text-danger border-danger';
