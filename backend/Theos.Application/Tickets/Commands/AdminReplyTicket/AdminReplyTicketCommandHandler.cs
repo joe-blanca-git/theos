@@ -37,6 +37,11 @@ public class AdminReplyTicketCommandHandler : IRequestHandler<AdminReplyTicketCo
             ticket.UpdateStatus(TicketStatus.Open);
             _context.TicketTimelines.Add(TicketTimeline.Create(ticket.Id, admin.Id, TicketTimelineEvent.Reopened, "Ticket reaberto via nova resposta do suporte."));
         }
+        else if (ticket.Status == TicketStatus.Open)
+        {
+            ticket.UpdateStatus(TicketStatus.Pending);
+            _context.TicketTimelines.Add(TicketTimeline.Create(ticket.Id, admin.Id, TicketTimelineEvent.StatusChanged, "Status alterado automaticamente para Pendente após resposta."));
+        }
 
         var message = TicketMessage.Create(ticket.Id, admin.Id, TicketOrigin.Backoffice, request.Content, null);
         _context.TicketMessages.Add(message);

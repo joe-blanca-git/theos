@@ -24,7 +24,6 @@ export class SupportTicketsComponent implements OnInit {
   replyForm!: FormGroup;
   searchQuery = '';
   statusFilter = '';
-  filterNoReply = false;
 
   ngOnInit(): void {
     this.replyForm = this.fb.group({
@@ -35,7 +34,7 @@ export class SupportTicketsComponent implements OnInit {
 
   loadTickets(): void {
     this.isLoading = true;
-    this.supportService.getTickets(this.statusFilter || undefined, undefined, this.searchQuery || undefined, this.filterNoReply).subscribe({
+    this.supportService.getTickets(this.statusFilter || undefined, undefined, this.searchQuery || undefined).subscribe({
       next: (data) => {
         this.tickets = data.items;
         this.isLoading = false;
@@ -54,11 +53,6 @@ export class SupportTicketsComponent implements OnInit {
 
   onFilterStatus(event: any): void {
     this.statusFilter = event.target.value;
-    this.loadTickets();
-  }
-
-  onFilterNoReply(event: any): void {
-    this.filterNoReply = event.target.checked;
     this.loadTickets();
   }
 
@@ -116,22 +110,20 @@ export class SupportTicketsComponent implements OnInit {
 
   getStatusBadgeClass(status: string): string {
     switch (status) {
-      case 'Open': return 'bg-warning bg-opacity-10 text-warning border-warning';
-      case 'InProgress': return 'bg-info bg-opacity-10 text-info border-info';
-      case 'WaitingOnCustomer': return 'bg-primary bg-opacity-10 text-primary border-primary';
-      case 'Resolved': return 'bg-success bg-opacity-10 text-success border-success';
-      case 'Closed': return 'bg-secondary bg-opacity-10 text-secondary border-secondary';
+      case '0': return 'bg-warning bg-opacity-10 text-warning border-warning';
+      case '1': return 'bg-info bg-opacity-10 text-info border-info';
+      case '2': return 'bg-primary bg-opacity-10 text-primary border-primary';
+      case '3': return 'bg-success bg-opacity-10 text-success border-success';
       default: return 'bg-secondary bg-opacity-10 text-secondary border-secondary';
     }
   }
   
   getStatusName(status: string): string {
     switch (status) {
-      case 'Open': return 'Aberto';
-      case 'InProgress': return 'Em Atendimento';
-      case 'WaitingOnCustomer': return 'Aguardando Cliente';
-      case 'Resolved': return 'Resolvido';
-      case 'Closed': return 'Fechado';
+      case '0': return 'Aberto';
+      case '1': return 'Pendente';
+      case '2': return 'Respondido'; // Mantido para compatibilidade com tickets antigos
+      case '3': return 'Fechado';
       default: return 'Desconhecido';
     }
   }

@@ -1,5 +1,5 @@
 import { Injectable, Injector } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError, delay } from 'rxjs/operators';
 import { BaseService } from '../../../../core/services/base.service';
@@ -23,6 +23,7 @@ export interface IAdminTicket {
   status: string;
   createdAt: string;
   lastUpdatedAt: string;
+  lastReplyAt?: string;
 }
 
 export interface IAdminTicketDetails extends IAdminTicket {
@@ -53,12 +54,11 @@ export class SupportService extends BaseService {
 
   // --- TICKETS (CHAMADOS) ---
 
-  getTickets(status?: string, categoryId?: number, searchTitle?: string, noReplyOnly?: boolean): Observable<IPaginatedList<IAdminTicket>> {
+  getTickets(status?: string, categoryId?: number, searchTitle?: string): Observable<IPaginatedList<IAdminTicket>> {
     let params = new HttpParams();
     if (status) params = params.set('status', status);
     if (categoryId) params = params.set('categoryId', categoryId.toString());
     if (searchTitle) params = params.set('searchText', searchTitle);
-    if (noReplyOnly) params = params.set('noReplyOnly', 'true');
 
     return this.http.get<IPaginatedList<IAdminTicket>>(`${this.urlApiTheos}tickets`, {
       ...this.GetAuthHeaderJson(),
