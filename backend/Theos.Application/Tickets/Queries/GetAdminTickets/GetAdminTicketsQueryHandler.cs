@@ -46,6 +46,9 @@ public class GetAdminTicketsQueryHandler : IRequestHandler<GetAdminTicketsQuery,
         if (!string.IsNullOrWhiteSpace(request.SearchText))
             query = query.Where(t => t.Subject.Contains(request.SearchText) || (t.User.FullName != null && t.User.FullName.Contains(request.SearchText)));
 
+        if (request.NoReplyOnly.HasValue && request.NoReplyOnly.Value)
+            query = query.Where(t => t.LastReplyAt == null);
+
         var totalCount = await query.CountAsync(cancellationToken);
 
         var dbItems = await query

@@ -279,37 +279,7 @@ export const MOCK_TICKETS: SupportTicket[] = [
   }
 ];
 
-export const MOCK_TOPICS: ForumTopic[] = [
-  {
-        createdAt: new Date(Date.now() - 250000000).toISOString()
-      },
-      {
-        id: 2,
-        sender: 'Support',
-        senderName: 'Suporte Técnico',
-        content: 'Olá Carlos. Estamos analisando os servidores de CDN. Pode tentar novamente agora e confirmar se melhorou?',
-        createdAt: new Date(Date.now() - 200000000).toISOString()
-      }
-    ]
-  },
-  {
-    id: 2002,
-    title: 'Como faço para alterar meu email?',
-    authorName: 'Ana Beatriz',
-    createdAt: new Date(Date.now() - 50000000).toISOString(),
-    replyCount: 1,
-    status: 'Aguardando resposta',
-    messages: [
-      {
-        id: 1,
-        sender: 'User',
-        senderName: 'Ana Beatriz',
-        content: 'Não encontrei a opção de mudar o email cadastrado nas minhas configurações.',
-        createdAt: new Date(Date.now() - 50000000).toISOString()
-      }
-    ]
-  }
-];
+export const MOCK_TOPICS: ForumTopic[] = [];
 
 export const MOCK_USERS_ACCESS: UserAccess[] = [
   {

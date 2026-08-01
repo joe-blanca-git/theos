@@ -53,13 +53,17 @@ export class SupportService extends BaseService {
 
   // --- TICKETS (CHAMADOS) ---
 
-  getTickets(status?: string, categoryId?: number, searchText?: string, pageIndex: number = 1, pageSize: number = 50): Observable<IPaginatedList<IAdminTicket>> {
-    let url = `${this.urlApiTheos}tickets?pageIndex=${pageIndex}&pageSize=${pageSize}`;
-    if (status) url += `&status=${status}`;
-    if (categoryId) url += `&categoryId=${categoryId}`;
-    if (searchText) url += `&searchText=${searchText}`;
-    
-    return this.http.get<IPaginatedList<IAdminTicket>>(url, this.GetAuthHeaderJson());
+  getTickets(status?: string, categoryId?: number, searchTitle?: string, noReplyOnly?: boolean): Observable<IPaginatedList<IAdminTicket>> {
+    let params = new HttpParams();
+    if (status) params = params.set('status', status);
+    if (categoryId) params = params.set('categoryId', categoryId.toString());
+    if (searchTitle) params = params.set('searchText', searchTitle);
+    if (noReplyOnly) params = params.set('noReplyOnly', 'true');
+
+    return this.http.get<IPaginatedList<IAdminTicket>>(`${this.urlApiTheos}tickets`, {
+      ...this.GetAuthHeaderJson(),
+      params
+    });
   }
 
   getTicketById(id: number): Observable<IAdminTicketDetails> {

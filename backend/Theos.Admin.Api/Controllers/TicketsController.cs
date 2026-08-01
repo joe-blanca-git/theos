@@ -33,9 +33,9 @@ public class TicketsController : ControllerBase
     /// Lista os tickets com paginação e filtros detalhados.
     /// </summary>
     [HttpGet]
-    public async Task<IActionResult> GetTickets([FromQuery] TicketStatus? status, [FromQuery] int? categoryId, [FromQuery] TicketPriority? priority, [FromQuery] int? studentId, [FromQuery] string? searchText, [FromQuery] DateTime? startDate, [FromQuery] DateTime? endDate, [FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 10)
+    public async Task<IActionResult> GetTickets([FromQuery] TicketStatus? status, [FromQuery] int? categoryId, [FromQuery] TicketPriority? priority, [FromQuery] int? studentId, [FromQuery] string? searchText, [FromQuery] DateTime? startDate, [FromQuery] DateTime? endDate, [FromQuery] bool? noReplyOnly, [FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 10)
     {
-        var query = new GetAdminTicketsQuery(status, categoryId, priority, studentId, searchText, startDate, endDate, pageIndex, pageSize);
+        var query = new GetAdminTicketsQuery(status, categoryId, priority, studentId, searchText, startDate, endDate, noReplyOnly, pageIndex, pageSize);
         var result = await _mediator.Send(query);
         return Ok(result);
     }
@@ -46,7 +46,7 @@ public class TicketsController : ControllerBase
     [HttpGet("search")]
     public async Task<IActionResult> SearchTickets([FromQuery] string searchText, [FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 10)
     {
-        var query = new GetAdminTicketsQuery(null, null, null, null, searchText, null, null, pageIndex, pageSize);
+        var query = new GetAdminTicketsQuery(null, null, null, null, searchText, null, null, null, pageIndex, pageSize);
         var result = await _mediator.Send(query);
         return Ok(result);
     }
