@@ -136,7 +136,8 @@ namespace Theos.Application.Courses.Commands.CreateCourse
                 course.CourseTeachers.Add(new CourseTeacher
                 {
                     TeacherId = teacher.Id,
-                    Course = course
+                    Course = course,
+                    ParticipationPercentage = 100m
                 });
             }
 

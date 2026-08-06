@@ -65,6 +65,11 @@
             Atualiza as categorias de um curso.
             </summary>
         </member>
+        <member name="M:Theos.Admin.Api.Controllers.CoursesController.UpdateTeachers(System.Int32,System.Collections.Generic.List{Theos.Application.Teachers.Commands.UpdateCourseTeachers.TeacherShareDto})">
+            <summary>
+            Atualiza os professores vinculados a um curso e suas cotas (total deve ser 100%).
+            </summary>
+        </member>
         <member name="M:Theos.Admin.Api.Controllers.CoursesController.CreateModule(Theos.Application.Courses.Commands.CreateModule.CreateModuleCommand)">
             <summary>
             Cria um novo módulo em um curso existente.
@@ -168,6 +173,21 @@
         <member name="M:Theos.Admin.Api.Controllers.CoursesController.DeleteCourseDomain(System.Int32,System.Int32)">
             <summary>
             Deleta permanentemente um domínio de um curso.
+            </summary>
+        </member>
+        <member name="M:Theos.Admin.Api.Controllers.FinancialTaxesController.GetAll">
+            <summary>
+            Obtém todas as taxas financeiras cadastradas.
+            </summary>
+        </member>
+        <member name="M:Theos.Admin.Api.Controllers.FinancialTaxesController.Create(Theos.Application.FinancialTaxes.Commands.CreateFinancialTaxCommand)">
+            <summary>
+            Cria uma nova taxa financeira.
+            </summary>
+        </member>
+        <member name="M:Theos.Admin.Api.Controllers.FinancialTaxesController.ToggleStatus(System.Int32)">
+            <summary>
+            Alterna o status (Ativo/Inativo) de uma taxa financeira.
             </summary>
         </member>
         <member name="M:Theos.Admin.Api.Controllers.TeachersController.GetTeachers">

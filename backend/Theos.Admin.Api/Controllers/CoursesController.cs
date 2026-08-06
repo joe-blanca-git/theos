@@ -173,6 +173,27 @@ namespace Theos.Admin.Api.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Atualiza os professores vinculados a um curso e suas cotas (total deve ser 100%).
+        /// </summary>
+        [Authorize(Roles = "Admin")]
+        [HttpPatch("{id}/teachers")]
+        [SwaggerOperation(Summary = "Atualiza professores vinculados", Description = "Remove vínculos antigos e insere os novos professores com as cotas informadas.")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> UpdateTeachers(int id, [FromBody] List<Theos.Application.Teachers.Commands.UpdateCourseTeachers.TeacherShareDto> teachers)
+        {
+            var command = new Theos.Application.Teachers.Commands.UpdateCourseTeachers.UpdateCourseTeachersCommand
+            {
+                CourseId = id,
+                Teachers = teachers
+            };
+            var result = await _mediator.Send(command);
+            if (!result.Success)
+                return BadRequest(new { message = result.Message });
+            
+            return Ok(new { message = result.Message });
+        }
+
         #endregion
 
         #region Modules
