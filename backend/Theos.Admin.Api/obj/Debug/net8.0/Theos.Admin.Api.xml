@@ -175,6 +175,16 @@
             Deleta permanentemente um domínio de um curso.
             </summary>
         </member>
+        <member name="M:Theos.Admin.Api.Controllers.FinancialClosingsController.GetSummary">
+            <summary>
+            Obtém o resumo financeiro global do professor logado (Dashboard).
+            </summary>
+        </member>
+        <member name="M:Theos.Admin.Api.Controllers.FinancialClosingsController.Simulate">
+            <summary>
+            Simula um fechamento com base nas vendas elegíveis (mais antigas que 7 dias).
+            </summary>
+        </member>
         <member name="M:Theos.Admin.Api.Controllers.FinancialTaxesController.GetAll">
             <summary>
             Obtém todas as taxas financeiras cadastradas.
