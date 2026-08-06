@@ -72,7 +72,7 @@ namespace Theos.Application.FinancialClosings.Queries
 
                 decimal teacherValue = netValue * teacherPercentage;
 
-                if (purchase.UpdatedAt <= thresholdDate)
+                if (purchase.CreatedAt <= thresholdDate)
                 {
                     totalAvailable += teacherValue;
                 }

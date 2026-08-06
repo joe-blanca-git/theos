@@ -1,23 +1,48 @@
 <div class="dashboard-content animated-fade-in p-md-3">
-  <div class="welcome-hero-banner rounded-4 p-4 p-md-5 mb-5 text-white shadow border-0 position-relative overflow-hidden"
-       style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);">
-    <div class="row align-items-center position-relative" style="z-index: 2;">
-      <div class="col-12 text-center text-lg-start">
-        <h4 class="fw-extrabold text-white mb-2 leading-tight">Olá, Professor!</h4>
-        <p class="text-white-50 mb-0" style="font-size: 1rem;">
-          Seja bem-vindo ao <strong>POP - Portal do Professor Theos</strong>.
-        </p>
-        <p class="text-white-50 mt-2 mb-0" style="font-size: 0.9rem;">
-          Acompanhe o desempenho dos seus cursos.
-        </p>
+  <!-- Skeleton Loader Mode -->
+  <ng-container *ngIf="isLoadingPage">
+    <!-- Skeleton Hero -->
+    <div class="welcome-hero-banner rounded-4 p-3 p-md-4 mb-4 text-white shadow border-0 position-relative overflow-hidden skeleton" style="height: 120px;"></div>
+
+    <!-- Skeleton ROW 1: KPIs -->
+    <div class="row g-3 mb-4">
+      <div class="col-12 col-md-6 col-lg-3" *ngFor="let i of [1,2,3,4]">
+        <div class="kpi-card p-3 rounded-4 d-flex flex-column justify-content-between position-relative overflow-hidden skeleton" style="height: 110px;"></div>
       </div>
     </div>
-  </div>
+
+    <!-- Skeleton ROW 2: Chart & Summary -->
+    <div class="row g-3 mb-4">
+      <div class="col-12 col-xl-8">
+        <div class="dashboard-card p-3 rounded-4 skeleton" style="height: 380px;"></div>
+      </div>
+      <div class="col-12 col-xl-4">
+        <div class="dashboard-card p-3 rounded-4 skeleton" style="height: 380px;"></div>
+      </div>
+    </div>
+  </ng-container>
+
+  <!-- Loaded Mode -->
+  <ng-container *ngIf="!isLoadingPage">
+    <div class="welcome-hero-banner rounded-4 p-3 p-md-4 mb-4 text-white shadow border-0 position-relative overflow-hidden"
+         style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);">
+      <div class="row align-items-center position-relative" style="z-index: 2;">
+        <div class="col-12 text-center text-lg-start">
+          <h5 class="fw-extrabold text-white mb-2 leading-tight">Olá, Professor!</h5>
+          <p class="text-white-50 mb-0" style="font-size: 0.9rem;">
+            Seja bem-vindo ao <strong>POP - Portal do Professor Theos</strong>.
+          </p>
+          <p class="text-white-50 mt-1 mb-0" style="font-size: 0.85rem;">
+            Acompanhe o desempenho dos seus cursos.
+          </p>
+        </div>
+      </div>
+    </div>
 
   <!-- ROW 1: KPIs -->
-  <div class="row g-4 mb-5">
+  <div class="row g-3 mb-4">
     <div class="col-12 col-md-6 col-lg-3" *ngFor="let kpi of kpis">
-      <div class="kpi-card p-4 rounded-4 d-flex flex-column justify-content-between h-100 position-relative overflow-hidden">
+      <div class="kpi-card p-3 rounded-4 d-flex flex-column justify-content-between h-100 position-relative overflow-hidden">
         <div class="d-flex justify-content-between align-items-start mb-3">
           <span class="kpi-title text-muted fw-medium">{{kpi.title}}</span>
           <div class="kpi-icon-wrapper rounded-circle d-flex align-items-center justify-content-center">
@@ -36,11 +61,11 @@
   </div>
 
   <!-- ROW 2: Chart & Summary -->
-  <div class="row g-4 mb-5">
+  <div class="row g-3 mb-4">
     <div class="col-12 col-xl-8">
-      <div class="dashboard-card p-4 rounded-4 h-100">
-        <div class="mb-4">
-          <h4 class="card-title fw-bold mb-1 text-white">Faturamento Anual</h4>
+      <div class="dashboard-card p-3 rounded-4 h-100">
+        <div class="mb-3">
+          <h5 class="card-title fw-bold mb-1 text-white">Faturamento Anual</h5>
           <p class="card-subtitle text-muted m-0">Evolução mensal do faturamento.</p>
         </div>
         <div class="chart-container" style="position: relative; height: 300px; width: 100%;">
@@ -54,10 +79,10 @@
     </div>
 
     <div class="col-12 col-xl-4">
-      <div class="dashboard-card p-4 rounded-4 h-100">
-        <h4 class="card-title fw-bold mb-4 text-white">Resumo</h4>
-        <div class="summary-list d-flex flex-column gap-3">
-          <div class="summary-item d-flex align-items-center justify-content-between p-3 rounded-3" *ngFor="let item of summaryItems">
+      <div class="dashboard-card p-3 rounded-4 h-100">
+        <h5 class="card-title fw-bold mb-3 text-white">Resumo</h5>
+        <div class="summary-list d-flex flex-column gap-2">
+          <div class="summary-item d-flex align-items-center justify-content-between p-2 rounded-3" *ngFor="let item of summaryItems">
             <div class="d-flex align-items-center gap-3">
               <div class="summary-icon rounded-circle d-flex align-items-center justify-content-center">
                 <i [class]="item.icon"></i>
@@ -74,8 +99,8 @@
   <!-- ROW 3: Forum Topics -->
   <div class="row">
     <div class="col-12">
-      <div class="dashboard-card p-4 rounded-4">
-        <h4 class="card-title fw-bold mb-4 text-white">Últimos tópicos dos fóruns</h4>
+      <div class="dashboard-card p-3 rounded-4">
+        <h5 class="card-title fw-bold mb-3 text-white">Últimos tópicos dos fóruns</h5>
         <div class="table-responsive">
           <table class="table custom-table mb-0 w-100">
             <thead>
@@ -112,4 +137,5 @@
       </div>
     </div>
   </div>
+  </ng-container>
 </div>

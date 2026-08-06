@@ -35,139 +35,56 @@
 
   <!-- Skeleton Cards -->
   <div class="row g-3 mb-4" *ngIf="isLoadingSummary">
-    <div class="col-12 col-sm-6 col-md-3" *ngFor="let item of [1,2,3,4,5,6,7,8]">
-      <div class="card border-0 shadow-sm rounded-4 h-100 p-4">
-        <div class="skeleton mb-3" style="width: 40px; height: 40px; border-radius: 50%;"></div>
-        <div class="skeleton mb-2" style="width: 70%; height: 20px; border-radius: 4px;"></div>
-        <div class="skeleton mb-2" style="width: 50%; height: 30px; border-radius: 4px;"></div>
+    <div class="col-12 col-sm-4" *ngFor="let item of [1,2,3]">
+      <div class="card border-0 shadow-sm rounded-4 h-100 p-3">
+        <div class="skeleton mb-2" style="width: 40px; height: 40px; border-radius: 50%;"></div>
+        <div class="skeleton mb-2" style="width: 70%; height: 16px; border-radius: 4px;"></div>
+        <div class="skeleton mb-0" style="width: 50%; height: 28px; border-radius: 4px;"></div>
       </div>
     </div>
   </div>
 
   <!-- Cards Financeiros Reais -->
   <div class="row g-3 mb-4" *ngIf="!isLoadingSummary && summary">
-    <!-- Row 1: Quantidades -->
-    <div class="col-12 col-sm-6 col-xl-3">
-      <div class="card border-0 shadow-sm rounded-4 h-100 kpi-card">
-        <div class="card-body">
-          <div class="d-flex justify-content-between align-items-start mb-3">
-            <div class="icon-box bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
-              <i class="fas fa-shopping-cart fs-5"></i>
-            </div>
-            <span class="badge" [ngClass]="summary.growth.totalSales >= 0 ? 'bg-success bg-opacity-10 text-success' : 'bg-danger bg-opacity-10 text-danger'">
-              <i class="fas" [ngClass]="summary.growth.totalSales >= 0 ? 'fa-arrow-up' : 'fa-arrow-down'"></i> {{summary.growth.totalSales}}%
-            </span>
-          </div>
-          <h6 class="text-muted fw-semibold mb-1">Total de Vendas</h6>
-          <h3 class="fw-bold mb-0 text-dark">{{summary.totalSalesCount}}</h3>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-12 col-sm-6 col-xl-3">
-      <div class="card border-0 shadow-sm rounded-4 h-100 kpi-card">
-        <div class="card-body">
-          <div class="d-flex justify-content-between align-items-start mb-3">
-            <div class="icon-box bg-success bg-opacity-10 text-success rounded-circle d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
-              <i class="fas fa-check-circle fs-5"></i>
-            </div>
-            <span class="badge" [ngClass]="summary.growth.confirmed >= 0 ? 'bg-success bg-opacity-10 text-success' : 'bg-danger bg-opacity-10 text-danger'">
-              <i class="fas" [ngClass]="summary.growth.confirmed >= 0 ? 'fa-arrow-up' : 'fa-arrow-down'"></i> {{summary.growth.confirmed}}%
-            </span>
-          </div>
-          <h6 class="text-muted fw-semibold mb-1">Confirmadas</h6>
-          <h3 class="fw-bold mb-0 text-dark">{{summary.totalConfirmedCount}}</h3>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-12 col-sm-6 col-xl-3">
-      <div class="card border-0 shadow-sm rounded-4 h-100 kpi-card">
-        <div class="card-body">
-          <div class="d-flex justify-content-between align-items-start mb-3">
-            <div class="icon-box bg-danger bg-opacity-10 text-danger rounded-circle d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
-              <i class="fas fa-times-circle fs-5"></i>
-            </div>
-            <span class="badge" [ngClass]="summary.growth.cancelled >= 0 ? 'bg-success bg-opacity-10 text-success' : 'bg-danger bg-opacity-10 text-danger'">
-              <i class="fas" [ngClass]="summary.growth.cancelled >= 0 ? 'fa-arrow-up' : 'fa-arrow-down'"></i> {{summary.growth.cancelled}}%
-            </span>
-          </div>
-          <h6 class="text-muted fw-semibold mb-1">Canceladas</h6>
-          <h3 class="fw-bold mb-0 text-dark">{{summary.totalCancelledCount}}</h3>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-12 col-sm-6 col-xl-3">
-      <div class="card border-0 shadow-sm rounded-4 h-100 kpi-card">
-        <div class="card-body">
-          <div class="d-flex justify-content-between align-items-start mb-3">
-            <div class="icon-box bg-secondary bg-opacity-10 text-secondary rounded-circle d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
-              <i class="fas fa-undo fs-5"></i>
-            </div>
-            <span class="badge" [ngClass]="summary.growth.refunded >= 0 ? 'bg-success bg-opacity-10 text-success' : 'bg-danger bg-opacity-10 text-danger'">
-              <i class="fas" [ngClass]="summary.growth.refunded >= 0 ? 'fa-arrow-up' : 'fa-arrow-down'"></i> {{summary.growth.refunded}}%
-            </span>
-          </div>
-          <h6 class="text-muted fw-semibold mb-1">Reembolsadas</h6>
-          <h3 class="fw-bold mb-0 text-dark">{{summary.totalRefundedCount}}</h3>
-        </div>
-      </div>
-    </div>
-
-    <!-- Row 2: Valores -->
-    <div class="col-12 col-sm-6 col-xl-3">
-      <div class="card border-0 shadow-sm rounded-4 h-100 kpi-card border-bottom border-4 border-info">
-        <div class="card-body">
-          <div class="d-flex justify-content-between align-items-start mb-3">
-            <div class="icon-box bg-info bg-opacity-10 text-info rounded-circle d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
-              <i class="fas fa-money-bill-wave fs-5"></i>
-            </div>
-          </div>
-          <h6 class="text-muted fw-semibold mb-1">Receita Bruta</h6>
-          <h3 class="fw-bold mb-0 text-dark">{{formatCurrency(summary.grossRevenue)}}</h3>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-12 col-sm-6 col-xl-3">
+    <!-- Row 1: Valores -->
+    <div class="col-12 col-sm-4">
       <div class="card border-0 shadow-sm rounded-4 h-100 kpi-card border-bottom border-4 border-success">
-        <div class="card-body">
-          <div class="d-flex justify-content-between align-items-start mb-3">
-            <div class="icon-box bg-success bg-opacity-10 text-success rounded-circle d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
-              <i class="fas fa-hand-holding-usd fs-5"></i>
+        <div class="card-body p-3">
+          <div class="d-flex justify-content-between align-items-start mb-2">
+            <div class="icon-box bg-success bg-opacity-10 text-success rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+              <i class="fas fa-money-bill-wave"></i>
             </div>
           </div>
-          <h6 class="text-muted fw-semibold mb-1">Receita Líquida (Pós Taxas)</h6>
-          <h3 class="fw-bold mb-0 text-dark">{{formatCurrency(summary.netRevenue)}}</h3>
+          <h6 class="text-muted fw-semibold mb-1 small">Disponível para Saque</h6>
+          <h4 class="fw-bold mb-0 text-dark">{{formatCurrency(summary.totalAvailable)}}</h4>
         </div>
       </div>
     </div>
 
-    <div class="col-12 col-sm-6 col-xl-3">
+    <div class="col-12 col-sm-4">
       <div class="card border-0 shadow-sm rounded-4 h-100 kpi-card border-bottom border-4 border-warning">
-        <div class="card-body">
-          <div class="d-flex justify-content-between align-items-start mb-3">
-            <div class="icon-box bg-warning bg-opacity-10 text-warning rounded-circle d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
-              <i class="fas fa-chalkboard-teacher fs-5"></i>
+        <div class="card-body p-3">
+          <div class="d-flex justify-content-between align-items-start mb-2">
+            <div class="icon-box bg-warning bg-opacity-10 text-warning rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+              <i class="fas fa-hourglass-half"></i>
             </div>
           </div>
-          <h6 class="text-muted fw-semibold mb-1">Valor dos Professores</h6>
-          <h3 class="fw-bold mb-0 text-dark">{{formatCurrency(summary.professorsTotal)}}</h3>
+          <h6 class="text-muted fw-semibold mb-1 small">Pendente (Aguardando prazo)</h6>
+          <h4 class="fw-bold mb-0 text-dark">{{formatCurrency(summary.totalPending)}}</h4>
         </div>
       </div>
     </div>
 
-    <div class="col-12 col-sm-6 col-xl-3">
+    <div class="col-12 col-sm-4">
       <div class="card border-0 shadow-sm rounded-4 h-100 kpi-card border-bottom border-4 border-primary">
-        <div class="card-body">
-          <div class="d-flex justify-content-between align-items-start mb-3">
-            <div class="icon-box bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
-              <i class="fas fa-building fs-5"></i>
+        <div class="card-body p-3">
+          <div class="d-flex justify-content-between align-items-start mb-2">
+            <div class="icon-box bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+              <i class="fas fa-piggy-bank"></i>
             </div>
           </div>
-          <h6 class="text-muted fw-semibold mb-1">Receita Instituto Theos</h6>
-          <h3 class="fw-bold mb-0 text-dark">{{formatCurrency(summary.theosTotal)}}</h3>
+          <h6 class="text-muted fw-semibold mb-1 small">Já Sacado</h6>
+          <h4 class="fw-bold mb-0 text-dark">{{formatCurrency(summary.totalWithdrawn)}}</h4>
         </div>
       </div>
     </div>
@@ -182,9 +99,7 @@
 
     <div class="card-body p-0 flex-grow-1 overflow-auto custom-scrollbar position-relative">
       
-      <div *ngIf="isLoadingGrid" class="position-absolute w-100 h-100 bg-white bg-opacity-75 d-flex align-items-center justify-content-center z-1">
-        <div class="spinner-border text-primary" role="status"></div>
-      </div>
+
 
       <table class="table table-hover align-middle mb-0" style="min-width: 1500px;">
         <thead class="bg-light bg-opacity-50 text-muted small fw-semibold sticky-top">
@@ -201,11 +116,37 @@
           </tr>
         </thead>
         <tbody class="border-top-0">
-          <tr *ngIf="!isLoadingGrid && sales.length === 0">
-            <td colspan="9" class="text-center py-5 text-muted">Nenhuma venda encontrada para o período selecionado.</td>
-          </tr>
-          <tr *ngFor="let sale of sales">
-            <td class="px-4 fw-medium text-dark"><i class="fas fa-receipt text-muted me-2"></i>{{sale.transactionCode}}</td>
+          <ng-container *ngIf="isLoadingGrid">
+            <tr *ngFor="let item of [1,2,3,4,5]">
+              <td class="px-4"><div class="skeleton rounded-2" style="width: 100px; height: 20px;"></div></td>
+              <td>
+                <div class="skeleton rounded-2 mb-1" style="width: 90px; height: 20px;"></div>
+                <div class="skeleton rounded-2" style="width: 50px; height: 14px;"></div>
+              </td>
+              <td>
+                <div class="d-flex align-items-center">
+                  <div class="skeleton rounded-circle me-3" style="width: 35px; height: 35px;"></div>
+                  <div class="skeleton rounded-2" style="width: 130px; height: 20px;"></div>
+                </div>
+              </td>
+              <td>
+                <div class="skeleton rounded-2 mb-1" style="width: 160px; height: 20px;"></div>
+                <div class="skeleton rounded-2" style="width: 80px; height: 14px;"></div>
+              </td>
+              <td><div class="skeleton rounded-2" style="width: 110px; height: 20px;"></div></td>
+              <td class="text-end"><div class="skeleton rounded-2 ms-auto" style="width: 90px; height: 20px;"></div></td>
+              <td class="text-end"><div class="skeleton rounded-2 ms-auto" style="width: 90px; height: 20px;"></div></td>
+              <td class="text-center"><div class="skeleton rounded-pill mx-auto" style="width: 80px; height: 24px;"></div></td>
+              <td class="px-4 text-end"><div class="skeleton rounded-pill ms-auto" style="width: 90px; height: 31px;"></div></td>
+            </tr>
+          </ng-container>
+
+          <ng-container *ngIf="!isLoadingGrid">
+            <tr *ngIf="!simulation || simulation.items.length === 0">
+              <td colspan="9" class="text-center py-5 text-muted">Nenhuma venda pendente para recebimento no momento.</td>
+            </tr>
+            <tr *ngFor="let sale of getPaginatedItems()">
+            <td class="px-4 fw-medium text-dark"><i class="fas fa-receipt text-muted me-2"></i>{{sale.purchaseId}}</td>
             <td>
               <div class="fw-medium">{{sale.purchaseDate | date:'dd/MM/yyyy'}}</div>
               <div class="text-muted small">{{sale.purchaseDate | date:'HH:mm'}}</div>
@@ -221,7 +162,7 @@
             <td>
               <div class="fw-semibold text-dark text-truncate" style="max-width: 250px;" title="{{sale.courseName}}">{{sale.courseName}}</div>
               <div class="text-muted small text-truncate" style="max-width: 250px;">
-                <span *ngFor="let p of sale.professors; let last = last">{{p.name}}{{last ? '' : ', '}}</span>
+                {{sale.appliedTeacherPercentage}}% de cota
               </div>
             </td>
             <td>
@@ -234,13 +175,12 @@
                   }"></i>
                 <span class="fw-medium">{{sale.paymentMethod}}</span>
               </div>
-              <div class="text-muted small" *ngIf="sale.installments > 1">{{sale.installments}} parcelas</div>
             </td>
             <td class="text-end fw-semibold text-dark">{{formatCurrency(sale.grossValue)}}</td>
-            <td class="text-end fw-semibold text-success">{{formatCurrency(sale.netValue)}}</td>
+            <td class="text-end fw-semibold text-success">{{formatCurrency(sale.calculatedValue)}}</td>
             <td class="text-center">
-              <span class="badge border border-opacity-25 rounded-pill" [ngClass]="getStatusBadgeClass(sale.saleStatus)">
-                {{sale.saleStatus}}
+              <span class="badge border border-opacity-25 rounded-pill bg-success bg-opacity-10 text-success border-success">
+                Confirmado
               </span>
             </td>
             <td class="px-4 text-end">
@@ -248,14 +188,15 @@
                 <i class="fas fa-search-dollar me-2"></i>Detalhes
               </button>
             </td>
-          </tr>
+            </tr>
+          </ng-container>
         </tbody>
       </table>
     </div>
 
     <!-- Paginação -->
     <div class="card-footer bg-white border-top p-3 d-flex justify-content-between align-items-center">
-      <span class="text-muted small">Exibindo {{(currentPage-1)*pageSize + 1}} a {{currentPage*pageSize > totalSales ? totalSales : currentPage*pageSize}} de {{totalSales}} vendas</span>
+      <span class="text-muted small">Exibindo {{(currentPage-1)*pageSize + 1}} a {{currentPage*pageSize > (simulation?.items?.length || 0) ? (simulation?.items?.length || 0) : currentPage*pageSize}} de {{simulation?.items?.length || 0}} vendas</span>
       <nav aria-label="Navegação da grid">
         <ul class="pagination pagination-sm mb-0">
           <li class="page-item" [class.disabled]="currentPage === 1">
@@ -303,18 +244,17 @@
               <span class="fw-semibold">{{selectedSale.studentName}}</span>
             </div>
           </div>
-          <div class="col-md-6 text-md-end">
-            <p class="text-muted small mb-1">Status da Venda</p>
-            <span class="badge border border-opacity-25 rounded-pill fs-6" [ngClass]="getStatusBadgeClass(selectedSale.saleStatus)">
-              {{selectedSale.saleStatus}}
+          <div class="col-12 text-md-end">
+            <span class="badge border border-opacity-25 rounded-pill fs-6 bg-success bg-opacity-10 text-success border-success">
+              Confirmado
             </span>
           </div>
           <div class="col-12">
             <div class="card bg-light border-0 rounded-3">
               <div class="card-body p-3 row g-3 text-center text-md-start">
                 <div class="col-6 col-md-3">
-                  <span class="text-muted small d-block mb-1">Código</span>
-                  <span class="fw-bold text-dark">{{selectedSale.transactionCode}}</span>
+                  <span class="text-muted small d-block mb-1">Cód Compra</span>
+                  <span class="fw-bold text-dark">{{selectedSale.purchaseId}}</span>
                 </div>
                 <div class="col-6 col-md-3">
                   <span class="text-muted small d-block mb-1">Data da Compra</span>
@@ -322,7 +262,7 @@
                 </div>
                 <div class="col-6 col-md-3">
                   <span class="text-muted small d-block mb-1">Método de Pagamento</span>
-                  <span class="fw-bold text-dark">{{selectedSale.paymentMethod}} <small *ngIf="selectedSale.installments > 1">({{selectedSale.installments}}x)</small></span>
+                  <span class="fw-bold text-dark">{{selectedSale.paymentMethod}}</span>
                 </div>
                 <div class="col-6 col-md-3">
                   <span class="text-muted small d-block mb-1">Curso</span>
@@ -345,40 +285,22 @@
               </tr>
               <tr>
                 <td class="text-muted py-3 ps-4">
-                  Taxa Bancária ({{formatPercent(selectedSale.bankFeePercentage)}})
+                  Taxa Bancária / Meio de pagamento
                 </td>
                 <td class="text-end text-danger pe-4">- {{formatCurrency(selectedSale.bankFeeValue)}}</td>
               </tr>
               <tr>
                 <td class="text-muted py-3 ps-4">
-                  Taxa Instituto Theos ({{formatPercent(selectedSale.theosFeePercentage)}} sobre Bruto)
+                  Taxa Instituto Theos
                 </td>
                 <td class="text-end text-danger pe-4">- {{formatCurrency(selectedSale.theosFeeValue)}}</td>
               </tr>
               <tr class="bg-primary bg-opacity-10 border-top border-primary border-opacity-25">
-                <td class="text-primary fw-bold py-3 ps-4">Valor Total destinado ao(s) Professor(es)</td>
-                <td class="text-end text-primary fw-bold fs-5 pe-4">{{formatCurrency(selectedSale.professorsValue)}}</td>
+                <td class="text-primary fw-bold py-3 ps-4">Valor Líquido Calculado (Para a sua cota de {{selectedSale.appliedTeacherPercentage}}%)</td>
+                <td class="text-end text-primary fw-bold fs-5 pe-4">{{formatCurrency(selectedSale.calculatedValue)}}</td>
               </tr>
             </tbody>
           </table>
-        </div>
-
-        <h6 class="fw-bold text-secondary mb-3"><i class="fas fa-users-cog me-2"></i>Divisão de Professores</h6>
-        <!-- Divisao Professores -->
-        <div class="row g-3">
-          <div class="col-12 col-md-6" *ngFor="let prof of selectedSale.professors">
-            <div class="card border border-secondary border-opacity-25 shadow-sm rounded-3">
-              <div class="card-body p-3 d-flex justify-content-between align-items-center">
-                <div>
-                  <div class="fw-bold text-dark">{{prof.name}}</div>
-                  <div class="text-muted small">Cota: {{prof.percentage}}%</div>
-                </div>
-                <div class="fw-bold text-success fs-5">
-                  {{formatCurrency(prof.value)}}
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
 
       </div>
@@ -507,8 +429,7 @@
                         </td>
                         <td class="text-end text-muted">{{formatCurrency(s.grossValue)}}</td>
                         <td class="pe-4 text-end fw-bold text-success">
-                          <!-- Busca o valor exato deste professor nesta transacao -->
-                          {{ formatCurrency(s.professors[0].name.includes('João') && closingProfessorId === '1' ? s.professors[0].value : (s.professors[1] ? s.professors[1].value : s.professors[0].value)) }}
+                          {{ formatCurrency(s.calculatedValue) }}
                         </td>
                       </tr>
                     </tbody>

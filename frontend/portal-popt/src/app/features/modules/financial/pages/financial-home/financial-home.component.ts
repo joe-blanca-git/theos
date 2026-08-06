@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FinancialService } from '../../services/financial.service';
-import { FinancialSummary, ProfessorClosing, SaleTransaction } from '../../models/financial.model';
+import { FinancialDashboardSummaryDto, FinancialClosingSimulationDto } from '../../models/financial.model';
 
 @Component({
   selector: 'app-financial-home',
@@ -22,9 +22,8 @@ export class FinancialHomeComponent implements OnInit {
   isLoadingGrid: boolean = true;
   
   // Data
-  summary: FinancialSummary | null = null;
-  sales: SaleTransaction[] = [];
-  totalSales: number = 0;
+  summary: FinancialDashboardSummaryDto | null = null;
+  simulation: FinancialClosingSimulationDto | null = null;
   
   // Pagination
   currentPage: number = 1;
@@ -32,12 +31,12 @@ export class FinancialHomeComponent implements OnInit {
   
   // Modals state
   showSaleModal: boolean = false;
-  selectedSale: SaleTransaction | null = null;
+  selectedSale: any = null;
   
   showClosingModal: boolean = false;
   closingProfessorId: string = '';
   isProcessingClosing: boolean = false;
-  closingData: ProfessorClosing | null = null;
+  closingData: any = null;
 
   constructor(private financialService: FinancialService) {}
 
@@ -67,12 +66,8 @@ export class FinancialHomeComponent implements OnInit {
 
   loadData() {
     this.isLoadingSummary = true;
-    this.isLoadingGrid = true;
     
-    const start = new Date(this.filterStartDate);
-    const end = new Date(this.filterEndDate);
-
-    this.financialService.getDashboardSummary(start, end).subscribe(res => {
+    this.financialService.getDashboardSummary().subscribe(res => {
       this.summary = res;
       this.isLoadingSummary = false;
     });
@@ -82,12 +77,9 @@ export class FinancialHomeComponent implements OnInit {
 
   loadGrid() {
     this.isLoadingGrid = true;
-    const start = new Date(this.filterStartDate);
-    const end = new Date(this.filterEndDate);
     
-    this.financialService.getSales(start, end, this.currentPage, this.pageSize).subscribe(res => {
-      this.sales = res.data;
-      this.totalSales = res.total;
+    this.financialService.simulateClosing().subscribe(res => {
+      this.simulation = res;
       this.isLoadingGrid = false;
     });
   }
@@ -95,19 +87,25 @@ export class FinancialHomeComponent implements OnInit {
   changePage(page: number) {
     if (page < 1 || page > this.getTotalPages()) return;
     this.currentPage = page;
-    this.loadGrid();
   }
 
   getTotalPages(): number {
-    return Math.ceil(this.totalSales / this.pageSize);
+    if (!this.simulation) return 1;
+    return Math.ceil(this.simulation.items.length / this.pageSize);
   }
   
   getPageArray(): number[] {
     return Array(this.getTotalPages()).fill(0).map((x, i) => i + 1);
   }
+  
+  getPaginatedItems() {
+    if (!this.simulation) return [];
+    const startIndex = (this.currentPage - 1) * this.pageSize;
+    return this.simulation.items.slice(startIndex, startIndex + this.pageSize);
+  }
 
   // Ações Grid
-  openSaleModal(sale: SaleTransaction) {
+  openSaleModal(sale: any) {
     this.selectedSale = sale;
     this.showSaleModal = true;
   }
@@ -137,11 +135,19 @@ export class FinancialHomeComponent implements OnInit {
     }
     
     this.isProcessingClosing = true;
-    const start = new Date(this.filterStartDate);
-    const end = new Date(this.filterEndDate);
     
-    this.financialService.processProfessorClosing(this.closingProfessorId, start, end).subscribe(res => {
-      this.closingData = res;
+    // Na integraçao real, admin tem um endpoit POST. Mas a nível de interface, mockamos o calculo caso não seja o user logado.
+    // Usaremos a própria simulação que já puxa os valores pra mostrar na modal do admin.
+    this.financialService.simulateClosing().subscribe(res => {
+      this.closingData = {
+        professorName: this.closingProfessorId === '1' ? 'Professor João' : 'Professora Maria',
+        salesCount: res.items.length,
+        grossRevenue: res.grossRevenue,
+        bankFees: res.bankFeesTotal,
+        theosFees: res.theosFeesTotal,
+        totalToReceive: res.totalToReceive,
+        sales: res.items
+      };
       this.isProcessingClosing = false;
     });
   }
@@ -151,8 +157,18 @@ export class FinancialHomeComponent implements OnInit {
   }
 
   confirmClosing() {
-    alert('Simulação: Fechamento financeiro confirmado no sistema!');
-    this.closeClosingModal();
+    if (!this.closingProfessorId) return;
+    
+    this.financialService.processClosing(+this.closingProfessorId).subscribe({
+      next: (res) => {
+        alert('Fechamento gerado com sucesso! Lote: ' + res.id);
+        this.closeClosingModal();
+        this.loadData(); // reload dashboard
+      },
+      error: (err) => {
+        alert('Erro ao processar fechamento: ' + err.error?.message);
+      }
+    });
   }
 
   // Helpers de UI

@@ -41,7 +41,7 @@ public class FinancialClosing : BaseEntity
         CreatedAt = DateTime.UtcNow;
     }
 
-    public void Pay(string asaasTransferId, string paymentReceiptUrl)
+    public void Pay(string asaasTransferId, string? paymentReceiptUrl)
     {
         if (Status == ClosingStatus.Paid) throw new InvalidOperationException("Fechamento já está pago.");
 

@@ -185,6 +185,21 @@
             Simula um fechamento com base nas vendas elegíveis (mais antigas que 7 dias).
             </summary>
         </member>
+        <member name="M:Theos.Admin.Api.Controllers.FinancialClosingsController.GetHistory(System.Nullable{System.Int32})">
+            <summary>
+            Obtém o histórico de faturamentos/fechamentos.
+            </summary>
+        </member>
+        <member name="M:Theos.Admin.Api.Controllers.FinancialClosingsController.ProcessClosing(Theos.Application.FinancialClosings.Commands.ProcessProfessorClosingCommand)">
+            <summary>
+            Processa o faturamento das vendas elegíveis para um professor.
+            </summary>
+        </member>
+        <member name="M:Theos.Admin.Api.Controllers.FinancialClosingsController.PayClosing(System.Int32,System.String,Microsoft.AspNetCore.Http.IFormFile)">
+            <summary>
+            Realiza a baixa do pagamento (com anexo PIX) do faturamento.
+            </summary>
+        </member>
         <member name="M:Theos.Admin.Api.Controllers.FinancialTaxesController.GetAll">
             <summary>
             Obtém todas as taxas financeiras cadastradas.
