@@ -27,4 +27,8 @@ export class FinancialService extends BaseService {
     const url = `${this.urlApiTheos}FinancialClosings`;
     return this.httpClient.post(url, { teacherId }, this.GetAuthHeaderJson());
   }
+
+  getTeachers(): Observable<any[]> {
+    return this.httpClient.get<any[]>(`${this.urlApiTheos}Teachers`, this.GetAuthHeaderJson());
+  }
 }

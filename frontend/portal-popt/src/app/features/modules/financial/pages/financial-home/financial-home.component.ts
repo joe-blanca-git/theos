@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FinancialService } from '../../services/financial.service';
 import { FinancialDashboardSummaryDto, FinancialClosingSimulationDto } from '../../models/financial.model';
+import { jsPDF } from 'jspdf';
+import html2canvas from 'html2canvas';
 
 @Component({
   selector: 'app-financial-home',
@@ -24,6 +26,7 @@ export class FinancialHomeComponent implements OnInit {
   // Data
   summary: FinancialDashboardSummaryDto | null = null;
   simulation: FinancialClosingSimulationDto | null = null;
+  teachers: any[] = [];
   
   // Pagination
   currentPage: number = 1;
@@ -37,6 +40,10 @@ export class FinancialHomeComponent implements OnInit {
   closingProfessorId: string = '';
   isProcessingClosing: boolean = false;
   closingData: any = null;
+  isGeneratingPdf: boolean = false;
+  currentDate = new Date();
+
+  @ViewChild('pdfContent') pdfContent!: ElementRef;
 
   constructor(private financialService: FinancialService) {}
 
@@ -70,6 +77,10 @@ export class FinancialHomeComponent implements OnInit {
     this.financialService.getDashboardSummary().subscribe(res => {
       this.summary = res;
       this.isLoadingSummary = false;
+    });
+
+    this.financialService.getTeachers().subscribe(res => {
+      this.teachers = res;
     });
 
     this.loadGrid();
@@ -138,9 +149,11 @@ export class FinancialHomeComponent implements OnInit {
     
     // Na integraçao real, admin tem um endpoit POST. Mas a nível de interface, mockamos o calculo caso não seja o user logado.
     // Usaremos a própria simulação que já puxa os valores pra mostrar na modal do admin.
+    const selectedTeacher = this.teachers.find(t => t.id === +this.closingProfessorId);
+
     this.financialService.simulateClosing().subscribe(res => {
       this.closingData = {
-        professorName: this.closingProfessorId === '1' ? 'Professor João' : 'Professora Maria',
+        professorName: selectedTeacher ? selectedTeacher.name : 'Professor',
         salesCount: res.items.length,
         grossRevenue: res.grossRevenue,
         bankFees: res.bankFeesTotal,
@@ -152,9 +165,7 @@ export class FinancialHomeComponent implements OnInit {
     });
   }
 
-  generateDemonstrativo() {
-    alert('Simulação: Demonstrativo gerado com sucesso! Um PDF fictício foi baixado.');
-  }
+
 
   confirmClosing() {
     if (!this.closingProfessorId) return;
@@ -169,6 +180,56 @@ export class FinancialHomeComponent implements OnInit {
         alert('Erro ao processar fechamento: ' + err.error?.message);
       }
     });
+  }
+
+  async generateDemonstrativo() {
+    if (!this.closingData || !this.pdfContent) return;
+    
+    this.isGeneratingPdf = true;
+    
+    try {
+      const element = this.pdfContent.nativeElement;
+      
+      // Temporarily unhide to capture
+      element.style.display = 'block';
+      
+      const canvas = await html2canvas(element, {
+        scale: 2, // Higher resolution
+        useCORS: true, // For the logo image
+        logging: false
+      });
+      
+      element.style.display = 'none'; // Hide again
+
+      const imgWidth = 210; // A4 width in mm
+      const pageHeight = 297; // A4 height in mm
+      const imgHeight = canvas.height * imgWidth / canvas.width;
+      let heightLeft = imgHeight;
+
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      let position = 0;
+
+      // Add first page
+      pdf.addImage(canvas, 'PNG', 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+
+      // Add extra pages if needed
+      while (heightLeft >= 0) {
+        position = heightLeft - imgHeight;
+        pdf.addPage();
+        pdf.addImage(canvas, 'PNG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+      }
+
+      const fileName = `Demonstrativo_${this.closingData.professorName.replace(/\s+/g, '_')}_${new Date().getTime()}.pdf`;
+      pdf.save(fileName);
+      
+    } catch (error) {
+      console.error('Erro ao gerar PDF', error);
+      alert('Erro ao gerar o PDF. Verifique o console para mais detalhes.');
+    } finally {
+      this.isGeneratingPdf = false;
+    }
   }
 
   // Helpers de UI
