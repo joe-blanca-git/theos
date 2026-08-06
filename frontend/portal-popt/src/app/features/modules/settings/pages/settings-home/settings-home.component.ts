@@ -311,10 +311,28 @@ export class SettingsHomeComponent implements OnInit {
       payload.id = this.teacherToEdit.id;
       this.settingsService.updateTeacher(this.teacherToEdit.id, payload).subscribe({
         next: () => {
-          this.toastService.success('Professor atualizado com sucesso!');
-          this.isSubmittingTeacher = false;
-          this.teacherModalInstance.hide();
-          this.loadData();
+          if (payload.idAgivys && payload.idAgivys !== this.teacherToEdit.idAgivys) {
+            this.agivysService.assignRole(payload.idAgivys, 'Teacher').subscribe({
+              next: () => {
+                this.toastService.success('Professor e acessos atualizados com sucesso!');
+                this.isSubmittingTeacher = false;
+                this.teacherModalInstance.hide();
+                this.loadData();
+              },
+              error: (err) => {
+                console.error('Error updating Agivys role', err);
+                this.toastService.error('Professor atualizado (Falha ao vincular role Agivys).');
+                this.isSubmittingTeacher = false;
+                this.teacherModalInstance.hide();
+                this.loadData();
+              }
+            });
+          } else {
+            this.toastService.success('Professor atualizado com sucesso!');
+            this.isSubmittingTeacher = false;
+            this.teacherModalInstance.hide();
+            this.loadData();
+          }
         },
         error: (err) => {
           console.error('Error updating teacher', err);
@@ -325,10 +343,28 @@ export class SettingsHomeComponent implements OnInit {
     } else {
       this.settingsService.createTeacher(payload).subscribe({
         next: () => {
-          this.toastService.success('Professor criado com sucesso!');
-          this.isSubmittingTeacher = false;
-          this.teacherModalInstance.hide();
-          this.loadData();
+          if (payload.idAgivys) {
+            this.agivysService.assignRole(payload.idAgivys, 'Teacher').subscribe({
+              next: () => {
+                this.toastService.success('Professor criado com acesso ao portal configurado!');
+                this.isSubmittingTeacher = false;
+                this.teacherModalInstance.hide();
+                this.loadData();
+              },
+              error: (err) => {
+                console.error('Error assigning Teacher role in Agivys', err);
+                this.toastService.error('Professor criado, mas erro ao dar acesso na API (Agivys).');
+                this.isSubmittingTeacher = false;
+                this.teacherModalInstance.hide();
+                this.loadData();
+              }
+            });
+          } else {
+            this.toastService.success('Professor criado com sucesso!');
+            this.isSubmittingTeacher = false;
+            this.teacherModalInstance.hide();
+            this.loadData();
+          }
         },
         error: (err) => {
           console.error('Error creating teacher', err);
@@ -373,11 +409,31 @@ export class SettingsHomeComponent implements OnInit {
     this.isDeletingTeacher = true;
     this.settingsService.deleteTeacher(this.teacherToDelete.id).subscribe({
       next: () => {
-        this.toastService.success('Professor inativado com sucesso!');
-        this.isDeletingTeacher = false;
-        this.confirmDeleteTeacherModalInstance.hide();
-        this.teacherToDelete = null;
-        this.loadData();
+        if (this.teacherToDelete.idAgivys) {
+          this.agivysService.removeRole(this.teacherToDelete.idAgivys, 'Teacher').subscribe({
+            next: () => {
+              this.toastService.success('Professor inativado e acessos removidos com sucesso!');
+              this.isDeletingTeacher = false;
+              this.confirmDeleteTeacherModalInstance.hide();
+              this.teacherToDelete = null;
+              this.loadData();
+            },
+            error: (err) => {
+              console.error('Error removing Teacher role', err);
+              this.toastService.error('Professor inativado (Erro ao remover acesso na API).');
+              this.isDeletingTeacher = false;
+              this.confirmDeleteTeacherModalInstance.hide();
+              this.teacherToDelete = null;
+              this.loadData();
+            }
+          });
+        } else {
+          this.toastService.success('Professor inativado com sucesso!');
+          this.isDeletingTeacher = false;
+          this.confirmDeleteTeacherModalInstance.hide();
+          this.teacherToDelete = null;
+          this.loadData();
+        }
       },
       error: (err) => {
         console.error('Error deleting teacher', err);

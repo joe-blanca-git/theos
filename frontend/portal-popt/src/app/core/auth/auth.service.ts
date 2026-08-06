@@ -70,13 +70,16 @@ export class AuthService extends BaseService {
         return true;
       }
 
+      const rolesFromToken = this.authUtil.getRolesFromToken(token);
+      const rolesMapped = rolesFromToken.map(r => ({ name: 'UserType', value: r }));
+
       const hydratedUser: UserLogedModel = {
-        email: payload.person.email || payload.user.email || null,
-        name: payload.person.name || 'Usuário',
-        username: payload.usuario || payload.unique_name || payload.name,
-        id: payload.user.id || null,
-        roles: payload.roles || [],
-        idPerson: payload.person.id || null,
+        email: payload['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'] || payload?.email || payload?.person?.email || payload?.user?.email || null,
+        name: payload['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'] || payload?.name || payload?.person?.name || 'Usuário',
+        username: payload?.usuario || payload?.unique_name || payload?.name,
+        id: payload['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'] || payload?.user?.id || payload?.id || null,
+        roles: rolesMapped,
+        idPerson: payload?.idPerson || payload?.person?.id || null,
       };
 
       this.stateUtil.saveUser(hydratedUser);
@@ -130,5 +133,30 @@ export class AuthService extends BaseService {
   registerSystemUser(payload: any): Observable<any> {
     const url = `${this.urlApiServiceAuth}register-system-user`;
     return this.http.post(url, payload, this.GetAuthHeaderJson());
+  }
+
+  updatePerson(payload: any): Observable<any> {
+    const url = `${this.urlApiServiceAuth}update-person`;
+    return this.http.put(url, payload, this.GetAuthHeaderJson());
+  }
+
+  getMyAddresses(): Observable<any> {
+    const url = `${this.urlApiServiceAuth}my-addresses`;
+    return this.http.get(url, this.GetAuthHeaderJson());
+  }
+
+  addAddress(payload: any): Observable<any> {
+    const url = `${this.urlApiServiceAuth}my-addresses`;
+    return this.http.post(url, payload, this.GetAuthHeaderJson());
+  }
+
+  updateAddress(id: string, payload: any): Observable<any> {
+    const url = `${this.urlApiServiceAuth}my-addresses/${id}`;
+    return this.http.put(url, payload, this.GetAuthHeaderJson());
+  }
+
+  deleteAddress(id: string): Observable<any> {
+    const url = `${this.urlApiServiceAuth}my-addresses/${id}`;
+    return this.http.delete(url, this.GetAuthHeaderJson());
   }
 }

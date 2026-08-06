@@ -361,6 +361,9 @@ namespace Theos.Infrastructure.Migrations
                     b.Property<int>("TeacherId")
                         .HasColumnType("int");
 
+                    b.Property<decimal>("ParticipationPercentage")
+                        .HasColumnType("decimal(65,30)");
+
                     b.HasKey("CourseId", "TeacherId");
 
                     b.HasIndex("TeacherId");
@@ -410,6 +413,140 @@ namespace Theos.Infrastructure.Migrations
                         .HasDatabaseName("IdxUniqueUserIdCourseId");
 
                     b.ToTable("Enrollments", (string)null);
+                });
+
+            modelBuilder.Entity("Theos.Domain.Entities.FinancialClosing", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AsaasTransferId")
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<decimal>("BankFeesTotal")
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<decimal>("GrossRevenue")
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<decimal>("NetValue")
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<DateTime?>("PaymentDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("PaymentReceiptUrl")
+                        .HasMaxLength(2000)
+                        .HasColumnType("varchar(2000)");
+
+                    b.Property<DateTime>("PeriodEnd")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime>("PeriodStart")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TeacherId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("TheosFeesTotal")
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<decimal>("TotalToReceive")
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TeacherId");
+
+                    b.ToTable("FinancialClosings", (string)null);
+                });
+
+            modelBuilder.Entity("Theos.Domain.Entities.FinancialClosingItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("AppliedTeacherPercentage")
+                        .HasColumnType("decimal(5,4)");
+
+                    b.Property<decimal>("BankFeeValue")
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<decimal>("CalculatedValue")
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("FinancialClosingId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("GrossValue")
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<int>("PurchaseId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("TheosFeeValue")
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FinancialClosingId");
+
+                    b.HasIndex("PurchaseId");
+
+                    b.ToTable("FinancialClosingItems", (string)null);
+                });
+
+            modelBuilder.Entity("Theos.Domain.Entities.FinancialTax", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime>("EffectiveFrom")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<decimal>("Percentage")
+                        .HasColumnType("decimal(5,4)");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("FinancialTaxes", (string)null);
                 });
 
             modelBuilder.Entity("Theos.Domain.Entities.ForumCategory", b =>
@@ -1217,6 +1354,36 @@ namespace Theos.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Theos.Domain.Entities.FinancialClosing", b =>
+                {
+                    b.HasOne("Theos.Domain.Entities.Teacher", "Teacher")
+                        .WithMany()
+                        .HasForeignKey("TeacherId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Teacher");
+                });
+
+            modelBuilder.Entity("Theos.Domain.Entities.FinancialClosingItem", b =>
+                {
+                    b.HasOne("Theos.Domain.Entities.FinancialClosing", "FinancialClosing")
+                        .WithMany("Items")
+                        .HasForeignKey("FinancialClosingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Theos.Domain.Entities.Purchase", "Purchase")
+                        .WithMany()
+                        .HasForeignKey("PurchaseId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("FinancialClosing");
+
+                    b.Navigation("Purchase");
+                });
+
             modelBuilder.Entity("Theos.Domain.Entities.ForumMessage", b =>
                 {
                     b.HasOne("Theos.Domain.Entities.User", "Author")
@@ -1410,6 +1577,11 @@ namespace Theos.Infrastructure.Migrations
             modelBuilder.Entity("Theos.Domain.Entities.CourseCategory", b =>
                 {
                     b.Navigation("CourseCategories");
+                });
+
+            modelBuilder.Entity("Theos.Domain.Entities.FinancialClosing", b =>
+                {
+                    b.Navigation("Items");
                 });
 
             modelBuilder.Entity("Theos.Domain.Entities.ForumCategory", b =>

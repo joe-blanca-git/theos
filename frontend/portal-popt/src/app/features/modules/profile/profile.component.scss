@@ -73,3 +73,21 @@
   0% { transform: translateY(100px); opacity: 0; }
   100% { transform: translateY(0); opacity: 1; }
 }
+
+.custom-nav-pills {
+  .nav-link {
+    color: #f0f0f0 !important; // Cinza bem clarinho (quase branco)
+    transition: all 0.2s ease-in-out;
+    border-radius: 0.5rem;
+    
+    &:hover {
+      color: #ffffff !important;
+      background: rgba(255, 255, 255, 0.05) !important;
+    }
+    
+    &.active {
+      color: #C62828 !important; // Vermelho
+      background: rgba(198, 40, 40, 0.1) !important; // Fundo levemente avermelhado para destacar
+    }
+  }
+}

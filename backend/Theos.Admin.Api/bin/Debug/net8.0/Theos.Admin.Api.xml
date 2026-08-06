@@ -205,12 +205,17 @@
             Desvincula um professor de um curso específico.
             </summary>
         </member>
+        <member name="M:Theos.Admin.Api.Controllers.TeachersController.GetTeacherDashboard">
+            <summary>
+            Obtém o dashboard completo do professor autenticado.
+            </summary>
+        </member>
         <member name="M:Theos.Admin.Api.Controllers.TicketCategoriesController.GetCategories">
             <summary>
             Lista as categorias ativas de suporte.
             </summary>
         </member>
-        <member name="M:Theos.Admin.Api.Controllers.TicketsController.GetTickets(System.Nullable{Theos.Domain.Enums.TicketStatus},System.Nullable{System.Int32},System.Nullable{Theos.Domain.Enums.TicketPriority},System.Nullable{System.Int32},System.String,System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Int32,System.Int32)">
+        <member name="M:Theos.Admin.Api.Controllers.TicketsController.GetTickets(System.Nullable{Theos.Domain.Enums.TicketStatus},System.Nullable{System.Int32},System.Nullable{Theos.Domain.Enums.TicketPriority},System.Nullable{System.Int32},System.String,System.Nullable{System.DateTime},System.Nullable{System.DateTime},System.Nullable{System.Boolean},System.Int32,System.Int32)">
             <summary>
             Lista os tickets com paginação e filtros detalhados.
             </summary>

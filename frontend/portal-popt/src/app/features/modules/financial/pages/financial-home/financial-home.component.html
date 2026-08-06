@@ -1,0 +1,534 @@
+<div class="container-fluid py-4 h-100 d-flex flex-column" style="min-height: 0;">
+  
+  <!-- Cabeçalho Principal -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h3 class="fw-bold mb-1">Visão Financeira</h3>
+      <p class="text-muted mb-0">Gestão administrativa de vendas e comissionamentos.</p>
+    </div>
+    <div>
+      <button class="btn btn-primary rounded-pill px-4 fw-semibold shadow-sm" (click)="openClosingModal()">
+        <i class="fas fa-file-invoice-dollar me-2"></i>Processar Faturamento
+      </button>
+    </div>
+  </div>
+
+  <!-- Filtros -->
+  <div class="card border-0 shadow-sm rounded-4 mb-4">
+    <div class="card-body p-3 d-flex flex-wrap align-items-end gap-3">
+      <div class="form-group mb-0">
+        <label class="form-label text-muted small fw-semibold mb-1">Data Inicial</label>
+        <input type="date" class="form-control" [(ngModel)]="filterStartDate">
+      </div>
+      <div class="form-group mb-0">
+        <label class="form-label text-muted small fw-semibold mb-1">Data Final</label>
+        <input type="date" class="form-control" [(ngModel)]="filterEndDate">
+      </div>
+      <div class="ms-auto d-flex gap-2">
+        <button class="btn btn-light rounded-pill px-4 text-secondary" (click)="onClearFilters()">Limpar Filtros</button>
+        <button class="btn btn-dark rounded-pill px-4 shadow-sm" (click)="onSearch()" [disabled]="isLoadingSummary || isLoadingGrid">
+          <i class="fas fa-search me-2"></i>Pesquisar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Skeleton Cards -->
+  <div class="row g-3 mb-4" *ngIf="isLoadingSummary">
+    <div class="col-12 col-sm-6 col-md-3" *ngFor="let item of [1,2,3,4,5,6,7,8]">
+      <div class="card border-0 shadow-sm rounded-4 h-100 p-4">
+        <div class="skeleton mb-3" style="width: 40px; height: 40px; border-radius: 50%;"></div>
+        <div class="skeleton mb-2" style="width: 70%; height: 20px; border-radius: 4px;"></div>
+        <div class="skeleton mb-2" style="width: 50%; height: 30px; border-radius: 4px;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cards Financeiros Reais -->
+  <div class="row g-3 mb-4" *ngIf="!isLoadingSummary && summary">
+    <!-- Row 1: Quantidades -->
+    <div class="col-12 col-sm-6 col-xl-3">
+      <div class="card border-0 shadow-sm rounded-4 h-100 kpi-card">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start mb-3">
+            <div class="icon-box bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+              <i class="fas fa-shopping-cart fs-5"></i>
+            </div>
+            <span class="badge" [ngClass]="summary.growth.totalSales >= 0 ? 'bg-success bg-opacity-10 text-success' : 'bg-danger bg-opacity-10 text-danger'">
+              <i class="fas" [ngClass]="summary.growth.totalSales >= 0 ? 'fa-arrow-up' : 'fa-arrow-down'"></i> {{summary.growth.totalSales}}%
+            </span>
+          </div>
+          <h6 class="text-muted fw-semibold mb-1">Total de Vendas</h6>
+          <h3 class="fw-bold mb-0 text-dark">{{summary.totalSalesCount}}</h3>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-sm-6 col-xl-3">
+      <div class="card border-0 shadow-sm rounded-4 h-100 kpi-card">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start mb-3">
+            <div class="icon-box bg-success bg-opacity-10 text-success rounded-circle d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+              <i class="fas fa-check-circle fs-5"></i>
+            </div>
+            <span class="badge" [ngClass]="summary.growth.confirmed >= 0 ? 'bg-success bg-opacity-10 text-success' : 'bg-danger bg-opacity-10 text-danger'">
+              <i class="fas" [ngClass]="summary.growth.confirmed >= 0 ? 'fa-arrow-up' : 'fa-arrow-down'"></i> {{summary.growth.confirmed}}%
+            </span>
+          </div>
+          <h6 class="text-muted fw-semibold mb-1">Confirmadas</h6>
+          <h3 class="fw-bold mb-0 text-dark">{{summary.totalConfirmedCount}}</h3>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-sm-6 col-xl-3">
+      <div class="card border-0 shadow-sm rounded-4 h-100 kpi-card">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start mb-3">
+            <div class="icon-box bg-danger bg-opacity-10 text-danger rounded-circle d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+              <i class="fas fa-times-circle fs-5"></i>
+            </div>
+            <span class="badge" [ngClass]="summary.growth.cancelled >= 0 ? 'bg-success bg-opacity-10 text-success' : 'bg-danger bg-opacity-10 text-danger'">
+              <i class="fas" [ngClass]="summary.growth.cancelled >= 0 ? 'fa-arrow-up' : 'fa-arrow-down'"></i> {{summary.growth.cancelled}}%
+            </span>
+          </div>
+          <h6 class="text-muted fw-semibold mb-1">Canceladas</h6>
+          <h3 class="fw-bold mb-0 text-dark">{{summary.totalCancelledCount}}</h3>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-sm-6 col-xl-3">
+      <div class="card border-0 shadow-sm rounded-4 h-100 kpi-card">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start mb-3">
+            <div class="icon-box bg-secondary bg-opacity-10 text-secondary rounded-circle d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+              <i class="fas fa-undo fs-5"></i>
+            </div>
+            <span class="badge" [ngClass]="summary.growth.refunded >= 0 ? 'bg-success bg-opacity-10 text-success' : 'bg-danger bg-opacity-10 text-danger'">
+              <i class="fas" [ngClass]="summary.growth.refunded >= 0 ? 'fa-arrow-up' : 'fa-arrow-down'"></i> {{summary.growth.refunded}}%
+            </span>
+          </div>
+          <h6 class="text-muted fw-semibold mb-1">Reembolsadas</h6>
+          <h3 class="fw-bold mb-0 text-dark">{{summary.totalRefundedCount}}</h3>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 2: Valores -->
+    <div class="col-12 col-sm-6 col-xl-3">
+      <div class="card border-0 shadow-sm rounded-4 h-100 kpi-card border-bottom border-4 border-info">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start mb-3">
+            <div class="icon-box bg-info bg-opacity-10 text-info rounded-circle d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+              <i class="fas fa-money-bill-wave fs-5"></i>
+            </div>
+          </div>
+          <h6 class="text-muted fw-semibold mb-1">Receita Bruta</h6>
+          <h3 class="fw-bold mb-0 text-dark">{{formatCurrency(summary.grossRevenue)}}</h3>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-sm-6 col-xl-3">
+      <div class="card border-0 shadow-sm rounded-4 h-100 kpi-card border-bottom border-4 border-success">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start mb-3">
+            <div class="icon-box bg-success bg-opacity-10 text-success rounded-circle d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+              <i class="fas fa-hand-holding-usd fs-5"></i>
+            </div>
+          </div>
+          <h6 class="text-muted fw-semibold mb-1">Receita Líquida (Pós Taxas)</h6>
+          <h3 class="fw-bold mb-0 text-dark">{{formatCurrency(summary.netRevenue)}}</h3>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-sm-6 col-xl-3">
+      <div class="card border-0 shadow-sm rounded-4 h-100 kpi-card border-bottom border-4 border-warning">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start mb-3">
+            <div class="icon-box bg-warning bg-opacity-10 text-warning rounded-circle d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+              <i class="fas fa-chalkboard-teacher fs-5"></i>
+            </div>
+          </div>
+          <h6 class="text-muted fw-semibold mb-1">Valor dos Professores</h6>
+          <h3 class="fw-bold mb-0 text-dark">{{formatCurrency(summary.professorsTotal)}}</h3>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-sm-6 col-xl-3">
+      <div class="card border-0 shadow-sm rounded-4 h-100 kpi-card border-bottom border-4 border-primary">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start mb-3">
+            <div class="icon-box bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+              <i class="fas fa-building fs-5"></i>
+            </div>
+          </div>
+          <h6 class="text-muted fw-semibold mb-1">Receita Instituto Theos</h6>
+          <h3 class="fw-bold mb-0 text-dark">{{formatCurrency(summary.theosTotal)}}</h3>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GRID DE VENDAS -->
+  <div class="card border-0 shadow-sm rounded-4 flex-grow-1 d-flex flex-column overflow-hidden">
+    
+    <div class="card-header bg-white border-bottom p-4">
+      <h5 class="fw-bold mb-0">Relatório de Transações</h5>
+    </div>
+
+    <div class="card-body p-0 flex-grow-1 overflow-auto custom-scrollbar position-relative">
+      
+      <div *ngIf="isLoadingGrid" class="position-absolute w-100 h-100 bg-white bg-opacity-75 d-flex align-items-center justify-content-center z-1">
+        <div class="spinner-border text-primary" role="status"></div>
+      </div>
+
+      <table class="table table-hover align-middle mb-0" style="min-width: 1500px;">
+        <thead class="bg-light bg-opacity-50 text-muted small fw-semibold sticky-top">
+          <tr>
+            <th class="px-4 py-3 border-0">Cód. Transação</th>
+            <th class="py-3 border-0">Data</th>
+            <th class="py-3 border-0">Aluno</th>
+            <th class="py-3 border-0">Curso / Professor</th>
+            <th class="py-3 border-0">Pagamento</th>
+            <th class="py-3 border-0 text-end">V. Bruto</th>
+            <th class="py-3 border-0 text-end">V. Líquido</th>
+            <th class="py-3 border-0 text-center">Status Venda</th>
+            <th class="px-4 py-3 border-0 text-end">Ações</th>
+          </tr>
+        </thead>
+        <tbody class="border-top-0">
+          <tr *ngIf="!isLoadingGrid && sales.length === 0">
+            <td colspan="9" class="text-center py-5 text-muted">Nenhuma venda encontrada para o período selecionado.</td>
+          </tr>
+          <tr *ngFor="let sale of sales">
+            <td class="px-4 fw-medium text-dark"><i class="fas fa-receipt text-muted me-2"></i>{{sale.transactionCode}}</td>
+            <td>
+              <div class="fw-medium">{{sale.purchaseDate | date:'dd/MM/yyyy'}}</div>
+              <div class="text-muted small">{{sale.purchaseDate | date:'HH:mm'}}</div>
+            </td>
+            <td>
+              <div class="d-flex align-items-center">
+                <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex justify-content-center align-items-center me-3 fw-bold" style="width:35px;height:35px;font-size:0.8rem">
+                  {{sale.studentName.charAt(0)}}
+                </div>
+                <span class="fw-semibold">{{sale.studentName}}</span>
+              </div>
+            </td>
+            <td>
+              <div class="fw-semibold text-dark text-truncate" style="max-width: 250px;" title="{{sale.courseName}}">{{sale.courseName}}</div>
+              <div class="text-muted small text-truncate" style="max-width: 250px;">
+                <span *ngFor="let p of sale.professors; let last = last">{{p.name}}{{last ? '' : ', '}}</span>
+              </div>
+            </td>
+            <td>
+              <div class="d-flex align-items-center gap-2">
+                <i class="fas text-secondary" 
+                  [ngClass]="{
+                    'fa-qrcode': sale.paymentMethod === 'PIX', 
+                    'fa-credit-card': sale.paymentMethod.includes('Cartão'), 
+                    'fa-barcode': sale.paymentMethod === 'Boleto'
+                  }"></i>
+                <span class="fw-medium">{{sale.paymentMethod}}</span>
+              </div>
+              <div class="text-muted small" *ngIf="sale.installments > 1">{{sale.installments}} parcelas</div>
+            </td>
+            <td class="text-end fw-semibold text-dark">{{formatCurrency(sale.grossValue)}}</td>
+            <td class="text-end fw-semibold text-success">{{formatCurrency(sale.netValue)}}</td>
+            <td class="text-center">
+              <span class="badge border border-opacity-25 rounded-pill" [ngClass]="getStatusBadgeClass(sale.saleStatus)">
+                {{sale.saleStatus}}
+              </span>
+            </td>
+            <td class="px-4 text-end">
+              <button class="btn btn-sm btn-light border rounded-pill shadow-sm text-primary fw-medium" (click)="openSaleModal(sale)">
+                <i class="fas fa-search-dollar me-2"></i>Detalhes
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Paginação -->
+    <div class="card-footer bg-white border-top p-3 d-flex justify-content-between align-items-center">
+      <span class="text-muted small">Exibindo {{(currentPage-1)*pageSize + 1}} a {{currentPage*pageSize > totalSales ? totalSales : currentPage*pageSize}} de {{totalSales}} vendas</span>
+      <nav aria-label="Navegação da grid">
+        <ul class="pagination pagination-sm mb-0">
+          <li class="page-item" [class.disabled]="currentPage === 1">
+            <button class="page-link shadow-none" (click)="changePage(currentPage-1)">Anterior</button>
+          </li>
+          <!-- Exibir maximo de 5 páginas para não estourar -->
+          <li class="page-item" *ngFor="let p of getPageArray().slice(0, 5)" [class.active]="currentPage === p">
+            <button class="page-link shadow-none" (click)="changePage(p)">{{p}}</button>
+          </li>
+          <li class="page-item disabled" *ngIf="getTotalPages() > 5"><span class="page-link shadow-none">...</span></li>
+          <li class="page-item" [class.disabled]="currentPage === getTotalPages()">
+            <button class="page-link shadow-none" (click)="changePage(currentPage+1)">Próximo</button>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+</div>
+
+
+<!-- ========================================== -->
+<!-- MODAL: DETALHES DA VENDA                   -->
+<!-- ========================================== -->
+<div class="modal fade" [class.show]="showSaleModal" [style.display]="showSaleModal ? 'block' : 'none'" tabindex="-1" style="background: rgba(0,0,0,0.5);">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content rounded-4 border-0 shadow-lg overflow-hidden">
+      
+      <!-- Header -->
+      <div class="modal-header bg-light border-bottom-0 p-4">
+        <h5 class="modal-title fw-bold">Detalhes da Transação</h5>
+        <button type="button" class="btn-close" (click)="closeSaleModal()"></button>
+      </div>
+
+      <div class="modal-body p-4" *ngIf="selectedSale">
+        
+        <!-- Info Básica -->
+        <div class="row g-4 mb-4">
+          <div class="col-md-6">
+            <p class="text-muted small mb-1">Aluno(a)</p>
+            <div class="d-flex align-items-center">
+              <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex justify-content-center align-items-center me-2 fw-bold" style="width:30px;height:30px;">
+                {{selectedSale.studentName.charAt(0)}}
+              </div>
+              <span class="fw-semibold">{{selectedSale.studentName}}</span>
+            </div>
+          </div>
+          <div class="col-md-6 text-md-end">
+            <p class="text-muted small mb-1">Status da Venda</p>
+            <span class="badge border border-opacity-25 rounded-pill fs-6" [ngClass]="getStatusBadgeClass(selectedSale.saleStatus)">
+              {{selectedSale.saleStatus}}
+            </span>
+          </div>
+          <div class="col-12">
+            <div class="card bg-light border-0 rounded-3">
+              <div class="card-body p-3 row g-3 text-center text-md-start">
+                <div class="col-6 col-md-3">
+                  <span class="text-muted small d-block mb-1">Código</span>
+                  <span class="fw-bold text-dark">{{selectedSale.transactionCode}}</span>
+                </div>
+                <div class="col-6 col-md-3">
+                  <span class="text-muted small d-block mb-1">Data da Compra</span>
+                  <span class="fw-bold text-dark">{{selectedSale.purchaseDate | date:'dd/MM/yyyy HH:mm'}}</span>
+                </div>
+                <div class="col-6 col-md-3">
+                  <span class="text-muted small d-block mb-1">Método de Pagamento</span>
+                  <span class="fw-bold text-dark">{{selectedSale.paymentMethod}} <small *ngIf="selectedSale.installments > 1">({{selectedSale.installments}}x)</small></span>
+                </div>
+                <div class="col-6 col-md-3">
+                  <span class="text-muted small d-block mb-1">Curso</span>
+                  <span class="fw-bold text-dark text-truncate d-block" title="{{selectedSale.courseName}}">{{selectedSale.courseName}}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <h6 class="fw-bold text-primary mb-3"><i class="fas fa-chart-pie me-2"></i>Composição Financeira</h6>
+        
+        <!-- Tabela Financeira -->
+        <div class="table-responsive border rounded-3 mb-4">
+          <table class="table table-borderless table-striped mb-0 align-middle">
+            <tbody class="fw-medium">
+              <tr>
+                <td class="text-muted py-3 ps-4">Receita Bruta</td>
+                <td class="text-end text-dark fw-bold fs-5 pe-4">{{formatCurrency(selectedSale.grossValue)}}</td>
+              </tr>
+              <tr>
+                <td class="text-muted py-3 ps-4">
+                  Taxa Bancária ({{formatPercent(selectedSale.bankFeePercentage)}})
+                </td>
+                <td class="text-end text-danger pe-4">- {{formatCurrency(selectedSale.bankFeeValue)}}</td>
+              </tr>
+              <tr>
+                <td class="text-muted py-3 ps-4">
+                  Taxa Instituto Theos ({{formatPercent(selectedSale.theosFeePercentage)}} sobre Bruto)
+                </td>
+                <td class="text-end text-danger pe-4">- {{formatCurrency(selectedSale.theosFeeValue)}}</td>
+              </tr>
+              <tr class="bg-primary bg-opacity-10 border-top border-primary border-opacity-25">
+                <td class="text-primary fw-bold py-3 ps-4">Valor Total destinado ao(s) Professor(es)</td>
+                <td class="text-end text-primary fw-bold fs-5 pe-4">{{formatCurrency(selectedSale.professorsValue)}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h6 class="fw-bold text-secondary mb-3"><i class="fas fa-users-cog me-2"></i>Divisão de Professores</h6>
+        <!-- Divisao Professores -->
+        <div class="row g-3">
+          <div class="col-12 col-md-6" *ngFor="let prof of selectedSale.professors">
+            <div class="card border border-secondary border-opacity-25 shadow-sm rounded-3">
+              <div class="card-body p-3 d-flex justify-content-between align-items-center">
+                <div>
+                  <div class="fw-bold text-dark">{{prof.name}}</div>
+                  <div class="text-muted small">Cota: {{prof.percentage}}%</div>
+                </div>
+                <div class="fw-bold text-success fs-5">
+                  {{formatCurrency(prof.value)}}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="modal-footer bg-light border-top-0 p-4">
+        <button type="button" class="btn btn-secondary rounded-pill px-4" (click)="closeSaleModal()">Fechar</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- ========================================== -->
+<!-- MODAL: PROCESSAR FATURAMENTO               -->
+<!-- ========================================== -->
+<div class="modal fade" [class.show]="showClosingModal" [style.display]="showClosingModal ? 'block' : 'none'" tabindex="-1" style="background: rgba(0,0,0,0.5);">
+  <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable">
+    <div class="modal-content rounded-4 border-0 shadow-lg overflow-hidden h-100">
+      
+      <!-- Header -->
+      <div class="modal-header bg-dark text-white border-bottom-0 p-4">
+        <div>
+          <h4 class="modal-title fw-bold mb-1"><i class="fas fa-calculator me-2 text-primary"></i>Fechamento de Faturamento</h4>
+          <p class="mb-0 text-white-50 small">Calcule e consolide o repasse de comissões para um professor em um período.</p>
+        </div>
+        <button type="button" class="btn-close btn-close-white align-self-start" (click)="closeClosingModal()"></button>
+      </div>
+
+      <div class="modal-body p-4 bg-light">
+        
+        <!-- Controles -->
+        <div class="card border-0 shadow-sm rounded-4 mb-4">
+          <div class="card-body p-4">
+            <div class="row g-3 align-items-end">
+              <div class="col-md-5">
+                <label class="form-label text-muted fw-semibold">Selecione o Professor</label>
+                <select class="form-select form-select-lg rounded-3" [(ngModel)]="closingProfessorId">
+                  <option value="">-- Selecione --</option>
+                  <option value="1">Professor João</option>
+                  <option value="2">Professora Maria</option>
+                </select>
+              </div>
+              <div class="col-md-5">
+                <label class="form-label text-muted fw-semibold">Período de Fechamento</label>
+                <div class="input-group input-group-lg">
+                  <input type="date" class="form-control" [value]="filterStartDate" readonly>
+                  <span class="input-group-text bg-white border-start-0 border-end-0">até</span>
+                  <input type="date" class="form-control" [value]="filterEndDate" readonly>
+                </div>
+              </div>
+              <div class="col-md-2">
+                <button class="btn btn-primary btn-lg rounded-3 w-100 fw-bold shadow-sm" [disabled]="!closingProfessorId || isProcessingClosing" (click)="onSelectProfessorForClosing()">
+                  <span class="spinner-border spinner-border-sm me-2" *ngIf="isProcessingClosing"></span>
+                  Calcular
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Resultados -->
+        <ng-container *ngIf="closingData && !isProcessingClosing">
+          <div class="row g-4">
+            
+            <!-- Resumo Financeiro Destacado -->
+            <div class="col-xl-4">
+              <div class="card bg-white border-0 shadow-sm rounded-4 h-100 overflow-hidden">
+                <div class="card-header bg-primary bg-opacity-10 border-0 p-4">
+                  <h5 class="fw-bold text-primary mb-0">Resumo do Repasse</h5>
+                  <div class="text-muted small">{{closingData.professorName}}</div>
+                </div>
+                <div class="card-body p-0">
+                  <ul class="list-group list-group-flush">
+                    <li class="list-group-item d-flex justify-content-between align-items-center p-4">
+                      <span class="text-muted fw-medium">Receita Bruta Vinculada</span>
+                      <span class="fw-bold text-dark">{{formatCurrency(closingData.grossRevenue)}}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center px-4 py-3 bg-light">
+                      <span class="text-muted small">(-) Taxas Bancárias (Proporcional)</span>
+                      <span class="text-danger small fw-medium">- {{formatCurrency(closingData.bankFees)}}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center px-4 py-3 bg-light">
+                      <span class="text-muted small">(-) Taxa Instituto Theos (35%)</span>
+                      <span class="text-danger small fw-medium">- {{formatCurrency(closingData.theosFees)}}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center p-4 bg-success text-white">
+                      <span class="fw-bold fs-5">Total Líquido a Repassar</span>
+                      <span class="fw-bold fs-4">{{formatCurrency(closingData.totalToReceive)}}</span>
+                    </li>
+                  </ul>
+                </div>
+                <div class="card-footer bg-white border-0 p-4 pt-3 d-grid gap-2">
+                  <button class="btn btn-outline-primary rounded-pill fw-semibold" (click)="generateDemonstrativo()">
+                    <i class="fas fa-file-pdf me-2"></i>Gerar Demonstrativo
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Lista de Vendas do Período -->
+            <div class="col-xl-8">
+              <div class="card bg-white border-0 shadow-sm rounded-4 h-100 d-flex flex-column">
+                <div class="card-header bg-white border-bottom p-4 d-flex justify-content-between align-items-center">
+                  <h6 class="fw-bold mb-0">Transações do Período ({{closingData.salesCount}})</h6>
+                  <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3 py-2">
+                    Apenas Confirmadas e Pendentes
+                  </span>
+                </div>
+                <div class="card-body p-0 flex-grow-1 overflow-auto custom-scrollbar" style="max-height: 450px;">
+                  <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-light sticky-top text-muted small">
+                      <tr>
+                        <th class="ps-4 border-0 py-3">Data</th>
+                        <th class="border-0 py-3">Curso / Aluno</th>
+                        <th class="border-0 py-3 text-end">V. Bruto (Total)</th>
+                        <th class="pe-4 border-0 py-3 text-end">V. Repasse (Prof.)</th>
+                      </tr>
+                    </thead>
+                    <tbody class="border-top-0">
+                      <tr *ngFor="let s of closingData.sales">
+                        <td class="ps-4 text-muted small">{{s.purchaseDate | date:'dd/MM/yy HH:mm'}}</td>
+                        <td>
+                          <div class="fw-semibold text-dark">{{s.courseName}}</div>
+                          <div class="text-muted small">{{s.studentName}}</div>
+                        </td>
+                        <td class="text-end text-muted">{{formatCurrency(s.grossValue)}}</td>
+                        <td class="pe-4 text-end fw-bold text-success">
+                          <!-- Busca o valor exato deste professor nesta transacao -->
+                          {{ formatCurrency(s.professors[0].name.includes('João') && closingProfessorId === '1' ? s.professors[0].value : (s.professors[1] ? s.professors[1].value : s.professors[0].value)) }}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </ng-container>
+
+      </div>
+
+      <div class="modal-footer bg-white border-top p-4 d-flex justify-content-between">
+        <button type="button" class="btn btn-light rounded-pill px-4 text-secondary" (click)="closeClosingModal()">Cancelar</button>
+        <button type="button" class="btn btn-primary rounded-pill px-5 fw-bold shadow-sm" [disabled]="!closingData" (click)="confirmClosing()">
+          <i class="fas fa-check-circle me-2"></i>Confirmar Fechamento
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>

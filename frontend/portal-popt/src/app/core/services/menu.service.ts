@@ -12,15 +12,7 @@ export class MenuService {
   constructor(private router: Router) { }
 
   getMenu(): IMenuItem[] {
-    const token = this.authUtil.getCookieAuth();
-    let isAdmin = false;
-
-    if (token) {
-      const decoded = this.authUtil.decodeToken(token);
-      if (decoded && decoded.roles && decoded.roles.includes('Admin')) {
-        isAdmin = true;
-      }
-    }
+    const isAdmin = this.authUtil.hasRole('Admin');
 
     const menuMock = [
       {
@@ -52,11 +44,17 @@ export class MenuService {
         title: 'Suporte',
         icon: 'fas fa-headset',
         route: '/support'
+      },
+      {
+        id: 6,
+        title: 'Financeiro',
+        icon: 'fas fa-dollar-sign',
+        route: '/financial'
       }
     ];
 
     if (!isAdmin) {
-      return menuMock.filter(m => m.route !== '/settings');
+      return menuMock.filter(m => m.route !== '/settings' && m.route !== '/financial');
     }
 
     return menuMock;

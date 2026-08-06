@@ -56,14 +56,10 @@ export class AuthGuardService {
     }
 
     if (isLoggedIn && state.url.includes('/settings')) {
-      const token = this.authUtil.getCookieAuth();
-      if (token) {
-        const decoded = this.authUtil.decodeToken(token);
-        if (!decoded || !decoded.roles || !decoded.roles.includes('Admin')) {
-          this.toastService.error('Você não tem permissão para acessar esta página.');
-          this.router.navigate([defaultPath]);
-          return false;
-        }
+      if (!this.authUtil.hasRole('Admin')) {
+        this.toastService.error('Você não tem permissão para acessar esta página.');
+        this.router.navigate([defaultPath]);
+        return false;
       }
     }
 

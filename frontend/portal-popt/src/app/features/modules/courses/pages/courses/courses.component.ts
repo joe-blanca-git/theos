@@ -139,14 +139,7 @@ export class CoursesComponent implements OnInit {
   }
 
   checkAdminStatus() {
-    const token = this.authUtil.getCookieAuth();
-    if (token) {
-      const decoded = this.authUtil.decodeToken(token);
-      if (decoded) {
-        const roles = decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] || decoded['role'] || [];
-        this.isAdmin = Array.isArray(roles) ? roles.includes('Admin') : roles === 'Admin';
-      }
-    }
+    this.isAdmin = this.authUtil.hasRole('Admin');
   }
 
   ngAfterViewInit() {

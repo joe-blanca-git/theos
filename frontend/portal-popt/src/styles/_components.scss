@@ -198,6 +198,11 @@
   border-top: 1px solid $border-subtle;
 }
 
+.modal-backdrop, .custom-modal-backdrop, .modal {
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+}
+
 // ─── 7. Dropdowns ────────────────────────────────
 .dropdown-menu {
   background-color: $bg-modais-dropdowns;

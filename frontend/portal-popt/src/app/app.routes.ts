@@ -62,6 +62,12 @@ export const routes: Routes = [
                 title: 'Suporte',
                 loadChildren: () =>
                     import('./features/modules/support/support.routes').then((r) => r.routes),
+            },
+            {
+                path: 'financial',
+                title: 'Financeiro',
+                loadChildren: () =>
+                    import('./features/modules/financial/financial.routes').then((r) => r.routes),
             }
         ]
     }

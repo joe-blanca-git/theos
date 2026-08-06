@@ -80,8 +80,10 @@
     <ng-container *ngIf="selectedTicket">
       <!-- Header do Chamado -->
       <div class="p-4 border-bottom bg-white shadow-sm z-1">
-        <div class="d-flex justify-content-between align-items-start mb-3">
-          <div>
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+          
+          <!-- Subject and Category -->
+          <div class="flex-grow-1">
             <h5 class="fw-bold mb-1">{{ selectedTicket.subject }}</h5>
             <div class="d-flex align-items-center gap-2">
               <span class="badge border border-opacity-25 rounded-pill" [ngClass]="getStatusBadgeClass(selectedTicket.status)">
@@ -90,19 +92,22 @@
               <span class="text-muted small ms-2"><i class="fas fa-folder me-1"></i>{{ selectedTicket.categoryName }}</span>
             </div>
           </div>
+          
+          <!-- User Info -->
+          <div class="d-flex align-items-center border-start ps-3">
+            <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center me-3 fw-bold shadow-sm" style="width: 45px; height: 45px;">
+              {{ selectedTicket.studentName.charAt(0) }}
+            </div>
+            <div>
+              <div class="fw-bold">{{ selectedTicket.studentName }}</div>
+              <div class="text-muted small">{{ selectedTicket.studentEmail }} &bull; {{ selectedTicket.createdAt | date:'short' }}</div>
+            </div>
+          </div>
+
+          <!-- Close Button Mobile -->
           <button class="btn btn-sm btn-light rounded-circle shadow-sm d-md-none" (click)="closeTicketView()">
             <i class="fas fa-times"></i>
           </button>
-        </div>
-        
-        <div class="d-flex align-items-center mt-3 pt-3 border-top">
-          <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center me-3 fw-bold shadow-sm" style="width: 45px; height: 45px;">
-            {{ selectedTicket.studentName.charAt(0) }}
-          </div>
-          <div>
-            <div class="fw-bold">{{ selectedTicket.studentName }}</div>
-            <div class="text-muted small">{{ selectedTicket.studentEmail }} &bull; {{ selectedTicket.createdAt | date:'short' }}</div>
-          </div>
         </div>
       </div>
 

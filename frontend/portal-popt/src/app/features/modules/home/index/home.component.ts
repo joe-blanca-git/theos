@@ -8,6 +8,7 @@ import { BreadcrumbComponent } from '../../../../shared/components/breadcrumb/br
 import { MenuService } from '../../../../core/services/menu.service';
 import { StateUtil } from '../../../../core/utils/UserState.util';
 import { AuthService } from '../../../../core/auth/auth.service';
+import { HomeService } from '../services/home.service';
 
 interface Course {
   id: number;
@@ -87,10 +88,13 @@ interface FaqItem {
 })
 export class HomeComponent implements OnInit {
   private readonly stateUtil = inject(StateUtil);
+  private readonly homeService = inject(HomeService);
 
   sidebarCollapsed = false;
   activeTab = 'dashboard';
   searchTerm = '';
+
+  dashboardData: any = null;
 
   // Student Info
   studentName = '--';
@@ -431,7 +435,6 @@ export class HomeComponent implements OnInit {
           this.studentName = user.name || '--';
         };
       });
-      
     }catch(error){
 
     }finally{

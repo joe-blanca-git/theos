@@ -35,4 +35,9 @@ export class HomeService extends BaseService {
       throw error;
     }
   }
+
+  getTeacherDashboard() {
+    let url = `${this.urlApiTheos}Teachers/dashboard`;
+    return this.httpClient.get<any>(url, this.GetAuthHeaderJson());
+  }
 }

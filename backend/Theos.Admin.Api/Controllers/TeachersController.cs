@@ -5,6 +5,7 @@ using Theos.Application.Teachers.Commands.DeleteTeacher;
 using Theos.Application.Teachers.Commands.AssignTeacher;
 using Theos.Application.Teachers.Queries.GetTeachers;
 using Theos.Application.Teachers.Queries.GetTeacherById;
+using Theos.Application.Teachers.Queries.GetTeacherDashboard;
 using Theos.Application.Teachers.Common;
 
 namespace Theos.Admin.Api.Controllers;
@@ -91,5 +92,20 @@ public class TeachersController : ApiControllerBase
         if (!result.Success) return BadRequest(result.Message);
 
         return Ok(new { message = result.Message });
+    }
+    /// <summary>
+    /// Obtém o dashboard completo do professor autenticado.
+    /// </summary>
+    [HttpGet("dashboard")]
+    public async Task<ActionResult<TeacherDashboardDto>> GetTeacherDashboard()
+    {
+        // Extract IdAgivys from current user context token claims
+        var idAgivys = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+        
+        if (string.IsNullOrEmpty(idAgivys))
+            return Unauthorized("ID do usuário não encontrado no token.");
+
+        var dto = await Mediator.Send(new GetTeacherDashboardQuery { IdAgivys = idAgivys });
+        return Ok(dto);
     }
 }
