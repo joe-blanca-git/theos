@@ -1,3 +1,0 @@
-/theos/backend/publish/Theos.Domain.dll
-/theos/backend/publish/Theos.Domain.deps.json
-/theos/backend/publish/Theos.Domain.pdb

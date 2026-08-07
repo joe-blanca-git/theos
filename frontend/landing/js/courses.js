@@ -47,7 +47,10 @@ async function fetchCursos() {
                     <img src="${curso.imgCoverLink}" class="card-img-top" alt="${curso.name}" onerror="this.src='./assets/images/others/default.jpeg'">
                     <div class="card-body d-flex flex-column justify-content-between h-100">
                         <div>
-                            <span class="course-tag">${curso.level || 'Intermediário'}</span>
+                            <div class="d-flex gap-2 mb-2 flex-wrap">
+                                <span class="course-tag">${curso.level || 'Intermediário'}</span>
+                                ${curso.isComingSoon ? `<span class="course-tag" style="background-color:#f59e0b; color:#fff; border-color:#f59e0b;">Vem aí: ${curso.releaseDate ? new Date(curso.releaseDate).toLocaleDateString('pt-BR') : 'Em breve'}</span>` : ''}
+                            </div>
                             <h4 class="card-title">${curso.name}</h4>
                             <p class="card-text text-white small text-justify">${curso.description.length > 150 ? curso.description.substring(0, 150) + '...' : curso.description}</p>
                         </div>
@@ -188,6 +191,16 @@ async function fetchCursoDetalhes() {
         const curso = await response.json();
 
         // 1. Atualizar informações básicas do curso
+        const badgeEl = document.getElementById("course-badge");
+        if (badgeEl) {
+            if (curso.isComingSoon) {
+                badgeEl.textContent = `ESTREIA EM: ${curso.releaseDate ? new Date(curso.releaseDate).toLocaleDateString('pt-BR') : 'EM BREVE'}`;
+                badgeEl.className = "badge bg-warning text-dark px-3 py-2 rounded-pill fw-bold";
+            } else {
+                badgeEl.textContent = "CURSO LIBERADO";
+            }
+        }
+
         const nameEl = document.getElementById("course-name");
         if (nameEl) nameEl.textContent = curso.name;
 
