@@ -36,6 +36,12 @@ namespace Theos.Application.Courses.Commands.UpdateCourse
 
         /// <summary>Novo ID da biblioteca Bunny para o curso.</summary>
         public string? BunnyLibraryId { get; init; }
+
+        /// <summary>Flag para indicar se o curso é uma estreia futura (Vem aí).</summary>
+        public bool IsComingSoon { get; init; }
+
+        /// <summary>Nova data de estreia do curso.</summary>
+        public DateTime? ReleaseDate { get; init; }
     }
 
     public class UpdateCourseCommandHandler : IRequestHandler<UpdateCourseCommand, Unit>
@@ -82,6 +88,8 @@ namespace Theos.Application.Courses.Commands.UpdateCourse
             course.PriceSingle = request.PriceSingle;
             course.ImgCoverLink = request.ImgCoverLink;
             course.BunnyLibraryId = request.BunnyLibraryId;
+            course.IsComingSoon = request.IsComingSoon;
+            course.ReleaseDate = request.ReleaseDate;
             course.UpdatedBy = currentUser.Id;
 
             _context.Courses.Update(course);

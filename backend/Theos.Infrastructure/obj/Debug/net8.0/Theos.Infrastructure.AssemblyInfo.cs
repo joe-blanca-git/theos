@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Theos.Infrastructure")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2a3de3149cd18eba39b1c611b29fad2328a1e4b3")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6c0485d0c173e654eec65fdc6862ab1387b6e1db")]
 [assembly: System.Reflection.AssemblyProductAttribute("Theos.Infrastructure")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Theos.Infrastructure")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -47,8 +47,10 @@ export interface Course {
   active: boolean;
   level: string;
   priceSingle: number;
-  imgCoverLink: string;
-  bunnyLibraryId: string;
+  imgCoverLink?: string;
+  bunnyLibraryId?: string;
+  isComingSoon?: boolean;
+  releaseDate?: string;
   workloadHours: number;
   modules: Module[];
   domains: Domain[];

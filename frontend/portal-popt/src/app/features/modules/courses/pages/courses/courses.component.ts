@@ -167,7 +167,9 @@ export class CoursesComponent implements OnInit {
       level: ['Iniciante', Validators.required],
       priceSingle: [0, [Validators.required, Validators.min(0)]],
       imgCoverLink: [''],
-      categoryId: ['', Validators.required]
+      categoryId: ['', Validators.required],
+      isComingSoon: [false],
+      releaseDate: ['']
     });
 
     this.moduleForm = this.fb.group({
@@ -306,7 +308,7 @@ export class CoursesComponent implements OnInit {
 
   openNewCourseModal() {
     this.courseToEdit = null;
-    this.courseForm.reset({ level: 'Iniciante', priceSingle: 0, categoryId: '' });
+    this.courseForm.reset({ level: 'Iniciante', priceSingle: 0, categoryId: '', isComingSoon: false, releaseDate: '' });
     this.selectedCoverImage = null;
     this.coverImagePreview = null;
     this.coverImageError = null;
@@ -322,7 +324,9 @@ export class CoursesComponent implements OnInit {
       level: course.level || 'Iniciante',
       priceSingle: course.priceSingle || 0,
       imgCoverLink: course.imgCoverLink,
-      categoryId: course.categories && course.categories.length > 0 ? course.categories[0].id : ''
+      categoryId: course.categories && course.categories.length > 0 ? course.categories[0].id : '',
+      isComingSoon: course.isComingSoon || false,
+      releaseDate: course.releaseDate ? new Date(course.releaseDate).toISOString().split('T')[0] : ''
     });
     this.selectedCoverImage = null;
     this.coverImagePreview = course.imgCoverLink || null;

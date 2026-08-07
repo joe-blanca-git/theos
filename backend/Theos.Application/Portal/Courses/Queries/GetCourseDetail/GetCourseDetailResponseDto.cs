@@ -11,6 +11,8 @@ public class GetCourseDetailResponseDto
     public string? Level { get; set; }
     public string? Category { get; set; }
     public bool Released { get; set; }
+    public bool IsComingSoon { get; set; }
+    public DateTime? ReleaseDate { get; set; }
 
     // Progress
     public int TotalLessons { get; set; }

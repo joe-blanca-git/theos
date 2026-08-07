@@ -190,11 +190,14 @@
               <td class="fw-bold text-success fs-6">
                 R$ {{ course.priceSingle }}
               </td>
-              <td class="text-center">
+              <td class="text-center d-flex flex-column align-items-center gap-1 justify-content-center h-100 py-3">
                 <span class="badge rounded-pill px-3 py-2 border shadow-sm"
                       [ngClass]="course.active ? 'bg-success bg-opacity-10 text-success border-success' : 'bg-secondary bg-opacity-10 text-secondary border-secondary'">
                   <i class="fas fa-circle fs-7 me-1" [class.text-success]="course.active" [class.text-secondary]="!course.active" style="font-size: 0.6rem;"></i>
                   {{ course.active ? 'Ativo' : 'Inativo' }}
+                </span>
+                <span *ngIf="course.isComingSoon" class="badge rounded-pill px-3 py-1 bg-warning text-dark shadow-sm border border-warning" style="font-size: 0.7rem;">
+                  <i class="fas fa-star me-1"></i> Vem aí
                 </span>
               </td>
               <td class="pe-4 text-end" *ngIf="isAdmin">
@@ -277,6 +280,22 @@
                       <option value="Intermediário">Intermediário</option>
                       <option value="Avançado">Avançado</option>
                     </select>
+                  </div>
+                  
+                  <div class="col-12 mt-4">
+                    <hr class="border-secondary border-opacity-25 my-0">
+                  </div>
+
+                  <div class="col-12">
+                    <div class="form-check form-switch d-flex align-items-center gap-2">
+                      <input class="form-check-input" type="checkbox" role="switch" id="isComingSoonSwitch" formControlName="isComingSoon" style="width: 2.5em; height: 1.25em;">
+                      <label class="form-check-label fw-bold text-white mb-0" for="isComingSoonSwitch">Vem aí (Estreia)</label>
+                    </div>
+                  </div>
+
+                  <div class="col-12" *ngIf="courseForm.get('isComingSoon')?.value">
+                    <label class="form-label small fw-bold text-white-50 text-uppercase" style="letter-spacing: 0.5px; font-size: 0.7rem;">Data de Estreia</label>
+                    <input type="date" class="form-control border-light-subtle" formControlName="releaseDate">
                   </div>
                   <div class="col-12">
                     <label class="form-label small fw-bold text-white-50 text-uppercase" style="letter-spacing: 0.5px; font-size: 0.7rem;">Preço (R$) <span class="text-danger">*</span></label>

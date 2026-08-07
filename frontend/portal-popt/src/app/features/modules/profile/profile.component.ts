@@ -57,6 +57,12 @@ export class ProfileComponent implements OnInit {
   newPassword = '';
   confirmPassword = '';
   isSubmitting = false;
+  
+  showCurrentPassword = false;
+  showNewPassword = false;
+  showConfirmPassword = false;
+
+  isInitializing = true;
 
   // Feedback
   showToast = false;
@@ -90,6 +96,62 @@ export class ProfileComponent implements OnInit {
       }
     });
 
+    // Handle initialization state
+    let completedRequests = 0;
+    const checkCompletion = () => {
+      completedRequests++;
+      if (completedRequests >= 2) {
+        // Add a slight delay for smoother transition
+        setTimeout(() => { this.isInitializing = false; }, 300);
+      }
+    };
+
+    // Replace regular load with intercepted ones
+    const originalLoadPersonData = this.loadPersonData.bind(this);
+    const originalLoadAddresses = this.loadAddresses.bind(this);
+
+    this.loadPersonData = () => {
+      this.authService.getPerson().subscribe({
+        next: (person) => {
+          if (person) {
+            let phoneVal = person.phone || '';
+            let countryCodeVal = '+55';
+            if (phoneVal.startsWith('+')) {
+              const spaceIdx = phoneVal.indexOf(' ');
+              if (spaceIdx > 0) {
+                countryCodeVal = phoneVal.substring(0, spaceIdx);
+                phoneVal = phoneVal.substring(spaceIdx + 1);
+              }
+            }
+            let formattedDate = '';
+            if (person.birthDate) {
+              formattedDate = new Date(person.birthDate).toISOString().split('T')[0];
+            }
+            this.personForm.patchValue({
+              name: person.name || this.userName,
+              email: person.email || this.userEmail,
+              document: person.document || '',
+              birthDate: formattedDate,
+              phone: phoneVal,
+              countryCode: countryCodeVal
+            });
+            if (person.name) this.userName = person.name;
+          }
+        },
+        error: (err) => console.error('Falha ao buscar dados cadastrais:', err),
+        complete: () => checkCompletion()
+      });
+    };
+
+    this.loadAddresses = () => {
+      this.authService.getMyAddresses().subscribe({
+        next: (res) => this.addresses = res || [],
+        error: () => console.error('Falha ao buscar endereços'),
+        complete: () => checkCompletion()
+      });
+    };
+
+    this.loadPersonData();
     this.loadAddresses();
   }
 
@@ -184,17 +246,14 @@ export class ProfileComponent implements OnInit {
     });
   }
 
+  loadPersonData() {
+    // This is overridden in ngOnInit
+  }
+
   // --- ENDEREÇOS --- //
 
   loadAddresses() {
-    this.authService.getMyAddresses().subscribe({
-      next: (res) => {
-        this.addresses = res || [];
-      },
-      error: () => {
-        console.error('Falha ao buscar endereços');
-      }
-    });
+    // This is overridden in ngOnInit
   }
 
   onPhoneInput(event: any) {
@@ -273,7 +332,11 @@ export class ProfileComponent implements OnInit {
     }
 
     this.isLoading = true;
-    const payload = this.addressForm.getRawValue();
+    const val = this.addressForm.getRawValue();
+    const payload = {
+      ...val,
+      zipCode: val.zipCode?.replace(/\D/g, '')
+    };
 
     if (this.isEditingAddress && this.currentAddressId) {
       this.authService.updateAddress(this.currentAddressId, payload).subscribe({
@@ -431,12 +494,18 @@ export class ProfileComponent implements OnInit {
     }
 
     this.isSubmitting = true;
-    setTimeout(() => {
-      this.isSubmitting = false;
-      this.currentPassword = '';
-      this.newPassword = '';
-      this.confirmPassword = '';
-      this.triggerToast('Sua senha foi alterada com sucesso!');
-    }, 1200);
+    this.authService.changePassword(this.currentPassword, this.newPassword).subscribe({
+      next: () => {
+        this.isSubmitting = false;
+        this.currentPassword = '';
+        this.newPassword = '';
+        this.confirmPassword = '';
+        this.triggerToast('Sua senha foi alterada com sucesso!');
+      },
+      error: () => {
+        this.isSubmitting = false;
+        this.triggerToast('Erro ao alterar a senha. Verifique sua senha atual.', true);
+      }
+    });
   }
 }

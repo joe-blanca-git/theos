@@ -125,6 +125,12 @@ export class AuthService extends BaseService {
       .pipe(map(this.extractData));
   }
 
+  changePassword(currentPassword: string, newPassword: string): Observable<any> {
+    const url = `${this.urlApiServiceAuth}change-password`;
+    const body = { currentPassword, newPassword };
+    return this.http.post(url, body, this.GetAuthHeaderJson());
+  }
+
   checkEmail(email: string): Observable<any> {
     const url = `${this.urlApiServiceAuth}check-email/${encodeURIComponent(email)}`;
     return this.http.get(url, this.GetAuthHeaderJson());
@@ -136,27 +142,32 @@ export class AuthService extends BaseService {
   }
 
   updatePerson(payload: any): Observable<any> {
-    const url = `${this.urlApiServiceAuth}update-person`;
+    const url = `${this.urlApiService}person`;
     return this.http.put(url, payload, this.GetAuthHeaderJson());
   }
 
+  getPerson(): Observable<any> {
+    const url = `${this.urlApiService}person`;
+    return this.http.get(url, this.GetAuthHeaderJson());
+  }
+
   getMyAddresses(): Observable<any> {
-    const url = `${this.urlApiServiceAuth}my-addresses`;
+    const url = `${this.urlApiService}address/my-address`;
     return this.http.get(url, this.GetAuthHeaderJson());
   }
 
   addAddress(payload: any): Observable<any> {
-    const url = `${this.urlApiServiceAuth}my-addresses`;
+    const url = `${this.urlApiService}address/my-address`;
     return this.http.post(url, payload, this.GetAuthHeaderJson());
   }
 
   updateAddress(id: string, payload: any): Observable<any> {
-    const url = `${this.urlApiServiceAuth}my-addresses/${id}`;
+    const url = `${this.urlApiService}address/my-address/${id}`;
     return this.http.put(url, payload, this.GetAuthHeaderJson());
   }
 
   deleteAddress(id: string): Observable<any> {
-    const url = `${this.urlApiServiceAuth}my-addresses/${id}`;
+    const url = `${this.urlApiService}address/my-address/${id}`;
     return this.http.delete(url, this.GetAuthHeaderJson());
   }
 }

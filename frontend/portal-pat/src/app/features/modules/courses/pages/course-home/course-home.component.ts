@@ -16,6 +16,8 @@ export interface ICourse {
   description: string;
   imgCoverLink: string;
   released: boolean;
+  isComingSoon?: boolean;
+  releaseDate?: string;
   color?: string;
   code?: string;
   rating?: number;
@@ -95,7 +97,20 @@ export class CourseHomeComponent implements OnInit {
     this.router.navigate(['courses/course-detail', courseId]);
   }
 
+  isCourseComingSoon(course: ICourse): boolean {
+    if (!course.isComingSoon) return false;
+    if (!course.releaseDate) return true; // Se não tem data, fica como coming soon eterno até mudarem a flag
+    const today = new Date();
+    const release = new Date(course.releaseDate);
+    // Removemos as horas para comparar apenas os dias (ou compara com a hora atual, se desejar)
+    return today < release;
+  }
+
   onCourseAction(course: ICourse) {
+    if (this.isCourseComingSoon(course)) {
+      return; // Bloqueia a ação se estiver "Vem aí..."
+    }
+
     if (course.released) {
       this.navigateDetail(course.id);
     } else {

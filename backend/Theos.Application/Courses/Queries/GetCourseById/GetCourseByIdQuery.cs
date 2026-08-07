@@ -67,6 +67,8 @@ namespace Theos.Application.Courses.Queries.GetCourseById
                     PriceSingle = c.PriceSingle,
                     ImgCoverLink = c.ImgCoverLink,
                     BunnyLibraryId = c.BunnyLibraryId,
+                    IsComingSoon = c.IsComingSoon,
+                    ReleaseDate = c.ReleaseDate,
                     Modules = c.Modules.Where(m => request.IncludeInactive || m.Active).Select(m => new ModuleDto
                     {
                         Id = m.Id,

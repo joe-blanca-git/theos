@@ -23,6 +23,8 @@ namespace Theos.Application.Courses.Queries.GetCourses
         public decimal? PriceSingle { get; init; }
         public string? ImgCoverLink { get; init; }
         public string? BunnyLibraryId { get; init; }
+        public bool IsComingSoon { get; init; }
+        public DateTime? ReleaseDate { get; init; }
         public List<ModuleDto> Modules { get; init; } = new();
         public List<CourseDomainDto> Domains { get; init; } = new();
         public List<Theos.Application.Teachers.Common.TeacherDto> Teachers { get; init; } = new();
@@ -112,6 +114,8 @@ namespace Theos.Application.Courses.Queries.GetCourses
                     PriceSingle = c.PriceSingle,
                     ImgCoverLink = c.ImgCoverLink,
                     BunnyLibraryId = c.BunnyLibraryId,
+                    IsComingSoon = c.IsComingSoon,
+                    ReleaseDate = c.ReleaseDate,
                     Modules = c.Modules.Where(m => request.IncludeInactive || m.Active).Select(m => new ModuleDto
                     {
                         Id = m.Id,

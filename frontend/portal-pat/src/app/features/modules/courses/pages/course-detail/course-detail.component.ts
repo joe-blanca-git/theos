@@ -62,8 +62,21 @@ export class CourseDetailComponent implements OnInit {
     this.router.navigate(['/courses']);
   }
 
+  isCourseComingSoon(): boolean {
+    if (!this.course || !this.course.isComingSoon) return false;
+    if (!this.course.releaseDate) return true;
+    const today = new Date();
+    const release = new Date(this.course.releaseDate);
+    return today < release;
+  }
+
   async goToLesson() {
     if (!this.course) return;
+
+    if (this.isCourseComingSoon()) {
+      this.toastService.error('Este curso ainda não estreou. Aguarde a data de lançamento.');
+      return;
+    }
 
     if (this.course.progressPercentage !== 100) {
       if (this.course.lastViewedLesson && this.course.lastViewedLesson.lessonId) {
@@ -86,6 +99,10 @@ export class CourseDetailComponent implements OnInit {
   }
 
   goToSpecificLesson(lessonId: number) {
+    if (this.isCourseComingSoon()) {
+      this.toastService.error('Este curso ainda não estreou. Aguarde a data de lançamento.');
+      return;
+    }
     this.router.navigate(['/courses/lesson', this.courseId], { queryParams: { lessonId: lessonId } });
   }
 
