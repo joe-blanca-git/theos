@@ -13,22 +13,19 @@ export interface AgivysRole {
 })
 export class AgivysService extends BaseService {
   
-  // Base URL for the Agivys RLS API
-  private readonly agivysRlsUrl = 'https://joederblanca.com.br/agivys-api/api/v1/RLS';
-
   constructor(protected override injector: Injector, private http: HttpClient) {
     super(injector);
   }
 
   getRoles(): Observable<AgivysRole[]> {
-    return this.http.get<AgivysRole[]>(`${this.agivysRlsUrl}/getRoles`, this.GetAuthHeaderJson());
+    return this.http.get<AgivysRole[]>(`${this.urlApiService}RLS`, this.GetAuthHeaderJson());
   }
 
   assignRole(userId: number, roleName: string): Observable<any> {
     const payload = { userId, roleName };
     const options: any = this.GetAuthHeaderJson();
     options.responseType = 'text';
-    return this.http.post(`${this.agivysRlsUrl}/postAssignRole`, payload, options);
+    return this.http.post(`${this.urlApiService}RLS/postAssignRole`, payload, options);
   }
 
   removeRole(userId: number, roleName: string): Observable<any> {
@@ -36,6 +33,6 @@ export class AgivysService extends BaseService {
     const options: any = this.GetAuthHeaderJson();
     options.body = payload;
     options.responseType = 'text';
-    return this.http.delete(`${this.agivysRlsUrl}/removeRole`, options);
+    return this.http.delete(`${this.urlApiService}RLS/removeRole`, options);
   }
 }

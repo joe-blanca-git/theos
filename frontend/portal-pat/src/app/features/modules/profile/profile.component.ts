@@ -120,6 +120,10 @@ export class ProfileComponent implements OnInit {
   confirmPassword = '';
   isSubmitting = false;
 
+  showCurrentPassword = false;
+  showNewPassword = false;
+  showConfirmPassword = false;
+
   ngOnInit() {
     this.initForms();
     
@@ -138,12 +142,44 @@ export class ProfileComponent implements OnInit {
         this.personForm.patchValue({
           name: this.userName,
           email: this.userEmail,
-          // phone: we default or parse it if we fetch from API later
         });
       }
     });
 
+    this.loadPersonData();
     this.loadAddresses();
+  }
+
+  loadPersonData() {
+    this.authService.getPerson().subscribe({
+      next: (person) => {
+        if (person) {
+          let phoneVal = person.phone || '';
+          let countryCodeVal = '+55';
+          if (phoneVal.startsWith('+')) {
+            const spaceIdx = phoneVal.indexOf(' ');
+            if (spaceIdx > 0) {
+              countryCodeVal = phoneVal.substring(0, spaceIdx);
+              phoneVal = phoneVal.substring(spaceIdx + 1);
+            }
+          }
+          let formattedDate = '';
+          if (person.birthDate) {
+            formattedDate = new Date(person.birthDate).toISOString().split('T')[0];
+          }
+          this.personForm.patchValue({
+            name: person.name || this.userName,
+            email: person.email || this.userEmail,
+            document: person.document || '',
+            birthDate: formattedDate,
+            phone: phoneVal,
+            countryCode: countryCodeVal
+          });
+          if (person.name) this.userName = person.name;
+        }
+      },
+      error: (err) => console.error('Falha ao buscar dados cadastrais:', err)
+    });
   }
 
   initForms() {
@@ -317,7 +353,11 @@ export class ProfileComponent implements OnInit {
     }
 
     this.isLoading = true;
-    const payload = this.addressForm.getRawValue();
+    const val = this.addressForm.getRawValue();
+    const payload = {
+      ...val,
+      zipCode: val.zipCode?.replace(/\D/g, '')
+    };
 
     if (this.isEditingAddress && this.currentAddressId) {
       this.authService.updateAddress(this.currentAddressId, payload).subscribe({
@@ -382,13 +422,18 @@ export class ProfileComponent implements OnInit {
     }
 
     this.isSubmitting = true;
-    // Simulando chamada para backend
-    setTimeout(() => {
-      this.isSubmitting = false;
-      this.currentPassword = '';
-      this.newPassword = '';
-      this.confirmPassword = '';
-      this.triggerToast('Sua senha foi alterada com sucesso!');
-    }, 1200);
+    this.authService.changePassword(this.currentPassword, this.newPassword).subscribe({
+      next: () => {
+        this.isSubmitting = false;
+        this.currentPassword = '';
+        this.newPassword = '';
+        this.confirmPassword = '';
+        this.triggerToast('Sua senha foi alterada com sucesso!');
+      },
+      error: () => {
+        this.isSubmitting = false;
+        this.triggerToast('Erro ao alterar a senha. Verifique sua senha atual.', true);
+      }
+    });
   }
 }
