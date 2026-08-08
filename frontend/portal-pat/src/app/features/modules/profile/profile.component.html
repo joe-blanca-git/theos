@@ -136,7 +136,10 @@
                   <label class="form-label fw-semibold text-white small">Senha Atual</label>
                   <div class="input-group">
                     <span class="input-group-text bg-secondary bg-opacity-10 border-end-0 text-white-50 border-secondary border-opacity-25"><i class="fas fa-key"></i></span>
-                    <input type="password" class="form-control  bg-secondary bg-opacity-10 border-start-0 ps-0 fs-6 text-white border-secondary border-opacity-25" placeholder="Digite sua senha atual" [(ngModel)]="currentPassword" name="currentPassword" required>
+                    <input [type]="showCurrentPassword ? 'text' : 'password'" class="form-control bg-secondary bg-opacity-10 border-start-0 border-end-0 ps-0 fs-6 text-white border-secondary border-opacity-25" placeholder="Digite sua senha atual" [(ngModel)]="currentPassword" name="currentPassword" required>
+                    <button type="button" class="btn btn-outline-secondary border-secondary border-opacity-25 bg-secondary bg-opacity-10 text-white-50 border-start-0" (click)="showCurrentPassword = !showCurrentPassword" tabindex="-1">
+                      <i class="fas" [ngClass]="showCurrentPassword ? 'fa-eye-slash' : 'fa-eye'"></i>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -148,14 +151,20 @@
                   <label class="form-label fw-semibold text-white small">Nova Senha</label>
                   <div class="input-group">
                     <span class="input-group-text bg-secondary bg-opacity-10 border-end-0 text-white-50 border-secondary border-opacity-25"><i class="fas fa-lock"></i></span>
-                    <input type="password" class="form-control  bg-secondary bg-opacity-10 border-start-0 ps-0 fs-6 text-white border-secondary border-opacity-25" placeholder="Nova senha segura" [(ngModel)]="newPassword" name="newPassword" required minlength="6">
+                    <input [type]="showNewPassword ? 'text' : 'password'" class="form-control bg-secondary bg-opacity-10 border-start-0 border-end-0 ps-0 fs-6 text-white border-secondary border-opacity-25" placeholder="Nova senha segura" [(ngModel)]="newPassword" name="newPassword" required minlength="6">
+                    <button type="button" class="btn btn-outline-secondary border-secondary border-opacity-25 bg-secondary bg-opacity-10 text-white-50 border-start-0" (click)="showNewPassword = !showNewPassword" tabindex="-1">
+                      <i class="fas" [ngClass]="showNewPassword ? 'fa-eye-slash' : 'fa-eye'"></i>
+                    </button>
                   </div>
                 </div>
                 <div class="col-12 col-md-6">
                   <label class="form-label fw-semibold text-white small">Confirmar Nova Senha</label>
                   <div class="input-group">
                     <span class="input-group-text bg-secondary bg-opacity-10 border-end-0 text-white-50 border-secondary border-opacity-25"><i class="fas fa-lock"></i></span>
-                    <input type="password" class="form-control  bg-secondary bg-opacity-10 border-start-0 ps-0 fs-6 text-white border-secondary border-opacity-25" placeholder="Repita a nova senha" [(ngModel)]="confirmPassword" name="confirmPassword" required minlength="6">
+                    <input [type]="showConfirmPassword ? 'text' : 'password'" class="form-control bg-secondary bg-opacity-10 border-start-0 border-end-0 ps-0 fs-6 text-white border-secondary border-opacity-25" placeholder="Repita a nova senha" [(ngModel)]="confirmPassword" name="confirmPassword" required minlength="6">
+                    <button type="button" class="btn btn-outline-secondary border-secondary border-opacity-25 bg-secondary bg-opacity-10 text-white-50 border-start-0" (click)="showConfirmPassword = !showConfirmPassword" tabindex="-1">
+                      <i class="fas" [ngClass]="showConfirmPassword ? 'fa-eye-slash' : 'fa-eye'"></i>
+                    </button>
                   </div>
                 </div>
               </div>
