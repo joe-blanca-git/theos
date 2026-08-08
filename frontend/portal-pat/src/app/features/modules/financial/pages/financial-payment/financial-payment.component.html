@@ -82,7 +82,10 @@
                     <i class="fa-brands fa-pix text-success fs-5"></i>
                   </div>
                   <div>
-                    <h6 class="mb-0 fw-bold">PIX</h6>
+                    <h6 class="mb-0 fw-bold d-flex align-items-center gap-2">
+                      PIX
+                      <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25" style="font-size: 0.6rem;">Mais econômico</span>
+                    </h6>
                     <span class="small text-white-50">Aprovação imediata</span>
                   </div>
                   <div class="ms-auto">
@@ -293,8 +296,14 @@
 
             <div class="d-flex justify-content-between mb-2">
               <span class="text-white-50 small">Subtotal</span>
-              <span class="fw-medium">{{ formatPrice(valorTotal) }}</span>
+              <span class="fw-medium">{{ formatPrice(purchaseSummary.valorCurso) }}</span>
             </div>
+            
+            <div class="d-flex justify-content-between mb-2" *ngIf="purchaseSummary.juros > 0">
+              <span class="text-white-50 small">Juros ({{ purchaseSummary.installmentCount }}x)</span>
+              <span class="fw-medium text-warning">+ {{ formatPrice(purchaseSummary.juros) }}</span>
+            </div>
+
             <div class="d-flex justify-content-between mb-3">
               <span class="text-white-50 small">Taxas</span>
               <span class="fw-medium">Grátis</span>
@@ -304,7 +313,7 @@
             
             <div class="d-flex flex-column justify-content-between align-items-center">
               <span class="fw-bold text-white">Total</span>
-              <span class="fs-4 fw-bold" style="color: #6366f1;">{{ formatPrice(valorTotal) }}</span>
+              <span class="fs-4 fw-bold" style="color: #6366f1;">{{ formatPrice(purchaseSummary.total) }}</span>
               <br>
             <div class="text-center mt-4">
               <small class="text-white-50 d-flex align-items-center justify-content-center gap-2">

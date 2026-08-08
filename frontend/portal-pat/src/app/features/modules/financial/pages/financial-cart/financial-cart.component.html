@@ -14,59 +14,126 @@
 
     <!-- LEFT: Course Info -->
     <div class="col-12 col-lg-7">
-      <div class="card border-0 rounded-4 shadow-sm overflow-hidden bg-dark">
-
-        <!-- Course Image -->
-        <div class="position-relative hero-image-wrapper">
-          <img [src]="course.imgCoverLink" class="w-100 h-auto" [alt]="course.title">
-          <div class="position-absolute start-0 end-0 bottom-0" style="height: 50%; background: linear-gradient(to top, rgba(15,23,42,0.85) 0%, transparent 100%);"></div>
-          <div class="position-absolute bottom-0 start-0 p-4 w-100">
-            <span class="badge rounded-pill px-3 py-2 mb-2 shadow-sm" style="background: rgba(99,102,241,0.9); font-size: 0.7rem; letter-spacing: 0.5px;">
-              <i class="fas fa-graduation-cap me-1"></i> {{ course.category }}
-            </span>
-            <h2 class="text-white fw-extrabold mb-0 lh-sm" style="text-shadow: 0 2px 4px rgba(0,0,0,0.3);">
-              {{ course.title }}
-            </h2>
-          </div>
-        </div>
-
-        <!-- Course Details -->
-        <div class="card-body p-4">
-          <p class="text-white-50 mb-4" style="font-size: 0.92rem; line-height: 1.7; text-align: justify;">
-            {{ course.description }}
-          </p>
-
-          <div class="d-flex flex-wrap gap-4 pt-3 border-top border-secondary border-opacity-10">
-            <div class="d-flex align-items-center gap-2">
-              <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 36px; height: 36px; background: rgba(99,102,241,0.08);">
-                <i class="fas fa-play-circle" style="color: #6366f1; font-size: 0.85rem;"></i>
+      
+      <!-- Course Presentation Card -->
+      <div class="card border-0 rounded-4 shadow-sm bg-dark mb-4">
+        <div class="row g-0 flex-column flex-md-row">
+          
+          <!-- Image Column (40% desktop) -->
+          <div class="col-12 col-md-5 p-3">
+            <div class="position-relative w-100 h-100 overflow-hidden rounded-4 course-interactive-card" style="aspect-ratio: 16/9; min-height: 180px;">
+              <img [src]="course.imgCoverLink" class="w-100 h-100 object-fit-cover" [alt]="course.title">
+              <div *ngIf="courseDetail?.isComingSoon" class="ribbon-wrapper">
+                <div class="ribbon">Estréia em: {{ courseDetail?.releaseDate ? (courseDetail.releaseDate | date:'dd/MM') : 'Em breve' }}</div>
               </div>
-              <div>
-                <span class="d-block fw-bold text-white" style="font-size: 0.82rem;">{{ course.totalLessons }} aulas</span>
-                <span class="text-white-50" style="font-size: 0.68rem;">Conteúdo completo</span>
-              </div>
-            </div>
-            <div class="d-flex align-items-center gap-2">
-              <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 36px; height: 36px; background: rgba(16,185,129,0.08);">
-                <i class="fas fa-clock" style="color: #10b981; font-size: 0.85rem;"></i>
-              </div>
-              <div>
-                <span class="d-block fw-bold text-white" style="font-size: 0.82rem;">{{ course.totalHours }} horas</span>
-                <span class="text-white-50" style="font-size: 0.68rem;">Carga horária</span>
-              </div>
-            </div>
-            <div class="d-flex align-items-center gap-2">
-              <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 36px; height: 36px; background: rgba(245,158,11,0.08);">
-                <i class="fas fa-infinity" style="color: #f59e0b; font-size: 0.85rem;"></i>
-              </div>
-              <div>
-                <span class="d-block fw-bold text-white" style="font-size: 0.82rem;">Vitalício</span>
-                <span class="text-white-50" style="font-size: 0.68rem;">Acesso ilimitado</span>
+              <!-- Gradient Overlay for badge visibility -->
+              <div class="position-absolute start-0 end-0 bottom-0 h-50" style="background: linear-gradient(to top, rgba(15,23,42,0.9) 0%, transparent 100%);"></div>
+              <div class="position-absolute bottom-0 start-0 p-3 w-100">
+                <span class="badge rounded-pill px-3 py-1.5 shadow-sm" style="background: rgba(99,102,241,0.9); font-size: 0.65rem; letter-spacing: 0.5px;">
+                  <i class="fas fa-graduation-cap me-1"></i> {{ course.category }}
+                </span>
               </div>
             </div>
           </div>
+          
+          <!-- Info Column (60% desktop) -->
+          <div class="col-12 col-md-7">
+            <div class="card-body p-4 pt-md-4 pb-md-4 ps-md-2 h-100 d-flex flex-column justify-content-between">
+              
+              <div class="mb-4">
+                <h3 class="text-white fw-extrabold mb-3" style="font-size: 1.35rem; line-height: 1.3;">
+                  {{ course.title }}
+                </h3>
+                <p class="text-white-50 mb-0" style="font-size: 0.82rem; line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; text-align: left;">
+                  {{ course.description }}
+                </p>
+              </div>
+
+              <!-- Indicators -->
+              <div class="d-flex flex-wrap gap-3 gap-xl-4 pt-3 border-top border-secondary border-opacity-10 mt-auto">
+                <div class="d-flex align-items-center gap-2" *ngIf="course.totalLessons > 0">
+                  <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style="width: 30px; height: 30px; background: rgba(99,102,241,0.08);">
+                    <i class="fas fa-play-circle" style="color: #6366f1; font-size: 0.75rem;"></i>
+                  </div>
+                  <div>
+                    <span class="d-block fw-bold text-white lh-1 mb-1" style="font-size: 0.78rem;">{{ course.totalLessons }} aulas</span>
+                    <span class="text-white-50 lh-1 d-block" style="font-size: 0.62rem;">Conteúdo completo</span>
+                  </div>
+                </div>
+                
+                <div class="d-flex align-items-center gap-2" *ngIf="course.totalHours > 0">
+                  <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style="width: 30px; height: 30px; background: rgba(16,185,129,0.08);">
+                    <i class="fas fa-clock" style="color: #10b981; font-size: 0.75rem;"></i>
+                  </div>
+                  <div>
+                    <span class="d-block fw-bold text-white lh-1 mb-1" style="font-size: 0.78rem;">{{ course.totalHours }} horas</span>
+                    <span class="text-white-50 lh-1 d-block" style="font-size: 0.62rem;">Carga horária</span>
+                  </div>
+                </div>
+                
+                <div class="d-flex align-items-center gap-2">
+                  <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style="width: 30px; height: 30px; background: rgba(245,158,11,0.08);">
+                    <i class="fas fa-infinity" style="color: #f59e0b; font-size: 0.75rem;"></i>
+                  </div>
+                  <div>
+                    <span class="d-block fw-bold text-white lh-1 mb-1" style="font-size: 0.78rem;">Vitalício</span>
+                    <span class="text-white-50 lh-1 d-block" style="font-size: 0.62rem;">Acesso ilimitado</span>
+                  </div>
+                </div>
+              </div>
+              
+            </div>
+          </div>
+          
         </div>
       </div>
+
+      <!-- Course Content Card -->
+      <div class="card border-0 rounded-4 shadow-sm bg-dark" *ngIf="courseDetail">
+        <div class="card-body p-4">
+          
+          <h5 class="fw-bold mb-4 d-flex align-items-center gap-2 text-white" style="font-size: 1.1rem;">
+            <i class="fas fa-list-ul" style="color: #6366f1;"></i> Conteúdo do Curso
+          </h5>
+
+          <!-- Domains -->
+          <div *ngIf="courseDetail.domains && courseDetail.domains.length > 0" class="mb-4 pb-2 border-bottom border-secondary border-opacity-10">
+            <h6 class="fw-bold text-white-50 mb-3 text-uppercase" style="font-size: 0.7rem; letter-spacing: 0.5px;">O que você vai aprender</h6>
+            <ul class="list-unstyled mb-0 row">
+              <li *ngFor="let domain of courseDetail.domains" class="col-12 col-md-6 d-flex align-items-start gap-2 mb-3">
+                <i class="fas fa-check-circle mt-1 flex-shrink-0" style="color: #10b981; font-size: 0.8rem;"></i>
+                <div>
+                  <span class="d-block fw-semibold text-white" style="font-size: 0.82rem;">{{ domain.title }}</span>
+                  <span *ngIf="domain.description" class="text-white-50 mt-1 d-block" style="font-size: 0.72rem; line-height: 1.4;">{{ domain.description }}</span>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Modules -->
+          <div *ngIf="courseDetail.modules && courseDetail.modules.length > 0">
+            <h6 class="fw-bold text-white-50 mb-3 text-uppercase" style="font-size: 0.7rem; letter-spacing: 0.5px;">Grade Curricular</h6>
+            <div class="accordion accordion-flush" id="accordionModules">
+              <div class="accordion-item bg-transparent border-0 mb-2" *ngFor="let module of courseDetail.modules; let i = index">
+                <h2 class="accordion-header" [id]="'headingModule' + i">
+                  <button class="accordion-button bg-secondary bg-opacity-10 text-white rounded-3 py-3 px-3 shadow-none d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" [attr.data-bs-target]="'#collapseModule' + i" aria-expanded="true" [attr.aria-controls]="'collapseModule' + i" style="font-size: 0.82rem; font-weight: 600;">
+                    <span class="d-flex align-items-center gap-2">
+                      <span class="text-white-50">{{ i + 1 }}.</span> {{ module.title }}
+                    </span>
+                  </button>
+                </h2>
+                <div [id]="'collapseModule' + i" class="accordion-collapse collapse show" [attr.aria-labelledby]="'headingModule' + i">
+                  <div class="accordion-body px-4 py-3 text-white-50 border-start border-2 ms-3 mt-1 mb-2" style="font-size: 0.8rem; line-height: 1.5; border-color: rgba(99,102,241,0.3) !important;">
+                    {{ module.description || 'Nenhuma descrição informada para este módulo.' }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+      
     </div>
 
     <!-- RIGHT: Checkout -->
@@ -92,7 +159,7 @@
                     <span class="text-white-50" style="font-size: 0.72rem;">Acesso vitalício a este curso</span>
                   </div>
                 </div>
-                <span class="fw-extrabold" style="font-size: 1.15rem; color: #0f172a;">
+                <span class="fw-extrabold" style="font-size: 1.15rem; color: #6366f1;">
                   {{ formatPrice(course.priceSingle) }}
                 </span>
               </div>
@@ -116,9 +183,12 @@
             <hr class="border-secondary border-opacity-15 my-3">
             <div class="d-flex justify-content-between align-items-center mb-4">
               <span class="fw-bold text-white" style="font-size: 1rem;">Total</span>
-              <span class="fw-extrabold" style="font-size: 1.35rem; color: #0f172a;">
-                {{ formatPrice(selectedPrice) }}
-              </span>
+              <div class="text-end">
+                <span class="text-white-50 fw-normal me-2" style="font-size: 0.85rem;">à vista</span>
+                <span class="fw-extrabold" style="font-size: 1.35rem; color: #6366f1;">
+                  {{ formatPrice(selectedPrice) }}
+                </span>
+              </div>
             </div>
             <button class="btn w-100 fw-bold rounded-pill py-3 shadow-sm checkout-btn transition-all"
                     (click)="onCheckout()">

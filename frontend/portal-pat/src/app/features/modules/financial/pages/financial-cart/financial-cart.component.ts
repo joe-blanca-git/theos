@@ -25,6 +25,7 @@ export interface ICartCourse {
 export class FinancialCartComponent implements OnInit {
 
   course: ICartCourse | null = null;
+  courseDetail: any = null;
   isLoading: boolean = true;
 
   constructor(
@@ -45,8 +46,13 @@ export class FinancialCartComponent implements OnInit {
     this.isLoading = true;
 
     try {
-      this.course = await this.coursesService.getCourseCheckoutSummary(courseId);
-      console.log('Dados do curso recebidos:', this.course);
+      const [courseSummary, detail] = await Promise.all([
+        this.coursesService.getCourseCheckoutSummary(courseId),
+        this.coursesService.getCourseDetail(courseId)
+      ]);
+      this.course = courseSummary;
+      this.courseDetail = detail;
+      console.log('Dados do curso recebidos:', this.course, this.courseDetail);
     } catch (error) {
       console.error('Erro ao carregar os dados do curso', error);
       this.router.navigate(['/courses']);

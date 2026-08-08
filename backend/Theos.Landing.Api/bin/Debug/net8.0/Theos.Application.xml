@@ -87,6 +87,12 @@
             <summary>ID da biblioteca Bunny para o curso.</summary>
             <example>library_12345</example>
         </member>
+        <member name="P:Theos.Application.Courses.Commands.CreateCourse.CreateCourseCommand.IsComingSoon">
+            <summary>Flag para indicar se o curso é uma estreia futura (Vem aí).</summary>
+        </member>
+        <member name="P:Theos.Application.Courses.Commands.CreateCourse.CreateCourseCommand.ReleaseDate">
+            <summary>Data de estreia do curso, caso IsComingSoon seja verdadeiro.</summary>
+        </member>
         <member name="P:Theos.Application.Courses.Commands.CreateCourse.CreateCourseCommand.CategoryIds">
             <summary>Lista de IDs das categorias às quais o curso pertence.</summary>
         </member>
@@ -266,6 +272,12 @@
         </member>
         <member name="P:Theos.Application.Courses.Commands.UpdateCourse.UpdateCourseCommand.BunnyLibraryId">
             <summary>Novo ID da biblioteca Bunny para o curso.</summary>
+        </member>
+        <member name="P:Theos.Application.Courses.Commands.UpdateCourse.UpdateCourseCommand.IsComingSoon">
+            <summary>Flag para indicar se o curso é uma estreia futura (Vem aí).</summary>
+        </member>
+        <member name="P:Theos.Application.Courses.Commands.UpdateCourse.UpdateCourseCommand.ReleaseDate">
+            <summary>Nova data de estreia do curso.</summary>
         </member>
         <member name="T:Theos.Application.Courses.Commands.UpdateLesson.UpdateLessonCommand">
             <summary>

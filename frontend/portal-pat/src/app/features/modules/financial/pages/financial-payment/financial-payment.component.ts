@@ -225,6 +225,32 @@ export class FinancialPaymentComponent implements OnInit {
     return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(price);
   }
 
+  get purchaseSummary() {
+    let valorCurso = this.valorTotal;
+    let taxas = 0;
+    let juros = 0;
+    let total = this.valorTotal;
+    let installmentCount = 1;
+
+    if (this.paymentMethod === 'CREDIT' && this.cardForm) {
+      installmentCount = Number(this.cardForm.get('installments')?.value || 1);
+      if (installmentCount > 1) {
+        // Juros mock de 2.5% simples ao mês
+        const jurosRate = 0.025;
+        juros = this.valorTotal * (jurosRate * installmentCount);
+        total = this.valorTotal + juros;
+      }
+    }
+
+    return {
+      valorCurso,
+      taxas,
+      juros,
+      total,
+      installmentCount
+    };
+  }
+
   initForm() {
     this.cardForm = this.fb.group({
       cpfTitular: ['', [Validators.required, Validators.minLength(11)]],

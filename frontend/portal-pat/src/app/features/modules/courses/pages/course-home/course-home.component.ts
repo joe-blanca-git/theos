@@ -107,9 +107,9 @@ export class CourseHomeComponent implements OnInit {
   }
 
   onCourseAction(course: ICourse) {
-    if (this.isCourseComingSoon(course)) {
-      return; // Bloqueia a ação se estiver "Vem aí..."
-    }
+    // Se estiver "Vem aí...", o usuário pode:
+    // 1. Comprar (se não tiver comprado)
+    // 2. Acessar os detalhes do curso (onde o botão de Iniciar Aula estará bloqueado)
 
     if (course.released) {
       this.navigateDetail(course.id);

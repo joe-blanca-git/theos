@@ -29,7 +29,7 @@
   <div *ngIf="isLoading" class="row g-4">
     <div class="col-12 col-md-6 col-lg-4 d-flex" *ngFor="let i of [1,2,3,4,5,6]">
       <div class="card h-100 border-0 rounded-4 shadow-sm overflow-hidden bg-dark w-100 d-flex flex-column p-0">
-        <div class="skeleton rounded-0" style="height: 160px; min-height: 160px;"></div>
+        <div class="skeleton rounded-0" style="height: 220px; min-height: 220px;"></div>
         <div class="card-body p-4 d-flex flex-column flex-grow-1 justify-content-between">
           <div>
             <div class="d-flex align-items-center justify-content-between mb-3">
@@ -72,7 +72,7 @@
       <div class="card h-100 border-0 rounded-4 shadow-sm overflow-hidden course-interactive-card bg-dark w-100 d-flex flex-column transition-all"
            (click)="onCourseAction(course)">
         
-        <div class="position-relative overflow-hidden" style="height: 160px; min-height: 160px;">
+        <div class="position-relative overflow-hidden" style="height: 220px; min-height: 220px;">
           <img [src]="course.imgCoverLink || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQY5JRi1qnVrXkmfdZGtvwU__qfPnrsVZqIVg&s'" class="w-100 h-100 object-fit-cover course-thumbnail" alt="Course Cover Image">
           <span class="badge position-absolute start-3 top-3 px-3 py-1.5 rounded-pill shadow-sm"
                 [style.background-color]="course.color"
@@ -126,10 +126,10 @@
                 </span>
                
                 <a class="btn btn-link ms-auto text-decoration-none fw-bold p-0 d-flex align-items-center gap-1.5 transition active-hover-link"
-                   [style.color]="isCourseComingSoon(course) ? '#fbbf24' : (course.released ? '#6366f1' : (course.hasPendingPurchase ? '#fbbf24' : '#10b981'))"
+                   [style.color]="course.released ? (isCourseComingSoon(course) ? '#fbbf24' : '#6366f1') : (course.hasPendingPurchase ? '#fbbf24' : '#10b981')"
                    style="font-size: 0.72rem;">
-                  {{ isCourseComingSoon(course) ? 'Em breve' : (course.released ? 'Acessar' : (course.hasPendingPurchase ? 'Em Análise' : 'Comprar Agora')) }}
-                  <i class="fas fs-8" [ngClass]="isCourseComingSoon(course) ? 'fa-lock' : (course.released ? 'fa-arrow-right' : (course.hasPendingPurchase ? 'fa-clock' : 'fa-shopping-cart'))"></i>
+                  {{ course.released ? (isCourseComingSoon(course) ? 'Aguardar Estreia' : 'Acessar') : (course.hasPendingPurchase ? 'Em Análise' : 'Comprar Agora') }}
+                  <i class="fas fs-8" [ngClass]="course.released ? (isCourseComingSoon(course) ? 'fa-lock' : 'fa-arrow-right') : (course.hasPendingPurchase ? 'fa-clock' : 'fa-shopping-cart')"></i>
                 </a>
               </div>
             </div>
