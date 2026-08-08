@@ -60,7 +60,9 @@ public class GetMyCoursesQueryHandler : IRequestHandler<GetMyCoursesQuery, List<
                 x.CompletedLessons,
                 x.TotalLessons,
                 x.Categories.Select(cat => new Theos.Application.Courses.Common.CourseCategoryBasicDto(cat.Id, cat.Name)).ToList(),
-                x.HasPendingPurchase
+                x.HasPendingPurchase,
+                x.Course.IsComingSoon,
+                x.Course.ReleaseDate
             );
         }).ToList();
         
