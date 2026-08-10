@@ -7,7 +7,7 @@ using Theos.Application.Refunds.Queries;
 namespace Theos.Admin.Api.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/v1/[controller]")]
 [Authorize]
 public class RefundsController : ControllerBase
 {
