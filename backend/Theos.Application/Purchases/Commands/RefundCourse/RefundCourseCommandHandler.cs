@@ -2,6 +2,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Theos.Application.Common.Interfaces;
 using Theos.Domain.Entities;
+using Theos.Domain.Enums;
 
 namespace Theos.Application.Purchases.Commands.RefundCourse;
 
@@ -85,7 +86,20 @@ public class RefundCourseCommandHandler : IRequestHandler<RefundCourseCommand, R
             purchase.MarkAsRefundRequested();
 
             var requestCode = $"REF-{DateTime.UtcNow:yyyyMMdd}-{Guid.NewGuid().ToString().Substring(0, 6).ToUpper()}";
-            var refundRequest = RefundRequest.Create(purchase.Id, requestCode, "Solicitado pelo aluno no portal", null);
+            
+            // Criação automática de Chamado (Ticket)
+            var category = await _context.TicketCategories.FirstOrDefaultAsync(c => c.Active && (c.Description.Contains("Financeiro") || c.Description.Contains("Reembolso")), cancellationToken)
+                        ?? await _context.TicketCategories.FirstOrDefaultAsync(c => c.Active, cancellationToken);
+            
+            var ticket = Ticket.Create(purchase.UserId, category?.Id ?? 1, $"Solicitação de Reembolso - Pedido {requestCode}", TicketPriority.High);
+            _context.Tickets.Add(ticket);
+            await _context.SaveChangesAsync(cancellationToken);
+            
+            // Agora adicionamos a primeira mensagem
+            var msg = TicketMessage.Create(ticket.Id, purchase.UserId, Theos.Domain.Enums.TicketOrigin.Portal, "Solicitação de reembolso aberta através do Portal do Aluno.", null);
+            _context.TicketMessages.Add(msg);
+
+            var refundRequest = RefundRequest.Create(purchase.Id, requestCode, "Solicitado pelo aluno no portal", ticket.Id.ToString());
 
             _context.RefundRequests.Add(refundRequest);
             await _context.SaveChangesAsync(cancellationToken);

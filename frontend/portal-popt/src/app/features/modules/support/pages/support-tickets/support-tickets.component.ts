@@ -1,5 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SupportService, IAdminTicket, IAdminTicketDetails, IPaginatedList } from '../../services/support.service';
 import { ToastService } from '../../../../../core/services/toast.service';
@@ -15,6 +16,7 @@ export class SupportTicketsComponent implements OnInit {
   private supportService = inject(SupportService);
   private fb = inject(FormBuilder);
   private toastService = inject(ToastService);
+  private route = inject(ActivatedRoute);
 
   tickets: IAdminTicket[] = [];
   selectedTicket: IAdminTicketDetails | null = null;
@@ -38,6 +40,25 @@ export class SupportTicketsComponent implements OnInit {
       next: (data) => {
         this.tickets = data.items;
         this.isLoading = false;
+
+        // Auto-select ticket if query parameter is present
+        this.route.queryParams.subscribe(params => {
+          const ticketId = params['ticketId'];
+          if (ticketId) {
+            const ticketToSelect = this.tickets.find(t => t.id.toString() === ticketId);
+            if (ticketToSelect) {
+              this.selectTicket(ticketToSelect);
+            } else {
+              // Optionally fetch directly by ID if not in current page, but for now we try to find it
+              this.supportService.getTicketById(+ticketId).subscribe({
+                next: (details: any) => {
+                  this.selectedTicket = details;
+                  this.replyForm.reset();
+                }
+              });
+            }
+          }
+        });
       },
       error: () => {
         this.toastService.error('Não foi possível carregar os chamados.');

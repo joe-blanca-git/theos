@@ -1,6 +1,7 @@
 import { Component, OnInit, ElementRef, ViewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { FinancialService } from '../../services/financial.service';
 import { FinancialDashboardSummaryDto, FinancialClosingSimulationDto, RefundDashboardSummaryDto, RefundRequestDto, RefundStatus, FinancialTaxDto, CreateFinancialTaxCommand, TaxType } from '../../models/financial.model';
 import { jsPDF } from 'jspdf';
@@ -10,7 +11,7 @@ import { ToastService } from '../../../../../core/services/toast.service';
 @Component({
   selector: 'app-financial-home',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './financial-home.component.html',
   styleUrl: './financial-home.component.scss'
 })

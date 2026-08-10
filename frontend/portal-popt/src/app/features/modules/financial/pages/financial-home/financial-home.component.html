@@ -410,9 +410,10 @@
                   </span>
                 </td>
                 <td class="text-center">
-                  <a href="javascript:void(0)" class="text-primary fw-medium text-decoration-none">
+                  <a *ngIf="ref.supportTicketCode" [routerLink]="['/support']" [queryParams]="{ ticketId: ref.supportTicketCode }" target="_blank" class="text-primary fw-medium text-decoration-none">
                     <i class="fas fa-ticket-alt me-1"></i>{{ref.supportTicketCode}}
                   </a>
+                  <span *ngIf="!ref.supportTicketCode" class="text-muted">-</span>
                 </td>
                 <td class="px-4 text-end">
                   <button class="btn btn-sm btn-light border rounded-pill shadow-sm text-primary fw-medium" (click)="openAnalyzeDrawer(ref)">
@@ -874,21 +875,29 @@
 <!-- MODAIS DA ABA DE REEMBOLSOS                -->
 <!-- ========================================== -->
 
-<!-- DRAWER DE ANÁLISE -->
+<!-- MODAL DE ANÁLISE -->
 <div class="modal fade" [class.show]="showRefundDrawer" [style.display]="showRefundDrawer ? 'block' : 'none'" tabindex="-1" style="background: rgba(0,0,0,0.5);">
-  <!-- Utilizamos o modal deslizando pela direita para imitar um Drawer -->
-  <div class="modal-dialog modal-dialog-scrollable modal-dialog-right m-0 h-100" style="max-width: 500px; width: 100%; float: right;">
-    <div class="modal-content rounded-0 border-0 h-100 shadow-lg" *ngIf="selectedRefund">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content rounded-4 border-0 shadow-lg d-flex flex-column" *ngIf="selectedRefund" style="max-height: 90vh;">
       
-      <div class="modal-header bg-dark text-white border-0 p-4">
-        <div>
-          <h5 class="modal-title fw-bold mb-1">Solicitação de Reembolso</h5>
-          <div class="text-white-50 font-monospace small">{{selectedRefund.requestCode}}</div>
+      <!-- Premium Header -->
+      <div class="modal-header bg-dark border-bottom-0 pb-3 pt-4 px-4 rounded-top-4 position-relative overflow-hidden flex-shrink-0">
+        <div class="position-absolute top-0 end-0 p-3 opacity-25">
+          <i class="fas fa-search-dollar text-white" style="font-size: 8rem; transform: translate(20%, -30%);"></i>
         </div>
-        <button type="button" class="btn-close btn-close-white" (click)="closeAnalyzeDrawer()"></button>
+        <div class="d-flex align-items-center gap-3">
+          <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center shadow-sm flex-shrink-0" style="width: 48px; height: 48px;">
+            <i class="fas fa-search-dollar fs-5"></i>
+          </div>
+          <div>
+            <h5 class="modal-title fw-bolder text-white mb-0 fs-5">Análise de Reembolso</h5>
+            <div class="text-white-50 font-monospace small mt-1">{{selectedRefund.requestCode}}</div>
+          </div>
+        </div>
+        <button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 mt-4 me-4" (click)="closeAnalyzeDrawer()"></button>
       </div>
 
-      <div class="modal-body p-4 bg-light">
+      <div class="modal-body bg-secondary bg-opacity-10 p-4 overflow-auto custom-scrollbar flex-grow-1">
         
         <!-- DADOS DO ALUNO -->
         <h6 class="fw-bold text-dark text-uppercase small letter-spacing-1 mb-3">Dados do Aluno</h6>
@@ -969,45 +978,49 @@
                 </span>
               </li>
               <li class="list-group-item px-3 py-3 bg-light border-0 d-flex justify-content-between align-items-center">
-                <div>
-                  <span class="text-muted small d-block mb-1">Chamado Financeiro</span>
-                  <span class="fw-bold text-primary"><i class="fas fa-ticket-alt me-1"></i>{{selectedRefund.supportTicketCode}}</span>
+                <div class="d-flex justify-content-between align-items-center w-100">
+                  <div>
+                    <span class="text-muted small d-block mb-1">Chamado de Suporte</span>
+                    <a *ngIf="selectedRefund.supportTicketCode" [routerLink]="['/support']" [queryParams]="{ ticketId: selectedRefund.supportTicketCode }" target="_blank" class="fw-bold text-primary text-decoration-none">
+                      <i class="fas fa-ticket-alt me-1"></i>{{selectedRefund.supportTicketCode}}
+                    </a>
+                    <span *ngIf="!selectedRefund.supportTicketCode" class="fw-bold text-muted">-</span>
+                  </div>
                 </div>
-                <button class="btn btn-sm btn-outline-primary rounded-pill px-3">Abrir Chamado</button>
               </li>
             </ul>
           </div>
         </div>
-
       </div>
 
-      <div class="modal-footer bg-white border-top p-3" style="box-shadow: 0 -4px 12px rgba(0,0,0,0.05);">
+      <div class="modal-footer bg-secondary bg-opacity-10 border-top-0 px-4 py-3 d-flex justify-content-end align-items-center gap-2">
         
         <!-- Ações: Pendente -->
         <ng-container *ngIf="selectedRefund.status === 'Pendente'">
-          <div class="d-flex w-100 gap-2">
-            <button class="btn btn-outline-danger flex-grow-1 rounded-pill fw-semibold" (click)="openRejectConfirm()">Reprovar</button>
-            <button class="btn btn-success flex-grow-1 rounded-pill fw-bold" (click)="openApproveConfirm()">Aprovar</button>
-          </div>
+          <button class="btn btn-light text-secondary border rounded-pill px-4 fw-semibold shadow-sm" (click)="closeAnalyzeDrawer()">Fechar</button>
+          <button class="btn btn-outline-danger rounded-pill fw-semibold px-4 shadow-sm" (click)="openRejectConfirm()">Reprovar</button>
+          <button class="btn btn-success rounded-pill fw-bold px-4 shadow-sm" (click)="openApproveConfirm()">Aprovar</button>
         </ng-container>
 
         <!-- Ações: Aprovado -->
         <ng-container *ngIf="selectedRefund.status === 'Aprovado'">
-          <button class="btn btn-danger w-100 rounded-pill fw-bold" (click)="openExecuteConfirm()">
+          <button class="btn btn-light text-secondary border rounded-pill px-4 fw-semibold shadow-sm" (click)="closeAnalyzeDrawer()">Fechar</button>
+          <button class="btn btn-danger rounded-pill fw-bold px-4 shadow-sm" (click)="openExecuteConfirm()">
             <i class="fas fa-paper-plane me-2"></i>Executar Reembolso
           </button>
         </ng-container>
 
         <!-- Ações: Falha -->
         <ng-container *ngIf="selectedRefund.status === 'Falha'">
-          <button class="btn btn-warning text-dark w-100 rounded-pill fw-bold" (click)="openExecuteConfirm()">
+          <button class="btn btn-light text-secondary border rounded-pill px-4 fw-semibold shadow-sm" (click)="closeAnalyzeDrawer()">Fechar</button>
+          <button class="btn btn-warning text-dark rounded-pill fw-bold px-4 shadow-sm" (click)="openExecuteConfirm()">
             <i class="fas fa-redo me-2"></i>Tentar Novamente
           </button>
         </ng-container>
 
         <!-- Ações: Apenas Fechar para os outros -->
         <ng-container *ngIf="['Reprovado', 'Processando', 'Reembolsado'].includes(selectedRefund.status)">
-          <button class="btn btn-light text-secondary w-100 rounded-pill fw-semibold border" (click)="closeAnalyzeDrawer()">Fechar</button>
+          <button class="btn btn-light text-secondary rounded-pill fw-semibold border px-4 shadow-sm" (click)="closeAnalyzeDrawer()">Fechar</button>
         </ng-container>
 
       </div>
