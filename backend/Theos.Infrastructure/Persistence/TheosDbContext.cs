@@ -39,6 +39,7 @@ namespace Theos.Infrastructure.Persistence
         public DbSet<FinancialTax> FinancialTaxes => Set<FinancialTax>();
         public DbSet<FinancialClosing> FinancialClosings => Set<FinancialClosing>();
         public DbSet<FinancialClosingItem> FinancialClosingItems => Set<FinancialClosingItem>();
+        public DbSet<RefundRequest> RefundRequests => Set<RefundRequest>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

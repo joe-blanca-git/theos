@@ -1,12 +1,12 @@
 namespace Theos.Domain.Enums
 {
-    public enum PurchaseStatus
+    public enum RefundStatus
     {
         Pending,
         Approved,
+        Rejected,
+        Processing,
         Refunded,
-        Canceled,
-        Expired,
-        RefundRequested
+        Failed
     }
 }

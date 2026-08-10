@@ -29,6 +29,7 @@ namespace Theos.Application.Common.Interfaces
         DbSet<FinancialTax> FinancialTaxes { get; }
         DbSet<FinancialClosing> FinancialClosings { get; }
         DbSet<FinancialClosingItem> FinancialClosingItems { get; }
+        DbSet<RefundRequest> RefundRequests { get; }
             DbSet<TicketCategory> TicketCategories { get; }
     DbSet<Ticket> Tickets { get; }
     DbSet<TicketMessage> TicketMessages { get; }

@@ -82,23 +82,18 @@ public class RefundCourseCommandHandler : IRequestHandler<RefundCourseCommand, R
                 }
             }
 
-            await _asaasService.RefundPaymentAsync(purchase.AsaasPaymentId, cancellationToken);
+            purchase.MarkAsRefundRequested();
 
-            var enrollment = await _context.Enrollments
-                .FirstOrDefaultAsync(e => e.UserId == purchase.UserId && e.CourseId == purchase.CourseId, cancellationToken);
+            var requestCode = $"REF-{DateTime.UtcNow:yyyyMMdd}-{Guid.NewGuid().ToString().Substring(0, 6).ToUpper()}";
+            var refundRequest = RefundRequest.Create(purchase.Id, requestCode, "Solicitado pelo aluno no portal", null);
 
-            if (enrollment != null)
-            {
-                _context.Enrollments.Remove(enrollment);
-            }
-
-            purchase.Refund();
+            _context.RefundRequests.Add(refundRequest);
             await _context.SaveChangesAsync(cancellationToken);
 
             return new RefundCourseResponseDto
             {
                 Success = true,
-                Message = "Estorno processado e matrícula cancelada com sucesso."
+                Message = "Sua solicitação de estorno foi enviada e está em análise."
             };
     }
 }
