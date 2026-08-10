@@ -83,9 +83,9 @@ export class SupportHomeComponent implements OnInit {
 
     this.supportService.getCategories().subscribe({
       next: (cats: ITicketCategory[]) => {
-        this.ticketCategories = cats;
-        if (cats.length > 0) {
-          this.contactCategoryId = cats[0].id;
+        this.ticketCategories = cats.filter(c => c.id !== 1);
+        if (this.ticketCategories.length > 0) {
+          this.contactCategoryId = this.ticketCategories[0].id;
         }
       },
       error: (err: any) => console.error('Erro ao buscar categorias de suporte', err)

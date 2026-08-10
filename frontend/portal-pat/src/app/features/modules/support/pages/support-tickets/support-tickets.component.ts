@@ -132,8 +132,8 @@ export class SupportTicketsComponent implements OnInit {
   openNewTicketModal(): void {
     if (this.ticketCategories.length === 0) {
       this.supportService.getCategories().subscribe(cats => {
-        this.ticketCategories = cats;
-        if (cats.length > 0) this.contactCategoryId = cats[0].id;
+        this.ticketCategories = cats.filter(c => c.id !== 1);
+        if (this.ticketCategories.length > 0) this.contactCategoryId = this.ticketCategories[0].id;
       });
     }
     this.showNewTicketModal = true;

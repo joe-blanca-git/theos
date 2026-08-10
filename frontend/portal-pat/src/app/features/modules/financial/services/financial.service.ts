@@ -65,6 +65,10 @@ export class FinancialService extends BaseService {
     return this.http.post(`${this.urlApiTheos}purchases/${purchaseId}/cancel`, {}, this.GetAuthHeaderJson());
   }
 
+  refundPurchase(purchaseId: number): Observable<any> {
+    return this.http.post(`${this.urlApiTheos}purchases/${purchaseId}/refund`, {}, this.GetAuthHeaderJson());
+  }
+
   getMyPortalTransactions(): Observable<any[]> {
     return this.http.get<any[]>(`${this.urlApiTheos}financial/transactions`, this.GetAuthHeaderJson());
   }

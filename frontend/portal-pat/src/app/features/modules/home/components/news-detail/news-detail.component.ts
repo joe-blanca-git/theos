@@ -15,6 +15,7 @@ export class NewsDetailComponent implements OnInit {
   newsId: number | null = null;
   newsDetail: any = null;
   recentPosts: any[] = [];
+  allRecentPosts: any[] = [];
   searchQuery: string = '';
   
   isLoading = true;
@@ -50,7 +51,8 @@ export class NewsDetailComponent implements OnInit {
       
       const homeData = await this.homeService.getHomeData();
       if (homeData && homeData.latestNews) {
-        this.recentPosts = homeData.latestNews.filter(n => n.id !== this.newsId).slice(0, 4);
+        this.allRecentPosts = homeData.latestNews.filter(n => n.id !== this.newsId).slice(0, 4);
+        this.recentPosts = [...this.allRecentPosts];
       }
     } catch (err) {
       this.error = true;
@@ -63,8 +65,23 @@ export class NewsDetailComponent implements OnInit {
 
   onSearch(event: Event) {
     event.preventDefault();
-    if (this.searchQuery.trim()) {
-      console.log('Buscando por:', this.searchQuery);
+    this.executeSearch();
+  }
+
+  onSearchInputChange(value: string) {
+    this.executeSearch();
+  }
+
+  private executeSearch() {
+    const query = this.searchQuery.trim().toLowerCase();
+    
+    if (query) {
+      this.recentPosts = this.allRecentPosts.filter(post => 
+        (post.title && post.title.toLowerCase().includes(query)) ||
+        (post.subject && post.subject.toLowerCase().includes(query))
+      );
+    } else {
+      this.recentPosts = [...this.allRecentPosts];
     }
   }
 

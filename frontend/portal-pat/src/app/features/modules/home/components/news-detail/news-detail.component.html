@@ -80,13 +80,13 @@
                   <i class="fas fa-user"></i>
                 </div>
                 <div class="d-flex flex-column">
-                  <span class="small fw-bold text-white lh-sm">Portal Pan</span>
-                  <span class="text-white-50 lh-sm" style="font-size: 0.7rem;">Redação</span>
+                  <span class="small fw-bold text-white lh-sm">{{ newsDetail.authorName || 'Portal Pan' }}</span>
+                  <span class="text-white-50 lh-sm" style="font-size: 0.7rem;">{{ newsDetail.authorRole || 'Redação' }}</span>
                 </div>
               </div>
 
               <!-- Publish Date -->
-              <div class="d-flex align-items-center gap-2 text-white-50">
+              <div class="d-flex align-items-center gap-2 text-white-50 ms-md-auto">
                 <div class="rounded-circle bg-secondary bg-opacity-10 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 36px; height: 36px;">
                   <i class="far fa-calendar-alt"></i>
                 </div>
@@ -95,16 +95,16 @@
                   <span class="text-white-50 font-monospace lh-sm" style="font-size: 0.7rem;">{{ newsDetail.publishDate | date:'dd/MM/yyyy HH:mm' }}</span>
                 </div>
               </div>
-
-              <!-- Tags -->
-              <div class="d-flex align-items-center gap-2 text-white-50 ms-auto" *ngIf="newsDetail.tags">
-                <i class="fas fa-tags text-indigo"></i>
-                <span class="small font-monospace bg-secondary bg-opacity-10 px-2 py-1 rounded text-white">{{ newsDetail.tags }}</span>
-              </div>
             </div>
 
             <!-- Article Body -->
             <div class="news-content text-white fs-6 fs-md-5" style="line-height: 1.7; color: #334155 !important; text-align: justify;" [innerHTML]="newsDetail.content">
+            </div>
+
+            <!-- Tags -->
+            <div class="mt-4 d-flex flex-wrap align-items-center gap-2 text-white-50" *ngIf="newsDetail.tags">
+              <i class="fas fa-tags text-indigo flex-shrink-0"></i>
+              <span class="small font-monospace bg-secondary bg-opacity-10 px-2 py-1 rounded text-white text-break" style="white-space: normal;">{{ newsDetail.tags }}</span>
             </div>
 
             <!-- Footer Share / Actions -->
@@ -134,7 +134,7 @@
               </h5>
               <form (submit)="onSearch($event)">
                 <div class="input-group">
-                  <input type="text" class="form-control bg-secondary bg-opacity-10 border-0 shadow-none fs-6" placeholder="Digite..." name="searchQuery" [(ngModel)]="searchQuery">
+                  <input type="text" class="form-control bg-secondary bg-opacity-10 border-0 shadow-none fs-6" placeholder="Digite..." name="searchQuery" [(ngModel)]="searchQuery" (ngModelChange)="onSearchInputChange($event)">
                   <button class="btn text-white px-3" type="submit" style="background: #6366f1;">
                     <i class="fas fa-arrow-right"></i>
                   </button>

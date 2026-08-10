@@ -61,6 +61,27 @@ public class RefundCourseCommandHandler : IRequestHandler<RefundCourseCommand, R
                 };
             }
 
+            var courseData = await _context.Courses
+                .Where(c => c.Id == purchase.CourseId)
+                .Select(c => new {
+                    TotalLessons = c.Modules.SelectMany(m => m.Lessons).Count(l => l.Active),
+                    CompletedLessons = c.Modules.SelectMany(m => m.Lessons).SelectMany(l => l.LessonViews).Count(lv => lv.UserId == currentUser.Id)
+                })
+                .FirstOrDefaultAsync(cancellationToken);
+
+            if (courseData != null)
+            {
+                double progress = courseData.TotalLessons > 0 ? (courseData.CompletedLessons * 100.0) / courseData.TotalLessons : 0;
+                if (progress > 20)
+                {
+                    return new RefundCourseResponseDto
+                    {
+                        Success = false,
+                        Message = "O estorno não pode ser realizado porque o progresso do curso ultrapassou 20%."
+                    };
+                }
+            }
+
             await _asaasService.RefundPaymentAsync(purchase.AsaasPaymentId, cancellationToken);
 
             var enrollment = await _context.Enrollments

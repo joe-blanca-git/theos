@@ -6,6 +6,7 @@ import { FinancialService, CheckoutSummary, PixResponse, PendenciaDTO } from '..
 import { CoursesService } from '../../../courses/services/courses.service';
 import { SignalRService, PaymentNotification } from '../../../../../core/services/signalr.service';
 import { AuthUtil } from '../../../../../core/auth/auth.util';
+import { AuthService } from '../../../../../core/auth/auth.service';
 import { ToastService } from '../../../../../core/services/toast.service';
 
 @Component({
@@ -63,6 +64,7 @@ export class FinancialPaymentComponent implements OnInit {
     private coursesService: CoursesService,
     private signalRService: SignalRService,
     private authUtil: AuthUtil,
+    private authService: AuthService,
     private toastService: ToastService
   ) {
     this.broadcastChannel = new BroadcastChannel('payment_sync_channel');
@@ -109,6 +111,27 @@ export class FinancialPaymentComponent implements OnInit {
     }
 
     this.verificarPendencias();
+    this.loadUserData();
+  }
+
+  loadUserData() {
+    this.authService.getPerson().subscribe({
+      next: (person) => {
+        if (person) {
+          const name = person.name || '';
+          const document = person.document || '';
+          
+          this.pixCpf = document;
+          this.pixHolderName = name;
+          
+          this.cardForm.patchValue({
+            cpfTitular: document,
+            cardHolder: name
+          });
+        }
+      },
+      error: (err) => console.error('Falha ao buscar dados do usuário para preencher o checkout:', err)
+    });
   }
 
   redirectOnSuccess(cursoId: number) {
@@ -352,7 +375,7 @@ export class FinancialPaymentComponent implements OnInit {
 
     const payload = {
       cursoId: this.cursoId,
-      valor: this.valorTotal,
+      valor: this.purchaseSummary.total,
       tipoCompra: 'AVULSO',
       cpf: formValues.cpfTitular,
       paymentMethod: this.paymentMethod, // 'CREDIT'

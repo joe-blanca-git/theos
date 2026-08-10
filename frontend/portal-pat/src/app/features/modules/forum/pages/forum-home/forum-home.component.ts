@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ForumService, IForumCategoryDto, IForumTopicSummaryDto, CreateForumTopicCommand } from '../../services/forum.service';
+import { StateUtil } from '../../../../../core/utils/UserState.util';
 
 // ─── Interfaces ────────────────────────────────────────────────────────────────
 
@@ -59,7 +60,10 @@ export interface IForumStats {
 export class ForumHomeComponent implements OnInit {
 
   private forumService = inject(ForumService);
+  private stateUtil = inject(StateUtil);
   isSubmittingNewTopic: boolean = false;
+  
+  userName: string = '';
 
   // ─── State ────────────────────────────────────────────────────────────────
   isLoading = true;
@@ -93,6 +97,11 @@ export class ForumHomeComponent implements OnInit {
   categoryOptions: string[] = [];
 
   ngOnInit(): void {
+    this.stateUtil.getUser().subscribe((user: any) => {
+      if (user) {
+        this.userName = user.name || '';
+      }
+    });
     this.loadData();
   }
 
@@ -143,7 +152,7 @@ export class ForumHomeComponent implements OnInit {
     const parts = (dto.authorName || 'User').split(' ');
     const initials = parts.slice(0, 2).map((n: string) => n[0]).join('').toUpperCase();
     const isUnread = false; 
-    const isOwn = false; 
+    const isOwn = (dto.authorName && dto.authorName === this.userName) || false; 
 
     return {
       id: dto.id,
@@ -211,6 +220,13 @@ export class ForumHomeComponent implements OnInit {
       this.activeTab = 'recent'; // Muda para aba de lista para visualizar
     }
     this.currentPage = 1;
+  }
+
+  onFilterChange(): void {
+    this.currentPage = 1;
+    if (this.activeTab === 'forums') {
+      this.activeTab = 'recent';
+    }
   }
 
   get filteredTopics(): IForumTopicUI[] {

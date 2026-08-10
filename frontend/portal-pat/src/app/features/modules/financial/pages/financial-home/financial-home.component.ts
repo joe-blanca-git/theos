@@ -62,7 +62,9 @@ export class FinancialHomeComponent implements OnInit, OnDestroy {
   selectedTransaction: ITransaction | null = null;
   toastMessage = '';
   showToast = false;
+  toastIsError = false;
   isCanceling = false;
+  isRefunding = false;
 
   showCancelConfirmModal = false;
   transactionToCancel: ITransaction | null = null;
@@ -133,8 +135,7 @@ export class FinancialHomeComponent implements OnInit, OnDestroy {
             const diffTime = now.getTime() - payDate.getTime();
             const diffDays = diffTime / (1000 * 60 * 60 * 24);
             const statusStr = p.status?.toUpperCase() || '';
-            const isPaid = statusStr === 'APPROVED' || statusStr === 'PAID' || statusStr === 'ACTIVE';
-            const isRefundable = isPaid && diffDays <= 7;
+            const isRefundable = p.isRefundable;
 
             txs.push({
               id: p.id.toString(),
@@ -377,10 +378,23 @@ export class FinancialHomeComponent implements OnInit, OnDestroy {
   confirmRefundAction(): void {
     if (!this.transactionToRefund) return;
     const tx = this.transactionToRefund;
-    // Futura chamada à API de reembolso. Por enquanto mock visual
-    this.triggerToast(`Solicitação de reembolso enviada para ${tx.transactionCode}! Em breve você receberá um email.`);
-    this.closeRefundConfirm();
-    this.closeDetail();
+    
+    this.isRefunding = true;
+    this.financialService.refundPurchase(Number(tx.id)).subscribe({
+      next: () => {
+        this.isRefunding = false;
+        this.triggerToast(`Solicitação de estorno enviada com sucesso. O processamento será concluído após a confirmação do pagamento.`);
+        this.closeRefundConfirm();
+        this.closeDetail();
+        this.loadTransactions();
+      },
+      error: (err) => {
+        this.isRefunding = false;
+        const msg = err.error?.message || 'Erro ao solicitar o reembolso. Verifique se a compra ainda é elegível.';
+        this.triggerToast(msg, true);
+        this.closeRefundConfirm();
+      }
+    });
   }
 
   showRetryConfirmModal = false;
@@ -457,10 +471,11 @@ export class FinancialHomeComponent implements OnInit, OnDestroy {
 
   // ─── Toast ────────────────────────────────────────────────────────────────
 
-  triggerToast(message: string): void {
+  triggerToast(message: string, isError: boolean = false): void {
     this.toastMessage = message;
+    this.toastIsError = isError;
     this.showToast = true;
-    setTimeout(() => (this.showToast = false), 3000);
+    setTimeout(() => (this.showToast = false), 5000);
   }
 
   // ─── Status Helpers ───────────────────────────────────────────────────────

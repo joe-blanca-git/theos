@@ -72,14 +72,14 @@
                  class="form-control form-control-lg rounded-pill ps-5 bg-secondary bg-opacity-10 border-0 shadow-none py-2"
                  placeholder="Buscar tópico, autor ou conteúdo..."
                  [(ngModel)]="searchTerm"
-                 (ngModelChange)="currentPage = 1"
+                 (ngModelChange)="onFilterChange()"
                  style="font-size: 0.83rem;">
         </div>
       </div>
       <div class="col-12 col-md-3">
         <select class="form-select form-select-lg rounded-pill bg-secondary bg-opacity-10 border-0 shadow-none py-2"
                 [(ngModel)]="selectedCategory"
-                (ngModelChange)="currentPage = 1"
+                (ngModelChange)="onFilterChange()"
                 style="font-size: 0.83rem;">
           <option *ngFor="let opt of categoryOptions" [value]="opt">{{ opt }}</option>
         </select>
