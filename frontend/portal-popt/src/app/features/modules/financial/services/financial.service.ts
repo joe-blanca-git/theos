@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, Injector } from '@angular/core';
 import { Observable } from 'rxjs';
 import { BaseService } from '../../../../core/services/base.service';
-import { FinancialDashboardSummaryDto, FinancialClosingSimulationDto } from '../models/financial.model';
+import { FinancialDashboardSummaryDto, FinancialClosingSimulationDto, RefundDashboardSummaryDto, RefundRequestDto } from '../models/financial.model';
 
 @Injectable({
   providedIn: 'root'
@@ -30,5 +30,38 @@ export class FinancialService extends BaseService {
 
   getTeachers(): Observable<any[]> {
     return this.httpClient.get<any[]>(`${this.urlApiTheos}Teachers`, this.GetAuthHeaderJson());
+  }
+
+  // --- Refunds & Authorizations ---
+
+  getRefundSummary(startDate?: string, endDate?: string): Observable<RefundDashboardSummaryDto> {
+    const params = new URLSearchParams();
+    if (startDate) params.append('startDate', startDate);
+    if (endDate) params.append('endDate', endDate);
+    const url = `${this.urlApiTheos}Refunds/Summary?${params.toString()}`;
+    // Using dummy mock if not implemented yet, but keeping the correct signature.
+    return this.httpClient.get<RefundDashboardSummaryDto>(url, this.GetAuthHeaderJson());
+  }
+
+  getRefunds(filters: any): Observable<RefundRequestDto[]> {
+    const url = `${this.urlApiTheos}Refunds`;
+    // For GET with body or complex filters, adjust as needed. Often it's query string for GET or a POST for complex filters.
+    // We'll use POST /Refunds/search as a common pattern or pass params. Let's pass via params for simple GET.
+    return this.httpClient.get<RefundRequestDto[]>(url, { headers: this.GetAuthHeaderJson().headers, params: filters });
+  }
+
+  approveRefund(id: number): Observable<any> {
+    const url = `${this.urlApiTheos}Refunds/${id}/approve`;
+    return this.httpClient.post(url, {}, this.GetAuthHeaderJson());
+  }
+
+  rejectRefund(id: number, reason: string): Observable<any> {
+    const url = `${this.urlApiTheos}Refunds/${id}/reject`;
+    return this.httpClient.post(url, { reason }, this.GetAuthHeaderJson());
+  }
+
+  executeRefund(id: number): Observable<any> {
+    const url = `${this.urlApiTheos}Refunds/${id}/execute`;
+    return this.httpClient.post(url, {}, this.GetAuthHeaderJson());
   }
 }

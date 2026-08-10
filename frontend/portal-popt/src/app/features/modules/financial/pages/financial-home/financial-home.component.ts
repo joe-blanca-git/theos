@@ -2,7 +2,7 @@ import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FinancialService } from '../../services/financial.service';
-import { FinancialDashboardSummaryDto, FinancialClosingSimulationDto } from '../../models/financial.model';
+import { FinancialDashboardSummaryDto, FinancialClosingSimulationDto, RefundDashboardSummaryDto, RefundRequestDto, RefundStatus } from '../../models/financial.model';
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
 
@@ -18,6 +18,27 @@ export class FinancialHomeComponent implements OnInit {
   // Filters
   filterStartDate: string = '';
   filterEndDate: string = '';
+  activeTab: 'vendas' | 'reembolsos' = 'vendas';
+
+  // --- REEMBOLSOS STATE ---
+  filterRefundStatus: RefundStatus = 'Todos';
+  refundSearchTerm: string = '';
+  isLoadingRefundSummary: boolean = true;
+  isLoadingRefunds: boolean = true;
+  refundSummary: RefundDashboardSummaryDto | null = null;
+  refunds: RefundRequestDto[] = [];
+  refundCurrentPage: number = 1;
+  refundPageSize: number = 10;
+  
+  // Refund Modals state
+  showRefundDrawer: boolean = false;
+  selectedRefund: RefundRequestDto | null = null;
+  showApproveConfirm: boolean = false;
+  showRejectConfirm: boolean = false;
+  showExecuteConfirm: boolean = false;
+  rejectReason: string = '';
+  isProcessingAction: boolean = false;
+  // -------------------------
   
   // States
   isLoadingSummary: boolean = true;
@@ -68,10 +89,33 @@ export class FinancialHomeComponent implements OnInit {
 
   onClearFilters() {
     this.initDefaultDates();
+    if (this.activeTab === 'reembolsos') {
+      this.filterRefundStatus = 'Todos';
+      this.refundSearchTerm = '';
+    }
+    this.onSearch();
+  }
+
+  switchTab(tab: 'vendas' | 'reembolsos') {
+    if (this.activeTab === tab) return;
+    this.activeTab = tab;
+    this.initDefaultDates();
+    if (tab === 'reembolsos') {
+      this.filterRefundStatus = 'Todos';
+      this.refundSearchTerm = '';
+    }
     this.onSearch();
   }
 
   loadData() {
+    if (this.activeTab === 'vendas') {
+      this.loadVendasData();
+    } else {
+      this.loadRefundsData();
+    }
+  }
+
+  loadVendasData() {
     this.isLoadingSummary = true;
     
     this.financialService.getDashboardSummary().subscribe(res => {
@@ -86,6 +130,42 @@ export class FinancialHomeComponent implements OnInit {
     this.loadGrid();
   }
 
+  loadRefundsData() {
+    this.isLoadingRefundSummary = true;
+    this.financialService.getRefundSummary(this.filterStartDate, this.filterEndDate).subscribe({
+      next: res => {
+        this.refundSummary = res;
+        this.isLoadingRefundSummary = false;
+      },
+      error: () => {
+        // Mock fallback to empty summary if endpoint isn't ready
+        this.refundSummary = { totalPending: 0, totalApproved: 0, totalProcessing: 0, totalRefunded: 0, totalRefundedValue: 0 };
+        this.isLoadingRefundSummary = false;
+      }
+    });
+    this.loadRefundsGrid();
+  }
+
+  loadRefundsGrid() {
+    this.isLoadingRefunds = true;
+    const filters = {
+      startDate: this.filterStartDate,
+      endDate: this.filterEndDate,
+      status: this.filterRefundStatus,
+      search: this.refundSearchTerm
+    };
+    this.financialService.getRefunds(filters).subscribe({
+      next: res => {
+        this.refunds = res;
+        this.isLoadingRefunds = false;
+      },
+      error: () => {
+        this.refunds = [];
+        this.isLoadingRefunds = false;
+      }
+    });
+  }
+
   loadGrid() {
     this.isLoadingGrid = true;
     
@@ -96,10 +176,16 @@ export class FinancialHomeComponent implements OnInit {
   }
 
   changePage(page: number) {
-    if (page < 1 || page > this.getTotalPages()) return;
-    this.currentPage = page;
+    if (this.activeTab === 'vendas') {
+      if (page < 1 || page > this.getTotalPages()) return;
+      this.currentPage = page;
+    } else {
+      if (page < 1 || page > this.getRefundTotalPages()) return;
+      this.refundCurrentPage = page;
+    }
   }
 
+  // --- Pagination Vendas ---
   getTotalPages(): number {
     if (!this.simulation) return 1;
     return Math.ceil(this.simulation.items.length / this.pageSize);
@@ -115,7 +201,21 @@ export class FinancialHomeComponent implements OnInit {
     return this.simulation.items.slice(startIndex, startIndex + this.pageSize);
   }
 
-  // Ações Grid
+  // --- Pagination Reembolsos ---
+  getRefundTotalPages(): number {
+    return Math.ceil(this.refunds.length / this.refundPageSize) || 1;
+  }
+  
+  getRefundPageArray(): number[] {
+    return Array(this.getRefundTotalPages()).fill(0).map((x, i) => i + 1);
+  }
+  
+  getPaginatedRefunds() {
+    const startIndex = (this.refundCurrentPage - 1) * this.refundPageSize;
+    return this.refunds.slice(startIndex, startIndex + this.refundPageSize);
+  }
+
+  // --- Ações Vendas ---
   openSaleModal(sale: any) {
     this.selectedSale = sale;
     this.showSaleModal = true;
@@ -232,13 +332,103 @@ export class FinancialHomeComponent implements OnInit {
     }
   }
 
+  // --- AÇÕES REEMBOLSO ---
+
+  openAnalyzeDrawer(refund: RefundRequestDto) {
+    this.selectedRefund = refund;
+    this.showRefundDrawer = true;
+  }
+
+  closeAnalyzeDrawer() {
+    this.showRefundDrawer = false;
+    this.selectedRefund = null;
+  }
+
+  openApproveConfirm() { this.showApproveConfirm = true; }
+  closeApproveConfirm() { this.showApproveConfirm = false; }
+  
+  openRejectConfirm() { 
+    this.rejectReason = '';
+    this.showRejectConfirm = true; 
+  }
+  closeRejectConfirm() { this.showRejectConfirm = false; }
+
+  openExecuteConfirm() { this.showExecuteConfirm = true; }
+  closeExecuteConfirm() { this.showExecuteConfirm = false; }
+
+  confirmApproveRefund() {
+    if (!this.selectedRefund) return;
+    this.isProcessingAction = true;
+    this.financialService.approveRefund(this.selectedRefund.id).subscribe({
+      next: () => {
+        alert('Reembolso aprovado com sucesso!');
+        this.isProcessingAction = false;
+        this.closeApproveConfirm();
+        this.closeAnalyzeDrawer();
+        this.loadRefundsData();
+      },
+      error: (err) => {
+        alert(err.error?.message || 'Erro ao aprovar reembolso.');
+        this.isProcessingAction = false;
+        this.closeApproveConfirm();
+      }
+    });
+  }
+
+  confirmRejectRefund() {
+    if (!this.selectedRefund || !this.rejectReason.trim()) return;
+    this.isProcessingAction = true;
+    this.financialService.rejectRefund(this.selectedRefund.id, this.rejectReason).subscribe({
+      next: () => {
+        alert('Reembolso reprovado.');
+        this.isProcessingAction = false;
+        this.closeRejectConfirm();
+        this.closeAnalyzeDrawer();
+        this.loadRefundsData();
+      },
+      error: (err) => {
+        alert(err.error?.message || 'Erro ao reprovar reembolso.');
+        this.isProcessingAction = false;
+        this.closeRejectConfirm();
+      }
+    });
+  }
+
+  confirmExecuteRefund() {
+    if (!this.selectedRefund) return;
+    this.isProcessingAction = true;
+    this.financialService.executeRefund(this.selectedRefund.id).subscribe({
+      next: () => {
+        alert('Reembolso enviado para processamento!');
+        this.isProcessingAction = false;
+        this.closeExecuteConfirm();
+        this.closeAnalyzeDrawer();
+        this.loadRefundsData();
+      },
+      error: (err) => {
+        alert(err.error?.message || 'Erro ao executar reembolso. Verifique logs do Asaas.');
+        this.isProcessingAction = false;
+        this.closeExecuteConfirm();
+      }
+    });
+  }
+
   // Helpers de UI
   getStatusBadgeClass(status: string): string {
     switch (status) {
-      case 'Confirmado': return 'bg-success bg-opacity-10 text-success border-success';
-      case 'Pendente': return 'bg-warning bg-opacity-10 text-warning border-warning';
-      case 'Cancelado': return 'bg-danger bg-opacity-10 text-danger border-danger';
-      case 'Reembolsado': return 'bg-secondary bg-opacity-10 text-secondary border-secondary';
+      case 'Confirmado': 
+      case 'Aprovado':
+        return 'bg-success bg-opacity-10 text-success border-success';
+      case 'Pendente': 
+        return 'bg-warning bg-opacity-10 text-warning border-warning';
+      case 'Cancelado': 
+      case 'Reprovado':
+      case 'Falha':
+        return 'bg-danger bg-opacity-10 text-danger border-danger';
+      case 'Reembolsado': 
+        return 'bg-secondary bg-opacity-10 text-secondary border-secondary';
+      case 'Processando':
+        return 'bg-primary bg-opacity-10 text-primary border-primary';
       default: return 'bg-light text-dark';
     }
   }

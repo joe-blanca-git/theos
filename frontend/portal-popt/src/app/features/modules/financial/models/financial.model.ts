@@ -25,3 +25,28 @@ export interface FinancialClosingSimulationDto {
   totalToReceive: number;
   items: FinancialClosingItemSimulationDto[];
 }
+
+export type RefundStatus = 'Todos' | 'Pendente' | 'Aprovado' | 'Reprovado' | 'Processando' | 'Reembolsado' | 'Falha';
+
+export interface RefundDashboardSummaryDto {
+  totalPending: number;
+  totalApproved: number;
+  totalProcessing: number;
+  totalRefunded: number;
+  totalRefundedValue: number;
+}
+
+export interface RefundRequestDto {
+  id: number;
+  requestCode: string;
+  requestDate: string;
+  studentName: string;
+  courseName: string;
+  transactionCode: string;
+  purchaseValue: number;
+  courseProgress: number;
+  status: RefundStatus;
+  supportTicketCode: string;
+  paymentMethod: string;
+  isEligible: boolean;
+}
