@@ -2,9 +2,11 @@ using Theos.Admin.Api.Extensions;
 using Theos.Admin.Api.Middlewares;
 using Theos.Admin.Api.Services;
 using Theos.Admin.Api.Hubs;
+using Microsoft.EntityFrameworkCore;
 using Theos.Application;
 using Theos.Application.Common.Interfaces;
 using Theos.Infrastructure;
+using Theos.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -70,6 +72,22 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerSetup();
 
 var app = builder.Build();
+
+// Automatically apply pending EF migrations on startup
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var context = services.GetRequiredService<TheosDbContext>();
+        context.Database.Migrate();
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "An error occurred while migrating the database.");
+    }
+}
 
 // Removida a verificação IsDevelopment() para garantir que a correção do proxy 
 // seja aplicada mesmo rodando como Development no Docker.
