@@ -1,10 +1,11 @@
-import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FinancialService } from '../../services/financial.service';
-import { FinancialDashboardSummaryDto, FinancialClosingSimulationDto, RefundDashboardSummaryDto, RefundRequestDto, RefundStatus } from '../../models/financial.model';
+import { FinancialDashboardSummaryDto, FinancialClosingSimulationDto, RefundDashboardSummaryDto, RefundRequestDto, RefundStatus, FinancialTaxDto, CreateFinancialTaxCommand, TaxType } from '../../models/financial.model';
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
+import { ToastService } from '../../../../../core/services/toast.service';
 
 @Component({
   selector: 'app-financial-home',
@@ -15,10 +16,12 @@ import html2canvas from 'html2canvas';
 })
 export class FinancialHomeComponent implements OnInit {
 
+  private toastService = inject(ToastService);
+
   // Filters
   filterStartDate: string = '';
   filterEndDate: string = '';
-  activeTab: 'vendas' | 'reembolsos' = 'vendas';
+  activeTab: 'vendas' | 'reembolsos' | 'configuracoes' = 'vendas';
 
   // --- REEMBOLSOS STATE ---
   filterRefundStatus: RefundStatus = 'Todos';
@@ -39,6 +42,18 @@ export class FinancialHomeComponent implements OnInit {
   rejectReason: string = '';
   isProcessingAction: boolean = false;
   // -------------------------
+
+  // --- CONFIGURAÇÕES E TAXAS STATE ---
+  taxes: FinancialTaxDto[] = [];
+  isLoadingTaxes: boolean = false;
+  showTaxModal: boolean = false;
+  taxForm: CreateFinancialTaxCommand = {
+    type: TaxType.Pix,
+    percentage: 0,
+    effectiveFrom: new Date().toISOString().split('T')[0]
+  };
+  TaxType = TaxType;
+  // -----------------------------------
   
   // States
   isLoadingSummary: boolean = true;
@@ -96,22 +111,29 @@ export class FinancialHomeComponent implements OnInit {
     this.onSearch();
   }
 
-  switchTab(tab: 'vendas' | 'reembolsos') {
-    if (this.activeTab === tab) return;
+  switchTab(tab: 'vendas' | 'reembolsos' | 'configuracoes'): void {
     this.activeTab = tab;
-    this.initDefaultDates();
-    if (tab === 'reembolsos') {
+    this.filterStartDate = '';
+    this.filterEndDate = '';
+    
+    if (tab === 'vendas') {
+      this.loadVendasData();
+    } else if (tab === 'reembolsos') {
       this.filterRefundStatus = 'Todos';
       this.refundSearchTerm = '';
+      this.loadRefundsData();
+    } else if (tab === 'configuracoes') {
+      this.loadTaxes();
     }
-    this.onSearch();
   }
 
   loadData() {
     if (this.activeTab === 'vendas') {
       this.loadVendasData();
-    } else {
+    } else if (this.activeTab === 'reembolsos') {
       this.loadRefundsData();
+    } else if (this.activeTab === 'configuracoes') {
+      this.loadTaxes();
     }
   }
 
@@ -270,14 +292,18 @@ export class FinancialHomeComponent implements OnInit {
   confirmClosing() {
     if (!this.closingProfessorId) return;
     
+    this.isProcessingClosing = true;
     this.financialService.processClosing(+this.closingProfessorId).subscribe({
       next: (res) => {
-        alert('Fechamento gerado com sucesso! Lote: ' + res.id);
+        this.toastService.success('Fechamento gerado com sucesso! Lote: ' + res.id);
+        this.isProcessingClosing = false;
         this.closeClosingModal();
-        this.loadData(); // reload dashboard
+        this.loadVendasData(); 
       },
       error: (err) => {
-        alert('Erro ao processar fechamento: ' + err.error?.message);
+        this.toastService.error('Erro ao processar fechamento: ' + err.error?.message);
+        console.error(err);
+        this.isProcessingClosing = false;
       }
     });
   }
@@ -326,7 +352,7 @@ export class FinancialHomeComponent implements OnInit {
       
     } catch (error) {
       console.error('Erro ao gerar PDF', error);
-      alert('Erro ao gerar o PDF. Verifique o console para mais detalhes.');
+      this.toastService.error('Erro ao gerar o PDF. Verifique o console para mais detalhes.');
     } finally {
       this.isGeneratingPdf = false;
     }
@@ -361,14 +387,14 @@ export class FinancialHomeComponent implements OnInit {
     this.isProcessingAction = true;
     this.financialService.approveRefund(this.selectedRefund.id).subscribe({
       next: () => {
-        alert('Reembolso aprovado com sucesso!');
+        this.toastService.success('Reembolso aprovado com sucesso!');
         this.isProcessingAction = false;
         this.closeApproveConfirm();
         this.closeAnalyzeDrawer();
         this.loadRefundsData();
       },
       error: (err) => {
-        alert(err.error?.message || 'Erro ao aprovar reembolso.');
+        this.toastService.error(err.error?.message || 'Erro ao aprovar reembolso.');
         this.isProcessingAction = false;
         this.closeApproveConfirm();
       }
@@ -380,14 +406,14 @@ export class FinancialHomeComponent implements OnInit {
     this.isProcessingAction = true;
     this.financialService.rejectRefund(this.selectedRefund.id, this.rejectReason).subscribe({
       next: () => {
-        alert('Reembolso reprovado.');
+        this.toastService.success('Reembolso reprovado.');
         this.isProcessingAction = false;
         this.closeRejectConfirm();
         this.closeAnalyzeDrawer();
         this.loadRefundsData();
       },
       error: (err) => {
-        alert(err.error?.message || 'Erro ao reprovar reembolso.');
+        this.toastService.error(err.error?.message || 'Erro ao reprovar reembolso.');
         this.isProcessingAction = false;
         this.closeRejectConfirm();
       }
@@ -399,14 +425,14 @@ export class FinancialHomeComponent implements OnInit {
     this.isProcessingAction = true;
     this.financialService.executeRefund(this.selectedRefund.id).subscribe({
       next: () => {
-        alert('Reembolso enviado para processamento!');
         this.isProcessingAction = false;
         this.closeExecuteConfirm();
         this.closeAnalyzeDrawer();
+        this.toastService.success('Reembolso enviado para processamento!');
         this.loadRefundsData();
       },
       error: (err) => {
-        alert(err.error?.message || 'Erro ao executar reembolso. Verifique logs do Asaas.');
+        this.toastService.error(err.error?.message || 'Erro ao executar reembolso. Verifique logs do Asaas.');
         this.isProcessingAction = false;
         this.closeExecuteConfirm();
       }
@@ -439,5 +465,69 @@ export class FinancialHomeComponent implements OnInit {
   
   formatPercent(value: number): string {
     return new Intl.NumberFormat('pt-BR', { style: 'percent', minimumFractionDigits: 2 }).format(value);
+  }
+
+  // --- TAXAS (FINANCIAL TAXES) ---
+
+  loadTaxes(): void {
+    this.isLoadingTaxes = true;
+    this.financialService.getFinancialTaxes().subscribe({
+      next: (res) => {
+        this.taxes = res;
+        this.isLoadingTaxes = false;
+      },
+      error: (err) => {
+        console.error(err);
+        this.isLoadingTaxes = false;
+      }
+    });
+  }
+
+  openTaxModal(): void {
+    this.taxForm = {
+      type: TaxType.Pix,
+      percentage: 0,
+      effectiveFrom: new Date().toISOString().split('T')[0]
+    };
+    this.showTaxModal = true;
+  }
+
+  closeTaxModal(): void {
+    this.showTaxModal = false;
+  }
+
+  submitTaxModal(): void {
+    if (this.taxForm.percentage <= 0 || !this.taxForm.effectiveFrom) {
+      this.toastService.error('Por favor, preencha todos os campos corretamente.');
+      return;
+    }
+    
+    this.isProcessingAction = true;
+    this.financialService.createFinancialTax(this.taxForm).subscribe({
+      next: () => {
+        this.isProcessingAction = false;
+        this.closeTaxModal();
+        this.toastService.success('Taxa cadastrada com sucesso!');
+        this.loadTaxes();
+      },
+      error: (err) => {
+        console.error(err);
+        this.toastService.error(err.error?.message || 'Erro ao cadastrar taxa.');
+        this.isProcessingAction = false;
+      }
+    });
+  }
+
+  toggleTaxStatus(id: number): void {
+    this.financialService.toggleFinancialTaxStatus(id).subscribe({
+      next: () => {
+        this.toastService.success('Status da taxa alterado com sucesso!');
+        this.loadTaxes();
+      },
+      error: (err) => {
+        console.error(err);
+        this.toastService.error(err.error?.message || 'Erro ao alterar status da taxa.');
+      }
+    });
   }
 }

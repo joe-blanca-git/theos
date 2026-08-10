@@ -12,7 +12,7 @@ namespace Theos.Infrastructure.Persistence.Configurations
             builder.HasKey(t => t.Id);
 
             builder.Property(t => t.Type).HasConversion<int>().IsRequired();
-            builder.Property(t => t.Percentage).HasColumnType("decimal(5,4)").IsRequired(); // e.g., 0.0199 for 1.99%
+            builder.Property(t => t.Percentage).HasColumnType("decimal(18,4)").IsRequired(); // Store fixed values or percentages
             builder.Property(t => t.EffectiveFrom).IsRequired();
             builder.Property(t => t.IsActive).IsRequired();
             

@@ -33,9 +33,6 @@ namespace Theos.Application.FinancialTaxes.Commands
             if (adminCheck == null || adminCheck.Role != "Admin")
                 return new CreateFinancialTaxResult(false, "Apenas administradores podem criar taxas.");
 
-            if (request.Percentage < 0 || request.Percentage > 100)
-                return new CreateFinancialTaxResult(false, "O percentual deve estar entre 0 e 100.");
-
             var tax = new FinancialTax(request.Type, request.Percentage, request.EffectiveFrom);
             
             _context.FinancialTaxes.Add(tax);

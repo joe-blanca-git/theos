@@ -50,3 +50,26 @@ export interface RefundRequestDto {
   paymentMethod: string;
   isEligible: boolean;
 }
+
+export enum TaxType {
+  Pix = 1,
+  CreditCard = 2,
+  Theos = 3
+}
+
+export interface FinancialTaxDto {
+  id: number;
+  type: TaxType;
+  typeDescription: string;
+  percentage: number;
+  effectiveFrom: string;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt?: string;
+}
+
+export interface CreateFinancialTaxCommand {
+  type: TaxType;
+  percentage: number;
+  effectiveFrom: string;
+}

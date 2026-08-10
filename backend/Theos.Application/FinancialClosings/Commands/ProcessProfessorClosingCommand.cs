@@ -79,10 +79,8 @@ namespace Theos.Application.FinancialClosings.Commands
                 var courseTeacher = purchase.Course.CourseTeachers.First(ct => ct.TeacherId == teacher.Id);
                 decimal teacherPercentage = courseTeacher.ParticipationPercentage / 100m;
 
-                decimal bankTax = purchase.PaymentMethod == "PIX" ? pixTax : creditCardTax;
-
                 decimal grossValue = purchase.Amount;
-                decimal bankFeeValue = grossValue * (bankTax / 100m);
+                decimal bankFeeValue = purchase.PaymentMethod == "PIX" ? pixTax : grossValue * (creditCardTax / 100m);
                 decimal theosFeeValue = grossValue * (theosTax / 100m);
                 decimal netValue = grossValue - bankFeeValue - theosFeeValue;
                 decimal calculatedTeacherValue = netValue * teacherPercentage;

@@ -64,4 +64,21 @@ export class FinancialService extends BaseService {
     const url = `${this.urlApiTheos}Refunds/${id}/execute`;
     return this.httpClient.post(url, {}, this.GetAuthHeaderJson());
   }
+
+  // --- Taxes (FinancialTaxes) ---
+
+  getFinancialTaxes(): Observable<import('../models/financial.model').FinancialTaxDto[]> {
+    const url = `${this.urlApiTheos}FinancialTaxes`;
+    return this.httpClient.get<import('../models/financial.model').FinancialTaxDto[]>(url, this.GetAuthHeaderJson());
+  }
+
+  createFinancialTax(data: import('../models/financial.model').CreateFinancialTaxCommand): Observable<any> {
+    const url = `${this.urlApiTheos}FinancialTaxes`;
+    return this.httpClient.post(url, data, this.GetAuthHeaderJson());
+  }
+
+  toggleFinancialTaxStatus(id: number): Observable<any> {
+    const url = `${this.urlApiTheos}FinancialTaxes/${id}/toggle-status`;
+    return this.httpClient.patch(url, {}, this.GetAuthHeaderJson());
+  }
 }
