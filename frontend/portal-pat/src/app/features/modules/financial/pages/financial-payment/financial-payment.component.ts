@@ -104,6 +104,13 @@ export class FinancialPaymentComponent implements OnInit {
         }
       });
 
+      this.signalRService.paymentCanceled$.subscribe((notification: PaymentNotification) => {
+        if (notification.cursoId === this.cursoId) {
+          this.toastService.info('Sua tentativa de pagamento expirou ou foi cancelada. Você pode tentar novamente.');
+          this.resetPaymentState();
+        }
+      });
+
       this.signalRService.reconnected$.subscribe(() => {
         console.log('WebSocket reconectado, verificando pendências atualizadas...');
         this.verificarPendencias();
@@ -468,5 +475,18 @@ export class FinancialPaymentComponent implements OnInit {
         this.toastService.error('Erro ao cancelar a transação. Tente novamente.');
       }
     });
+  }
+
+  resetPaymentState() {
+    this.purchaseId = null;
+    this.transacaoPendente = null;
+    this.bloquearOutrosMetodos = false;
+    this.paymentPending = false;
+    this.qrCodeGenerated = false;
+    this.pixCopiaECola = '';
+    this.qrCodeUrl = '';
+    this.isLoadingPix = false;
+    this.isCancelingPix = false;
+    this.isCancelingCredit = false;
   }
 }

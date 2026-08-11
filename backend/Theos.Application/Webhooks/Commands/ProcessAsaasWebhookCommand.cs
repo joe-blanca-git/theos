@@ -109,6 +109,10 @@ public class ProcessAsaasWebhookCommandHandler : IRequestHandler<ProcessAsaasWeb
             if (purchase.Status == PurchaseStatus.Canceled) return true;
             purchase.Cancel();
             await _context.SaveChangesAsync(cancellationToken);
+            if (externalUserId != null)
+            {
+                await _paymentEventPublisher.PublishPaymentCanceledAsync(externalUserId, "AVULSO", purchase.CourseId);
+            }
             return true;
         }
         else if (eventType == "PAYMENT_OVERDUE")
@@ -116,6 +120,10 @@ public class ProcessAsaasWebhookCommandHandler : IRequestHandler<ProcessAsaasWeb
             if (purchase.Status == PurchaseStatus.Expired) return true;
             purchase.Expire();
             await _context.SaveChangesAsync(cancellationToken);
+            if (externalUserId != null)
+            {
+                await _paymentEventPublisher.PublishPaymentCanceledAsync(externalUserId, "AVULSO", purchase.CourseId);
+            }
             return true;
         }
 

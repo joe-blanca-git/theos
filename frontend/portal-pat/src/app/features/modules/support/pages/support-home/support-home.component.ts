@@ -222,19 +222,17 @@ export class SupportHomeComponent implements OnInit {
           actionLabel: 'Ver Chamados',
           actionHref: '/support/tickets'
         }
-        /*
         ,{
           id: 'whatsapp',
           name: 'Suporte via WhatsApp',
-          description: 'Converse com nosso assistente virtual 24h por dia para resolver dúvidas rápidas sobre a plataforma, pagamentos e acesso.',
+          description: 'Converse com nosso assistente para resolver dúvidas rápidas sobre a plataforma, pagamentos e acesso.',
           icon: 'fa-whatsapp',
           color: '#25d366',
           responseTime: 'Atendimento imediato',
           isOnline: true,
           actionLabel: 'Iniciar Conversa',
-          actionHref: 'https://wa.me/5511900000000'
+          actionHref: 'https://wa.me/5516981181914'
         }
-        */
       ];
 
       this.isLoading = false;

@@ -92,15 +92,20 @@ public class RefundCourseCommandHandler : IRequestHandler<RefundCourseCommand, R
                         ?? await _context.TicketCategories.FirstOrDefaultAsync(c => c.Active, cancellationToken);
             
             var ticket = Ticket.Create(purchase.UserId, category?.Id ?? 1, $"Solicitação de Reembolso - Pedido {requestCode}", TicketPriority.High);
-            _context.Tickets.Add(ticket);
-            await _context.SaveChangesAsync(cancellationToken);
             
-            // Agora adicionamos a primeira mensagem
+            // Agora adicionamos a primeira mensagem e a timeline no mesmo objeto ticket
             var msg = TicketMessage.Create(ticket.Id, purchase.UserId, Theos.Domain.Enums.TicketOrigin.Portal, "Solicitação de reembolso aberta através do Portal do Aluno.", null);
-            _context.TicketMessages.Add(msg);
+            ticket.Messages.Add(msg);
+
+            var timeline = TicketTimeline.Create(ticket.Id, purchase.UserId, TicketTimelineEvent.Created, "Ticket de reembolso criado automaticamente.");
+            ticket.Timelines.Add(timeline);
+
+            _context.Tickets.Add(ticket);
+            
+            // Salvamos o ticket para o EF Core gerar e preencher o ticket.Id (auto-increment)
+            await _context.SaveChangesAsync(cancellationToken);
 
             var refundRequest = RefundRequest.Create(purchase.Id, requestCode, "Solicitado pelo aluno no portal", ticket.Id.ToString());
-
             _context.RefundRequests.Add(refundRequest);
             await _context.SaveChangesAsync(cancellationToken);
 

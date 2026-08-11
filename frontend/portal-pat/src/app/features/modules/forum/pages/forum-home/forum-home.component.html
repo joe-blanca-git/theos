@@ -209,47 +209,57 @@
         </div>
       </div>
 
-      <div class="topic-list-item px-4 py-4"
+      <div class="topic-list-item px-4 py-4 position-relative"
+           style="cursor: pointer; transition: background-color 0.2s ease;"
+           [routerLink]="['/forum/topic', topic.id]"
            *ngFor="let topic of paginatedTopics; let last = last">
-        <div class="d-flex align-items-start gap-3">
-          <div class="author-avatar rounded-circle d-flex align-items-center justify-content-center fw-bold text-white flex-shrink-0"
-               [style.background]="topic.authorColor"
-               style="width: 38px; height: 38px; font-size: 0.72rem;">
-            {{ topic.authorInitials }}
+        <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
+          <div class="d-flex align-items-start gap-3 flex-grow-1 min-w-0">
+            <div class="author-avatar rounded-circle d-flex align-items-center justify-content-center fw-bold text-white flex-shrink-0"
+                 [style.background]="topic.authorColor"
+                 style="width: 38px; height: 38px; font-size: 0.72rem;">
+              {{ topic.authorInitials }}
+            </div>
+            <div class="flex-grow-1 min-w-0">
+              <div class="d-flex align-items-center gap-2 flex-wrap mb-1">
+                <span class="fw-extrabold text-white topic-title-link" style="font-size: 0.88rem;">
+                  {{ topic.title }}
+                </span>
+                <span class="badge rounded-pill px-2 py-1 fw-semibold" [ngClass]="getStatusBadgeClass(topic.status)" style="font-size: 0.62rem;">
+                  <i class="fas me-1" [ngClass]="getStatusIcon(topic.status)" style="font-size: 0.55rem;"></i>
+                  {{ topic.status }}
+                </span>
+                <span class="badge rounded-pill px-2 py-1 fw-bold"
+                      style="background: rgba(99,102,241,0.1); color: #6366f1; font-size: 0.6rem;"
+                      *ngIf="topic.isUnread">
+                  Novo
+                </span>
+              </div>
+              <p class="text-white-50 mb-2 line-clamp-1" style="font-size: 0.78rem; line-height: 1.45;">{{ topic.preview }}</p>
+              <div class="d-flex align-items-center gap-3 flex-wrap" style="font-size: 0.7rem;">
+                <span class="text-white-50">
+                  <i class="fas fa-user me-1"></i>{{ topic.authorName }}
+                </span>
+                <span class="badge rounded-pill px-2 py-1 fw-semibold"
+                      style="background: rgba(0,0,0,0.04); color: #64748b; font-size: 0.62rem;">
+                  {{ topic.categoryName }}
+                </span>
+                <span class="text-white-50"><i class="fas fa-reply me-1"></i>{{ topic.replyCount }} respostas</span>
+                <span class="text-white-50"><i class="fas fa-eye me-1"></i>{{ topic.viewCount }} views</span>
+                <span class="text-white-50"><i class="fas fa-clock me-1"></i>{{ topic.date }}</span>
+                <span class="text-warning fw-semibold" *ngIf="topic.hasPendingReplies" style="font-size: 0.7rem;">
+                  <i class="fas fa-exclamation-circle me-1"></i>Resposta pendente
+                </span>
+              </div>
+            </div>
           </div>
-          <div class="flex-grow-1 min-w-0">
-            <div class="d-flex align-items-center gap-2 flex-wrap mb-1">
-              <span class="fw-extrabold text-white topic-title-link" style="font-size: 0.88rem; cursor: pointer;" [routerLink]="['/forum/topic', topic.id]">
-                {{ topic.title }}
-              </span>
-              <span class="badge rounded-pill px-2 py-1 fw-semibold" [ngClass]="getStatusBadgeClass(topic.status)" style="font-size: 0.62rem;">
-                <i class="fas me-1" [ngClass]="getStatusIcon(topic.status)" style="font-size: 0.55rem;"></i>
-                {{ topic.status }}
-              </span>
-              <span class="badge rounded-pill px-2 py-1 fw-bold"
-                    style="background: rgba(99,102,241,0.1); color: #6366f1; font-size: 0.6rem;"
-                    *ngIf="topic.isUnread">
-                Novo
-              </span>
-            </div>
-            <p class="text-white-50 mb-2 line-clamp-1" style="font-size: 0.78rem; line-height: 1.45;">{{ topic.preview }}</p>
-            <div class="d-flex align-items-center gap-3 flex-wrap" style="font-size: 0.7rem;">
-              <span class="text-white-50">
-                <i class="fas fa-user me-1"></i>{{ topic.authorName }}
-              </span>
-              <span class="badge rounded-pill px-2 py-1 fw-semibold"
-                    style="background: rgba(0,0,0,0.04); color: #64748b; font-size: 0.62rem;">
-                {{ topic.categoryName }}
-              </span>
-              <span class="text-white-50"><i class="fas fa-reply me-1"></i>{{ topic.replyCount }} respostas</span>
-              <span class="text-white-50"><i class="fas fa-eye me-1"></i>{{ topic.viewCount }} views</span>
-              <span class="text-white-50"><i class="fas fa-clock me-1"></i>{{ topic.date }}</span>
-              <span class="text-warning fw-semibold" *ngIf="topic.hasPendingReplies" style="font-size: 0.7rem;">
-                <i class="fas fa-exclamation-circle me-1"></i>Resposta pendente
-              </span>
-            </div>
+          <div class="flex-shrink-0 align-self-end align-self-md-center mt-2 mt-md-0">
+            <button class="btn btn-outline-light btn-sm rounded-pill px-3 py-1 fw-semibold d-flex align-items-center gap-2" style="font-size: 0.75rem;">
+              Acessar Tópico <i class="fas fa-arrow-right" style="font-size: 0.65rem;"></i>
+            </button>
           </div>
         </div>
+      </div>
       </div>
 
       <div class="card-footer bg-dark border-top border-secondary border-opacity-10 px-4 py-3 d-flex align-items-center justify-content-between"

@@ -21,6 +21,9 @@ export class SignalRService {
   private paymentRefundedSource = new Subject<PaymentNotification>();
   paymentRefunded$ = this.paymentRefundedSource.asObservable();
 
+  private paymentCanceledSource = new Subject<PaymentNotification>();
+  paymentCanceled$ = this.paymentCanceledSource.asObservable();
+
   private reconnectedSource = new Subject<void>();
   reconnected$ = this.reconnectedSource.asObservable();
 
@@ -69,6 +72,10 @@ export class SignalRService {
 
     this.hubConnection.on('PaymentRefunded', (data: PaymentNotification) => {
       this.paymentRefundedSource.next(data);
+    });
+
+    this.hubConnection.on('PaymentCanceled', (data: PaymentNotification) => {
+      this.paymentCanceledSource.next(data);
     });
   }
 
