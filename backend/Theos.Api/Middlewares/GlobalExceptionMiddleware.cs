@@ -47,11 +47,11 @@ namespace Theos.Api.Middlewares
             var response = new
             {
                 StatusCode = statusCode,
-                Message = env.IsDevelopment() ? exception.Message : $"An unexpected error occurred. Debug: [{exception.GetType().Name}] {exception.Message}",
+                Message = env.IsDevelopment() ? exception.Message : "An unexpected error occurred.",
                 Errors = exception is ValidationException valEx 
                     ? valEx.Errors.Select(e => new { e.PropertyName, e.ErrorMessage }) 
                     : null,
-                StackTrace = env.IsDevelopment() ? exception.StackTrace : exception.StackTrace
+                StackTrace = env.IsDevelopment() ? exception.StackTrace : null
             };
 
             await context.Response.WriteAsync(JsonSerializer.Serialize(response));

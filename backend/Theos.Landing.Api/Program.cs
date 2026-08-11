@@ -10,6 +10,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models;
 using Theos.Infrastructure.Configuration;
+using Microsoft.AspNetCore.RateLimiting;
+using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,6 +42,21 @@ builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 builder.Services.AddScoped<IPaymentEventPublisher, PaymentEventPublisher>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSignalR();
+builder.Services.AddRateLimiter(options =>
+{
+    options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: httpContext.Connection.RemoteIpAddress?.ToString() ?? httpContext.Request.Headers.Host.ToString(),
+            factory: partition => new FixedWindowRateLimiterOptions
+            {
+                AutoReplenishment = true,
+                PermitLimit = 120,
+                QueueLimit = 2,
+                QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                Window = TimeSpan.FromMinutes(1)
+            }));
+    options.RejectionStatusCode = 429;
+});
 builder.Services.AddSingleton<Microsoft.AspNetCore.SignalR.IUserIdProvider, CustomUserIdProvider>();
 builder.Services.AddControllers()
     .ConfigureApiBehaviorOptions(options =>
@@ -74,6 +91,8 @@ var app = builder.Build();
 // app.UseSwagger(...);
 // app.UseSwaggerUI(...);
 
+app.UseSecurityHeaders();
+app.UseRateLimiter();
 app.UseCors("DevelopmentCors");
 app.UseGlobalExceptionHandler();
 
