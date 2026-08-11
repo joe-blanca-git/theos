@@ -26,8 +26,7 @@ builder.Services.AddCors(options =>
     {
         policy.SetIsOriginAllowed(origin => 
                 new Uri(origin).Host.EndsWith("portaltheos.com.br") || 
-                new Uri(origin).Host == "localhost" ||
-                origin.StartsWith("http://localhost:4200"))
+                new Uri(origin).Host == "localhost")
               .AllowAnyMethod()
               .AllowAnyHeader()
               .AllowCredentials();
@@ -67,29 +66,13 @@ builder.Services.AddControllers()
         };
     });
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerSetup();
+// builder.Services.AddSwaggerSetup();
 
 var app = builder.Build();
 
-// Removida a verificação IsDevelopment() para garantir que a correção do proxy 
-// seja aplicada mesmo rodando como Development no Docker.
-app.UseSwagger(c =>
-{
-    c.PreSerializeFilters.Add((swaggerDoc, httpReq) =>
-    {
-        swaggerDoc.Servers = new List<OpenApiServer>
-        {
-            new OpenApiServer { Url = "https://portaltheos.com.br/theos-landing-api" }
-        };
-    });
-});
-
-app.UseSwaggerUI(c =>
-{
-    // Caminho relativo para encontrar o JSON do Swagger de forma segura
-    c.SwaggerEndpoint("v1/swagger.json", "Theos Landing API");
-    c.RoutePrefix = "swagger";
-});
+// Swagger desabilitado
+// app.UseSwagger(...);
+// app.UseSwaggerUI(...);
 
 app.UseCors("DevelopmentCors");
 app.UseGlobalExceptionHandler();
