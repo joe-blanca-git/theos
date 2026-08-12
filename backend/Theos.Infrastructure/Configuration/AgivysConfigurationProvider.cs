@@ -71,6 +71,12 @@ public class AgivysConfigurationProvider : ConfigurationProvider
 
         var integrations = await integrationsResponse.Content.ReadFromJsonAsync<JsonElement>();
 
+        // Agivys API now returns { "value": [ ... ], "Count": X } (OData format)
+        if (integrations.ValueKind == JsonValueKind.Object && integrations.TryGetProperty("value", out var valueArray))
+        {
+            integrations = valueArray;
+        }
+
         if (integrations.ValueKind != JsonValueKind.Array)
         {
             return;
