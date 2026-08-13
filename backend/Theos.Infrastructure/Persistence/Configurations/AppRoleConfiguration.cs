@@ -18,7 +18,7 @@ namespace Theos.Infrastructure.Persistence.Configurations
             builder.Property(r => r.RoleId)
                 .HasColumnName("Id")
                 .IsRequired()
-                .HasMaxLength(450);
+                .HasMaxLength(255);
 
             builder.Property(r => r.Name)
                 .HasColumnName("Name")

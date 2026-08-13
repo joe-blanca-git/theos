@@ -18,12 +18,12 @@ namespace Theos.Infrastructure.Persistence.Configurations
             builder.Property(ur => ur.UserId)
                 .HasColumnName("UserId")
                 .IsRequired()
-                .HasMaxLength(450);
+                .HasMaxLength(255);
 
             builder.Property(ur => ur.RoleId)
                 .HasColumnName("RoleId")
                 .IsRequired()
-                .HasMaxLength(450);
+                .HasMaxLength(255);
         }
     }
 }
