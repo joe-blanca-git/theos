@@ -44,7 +44,7 @@ public class ResendEmailService : IEmailService
                     Você pode acompanhar o andamento ou enviar anexos adicionais diretamente pelo Portal de Suporte.
                 </p>
                 <div style=""margin-top: 32px;"">
-                    <a href=""https://portaltheos.com.br/suporte"" style=""background-color: #6366f1; color: #ffffff; text-decoration: none; padding: 12px 24px; border-radius: 6px; font-weight: 600; display: inline-block;"">
+                    <a href=""https://portaltheos.com.br/portal-pat/support/tickets"" style=""background-color: #6366f1; color: #ffffff; text-decoration: none; padding: 12px 24px; border-radius: 6px; font-weight: 600; display: inline-block;"">
                         Acompanhar Meu Chamado
                     </a>
                 </div>
