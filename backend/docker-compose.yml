@@ -1,6 +1,21 @@
 version: '3.8'
 
 services:
+  # Banco de Dados MySQL
+  mysql_banco:
+    image: mysql:8.0
+    container_name: theos-mysql-db
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-senha}
+      MYSQL_DATABASE: theos_bd
+    ports:
+      - "3307:3306"
+    volumes:
+      - theos_db_data:/var/lib/mysql
+    networks:
+      - theos-network
+    restart: always
+
   # 1. Theos Admin API (POPT) - Porta 5012
   theos-admin-api:
     build:
@@ -11,8 +26,10 @@ services:
       - "5012:8080"
     env_file:
       - .env
+    depends_on:
+      - mysql_banco
     networks:
-      - agivys-network
+      - theos-network
     restart: always
 
   # 2. Theos API (PAT) - Porta 5011
@@ -25,8 +42,10 @@ services:
       - "5011:8080"
     env_file:
       - .env
+    depends_on:
+      - mysql_banco
     networks:
-      - agivys-network
+      - theos-network
     restart: always
 
   # 3. Theos Landing API - Porta 5013
@@ -39,11 +58,15 @@ services:
       - "5013:8080"
     env_file:
       - .env
+    depends_on:
+      - mysql_banco
     networks:
-      - agivys-network
+      - theos-network
     restart: always
 
 networks:
-  agivys-network:
-    name: agivys_default
-    external: true
+  theos-network:
+    driver: bridge
+
+volumes:
+  theos_db_data:
