@@ -167,6 +167,7 @@ public class AsaasService : IAsaasService
             value = purchase.Amount,
             dueDate = DateTime.UtcNow.AddDays(1).ToString("yyyy-MM-dd"),
             externalReference = purchase.Id.ToString(),
+            description = $"Compra de Curso ID: {purchase.CourseId}",
             // Dados do cartão se fornecidos (Checkout Transparente)
             creditCard = card != null ? new {
                 holderName = card.HolderName,
