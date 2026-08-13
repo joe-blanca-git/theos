@@ -35,7 +35,7 @@ public class ResendEmailService : IEmailService
                 <p style=""color: #475569; font-size: 16px; line-height: 1.5;"">
                     Seu chamado <strong>#{ticketId}</strong> (""{subject}"") foi aberto com sucesso em nossa plataforma.
                 </p>
-                <div style=""background-color: #f8fafc; border-left: 4px solid #6366f1; padding: 16px; margin: 24px 0; border-radius: 4px;"">
+                <div style=""background-color: #f8fafc; border-left: 4px solid #f16363ff; padding: 16px; margin: 24px 0; border-radius: 4px;"">
                     <p style=""color: #334155; margin: 0; font-size: 15px; font-weight: 500;"">
                         Em até 24h úteis nossa equipe especializada entrará em contato com você.
                     </p>
@@ -44,7 +44,7 @@ public class ResendEmailService : IEmailService
                     Você pode acompanhar o andamento ou enviar anexos adicionais diretamente pelo Portal de Suporte.
                 </p>
                 <div style=""margin-top: 32px;"">
-                    <a href=""https://portaltheos.com.br/portal-pat/support/tickets"" style=""background-color: #6366f1; color: #ffffff; text-decoration: none; padding: 12px 24px; border-radius: 6px; font-weight: 600; display: inline-block;"">
+                    <a href=""https://portaltheos.com.br/portal-pat/support/tickets"" style=""background-color: #f16363ff; color: #ffffff; text-decoration: none; padding: 12px 24px; border-radius: 6px; font-weight: 600; display: inline-block;"">
                         Acompanhar Meu Chamado
                     </a>
                 </div>
