@@ -37,6 +37,7 @@ namespace Theos.Admin.Api.Middlewares
                 ValidationException => (int)HttpStatusCode.BadRequest,
                 UnauthorizedAccessException => (int)HttpStatusCode.Unauthorized,
                 Theos.Application.Common.Exceptions.NotFoundException => (int)HttpStatusCode.NotFound,
+                Theos.Application.Common.Exceptions.BadRequestException => (int)HttpStatusCode.BadRequest,
                 _ => (int)HttpStatusCode.InternalServerError
             };
 
@@ -47,7 +48,9 @@ namespace Theos.Admin.Api.Middlewares
             var response = new
             {
                 StatusCode = statusCode,
-                Message = env.IsDevelopment() ? exception.Message : "An unexpected error occurred.",
+                Message = (env.IsDevelopment() || exception is Theos.Application.Common.Exceptions.BadRequestException) 
+                    ? exception.Message 
+                    : "An unexpected error occurred.",
                 Errors = exception is ValidationException valEx 
                     ? valEx.Errors.Select(e => new { e.PropertyName, e.ErrorMessage }) 
                     : null,

@@ -59,7 +59,7 @@ public class ExecuteRefundCommandHandler : IRequestHandler<ExecuteRefundCommand,
         {
             refund.MarkAsFailed(ex.Message);
             await _context.SaveChangesAsync(cancellationToken);
-            throw new Exception("Falha ao executar reembolso no gateway: " + ex.Message);
+            throw new Theos.Application.Common.Exceptions.BadRequestException("Falha ao executar reembolso no gateway: " + ex.Message);
         }
     }
 }
