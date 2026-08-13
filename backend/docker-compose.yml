@@ -16,6 +16,10 @@ services:
     networks:
       - theos-network
     restart: always
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pLikeaboos1970"]
+      timeout: 20s
+      retries: 10
 
   # 1. Theos Admin API (POPT) - Porta 5012
   theos-admin-api:
@@ -28,7 +32,8 @@ services:
     env_file:
       - .env
     depends_on:
-      - mysql_banco
+      mysql_banco:
+        condition: service_healthy
     networks:
       - theos-network
     restart: always
@@ -44,7 +49,8 @@ services:
     env_file:
       - .env
     depends_on:
-      - mysql_banco
+      mysql_banco:
+        condition: service_healthy
     networks:
       - theos-network
     restart: always
@@ -60,7 +66,8 @@ services:
     env_file:
       - .env
     depends_on:
-      - mysql_banco
+      mysql_banco:
+        condition: service_healthy
     networks:
       - theos-network
     restart: always
