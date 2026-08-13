@@ -65,4 +65,11 @@ export class AuthGuardService {
 
     return true;
   }
+
+  canActivateChild(
+    childRoute: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot
+  ): boolean {
+    return this.canActivate(childRoute, state);
+  }
 }

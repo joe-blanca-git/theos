@@ -1053,7 +1053,7 @@
             <div class="card-body p-3 d-flex align-items-center">
               <div class="d-flex align-items-center gap-3 flex-grow-1 overflow-hidden">
                 <div class="rounded-circle overflow-hidden shadow-sm" style="width: 48px; height: 48px; flex-shrink: 0;">
-                  <img [src]="teacher.avatar || 'assets/images/default-avatar.png'" alt="{{ teacher.name }}" class="w-100 h-100 object-fit-cover" onerror="this.src='assets/images/default-avatar.png'">
+                  <img [src]="teacher.avatar || ''" alt="{{ teacher.name }}" class="w-100 h-100 object-fit-cover" onerror="this.onerror=null; this.style.display='none';">
                 </div>
                 <div class="flex-grow-1 overflow-hidden pe-3">
                   <h6 class="mb-0 fw-bold text-white text-truncate">{{ teacher.name }}</h6>

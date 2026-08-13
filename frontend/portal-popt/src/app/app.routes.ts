@@ -6,6 +6,8 @@ import { AuthGuardService } from './core/guards/auth.guard';
 export const routes: Routes = [
     {
         path: 'auth',
+        canActivate: [AuthGuardService],
+        canActivateChild: [AuthGuardService],
         loadChildren: () =>
             import('./features/auth/auth.routes').then((r) => r.AUTH_ROUTES),
     },
@@ -13,6 +15,7 @@ export const routes: Routes = [
         path: '',
         component: HomeComponent,
         canActivate: [AuthGuardService],
+        canActivateChild: [AuthGuardService],
         children: [
             {
                 path: '',
