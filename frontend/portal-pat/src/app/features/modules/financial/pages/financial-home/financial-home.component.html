@@ -392,8 +392,8 @@
       <button *ngIf="selectedTransaction.isRefundable" 
               class="btn btn-outline-danger rounded-4 py-2.5 fw-bold d-flex align-items-center justify-content-center gap-2"
               style="font-size: 0.83rem; border-width: 2px;"
-              (click)="requestRefund(selectedTransaction)"
-              title="Solicitar reembolso deste item">
+              disabled
+              title="Para solicitar reembolso, por favor, abra um chamado na Central de Ajuda.">
         <i class="fas fa-undo-alt"></i> Solicitar Reembolso
       </button>
 
