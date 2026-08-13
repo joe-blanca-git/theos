@@ -5,8 +5,9 @@ services:
   mysql_banco:
     image: mysql:8.0
     container_name: theos-mysql-db
+    command: --default-authentication-plugin=mysql_native_password
     environment:
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-senha}
+      MYSQL_ROOT_PASSWORD: Likeaboos1970
       MYSQL_DATABASE: theos_bd
     ports:
       - "3307:3306"
