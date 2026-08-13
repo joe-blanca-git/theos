@@ -5,8 +5,8 @@ export const environment = {
   supportedLanguages: ['pt-BR'],
 
   //=============================PRODUCAO==============================================================
-  apiAgivysUrl: 'https://joederblanca.com.br/agivys-api/api/v1/',
-  apiAvivysAuthUrl: 'https://joederblanca.com.br/agivys-api/api/v1/authentication/',
+  apiAgivysUrl: 'https://portaltheos.com.br/agivys-api/api/v1/',
+  apiAvivysAuthUrl: 'https://portaltheos.com.br/agivys-api/api/v1/authentication/',
   apiTheosUrl: 'https://portaltheos.com.br/theos-api/api/v1/',
   //===================================================================================================
 };
