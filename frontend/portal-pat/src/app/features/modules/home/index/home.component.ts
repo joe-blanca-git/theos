@@ -472,12 +472,12 @@ export class HomeComponent implements OnInit {
   }
 
   getInitials(name: string): string {
-    if (!name) return 'A';
-    const parts = name.split(' ');
+    if (!name || !name.trim()) return 'A';
+    const parts = name.trim().split(/\s+/);
     if (parts.length >= 2) {
       return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
     }
-    return name[0].toUpperCase();
+    return parts[0][0].toUpperCase();
   }
 
   get unreadNotificationsCount(): number {

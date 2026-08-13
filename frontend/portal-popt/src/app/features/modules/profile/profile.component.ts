@@ -192,12 +192,12 @@ export class ProfileComponent implements OnInit {
   }
 
   getInitials(name: string): string {
-    if (!name || name === 'Usuário Não Informado') return 'U';
-    const parts = name.trim().split(' ');
+    if (!name || !name.trim()) return 'A';
+    const parts = name.trim().split(/\s+/);
     if (parts.length >= 2) {
       return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
     }
-    return name[0].toUpperCase();
+    return parts[0][0].toUpperCase();
   }
 
   triggerToast(message: string, isError = false) {

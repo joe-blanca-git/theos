@@ -36,6 +36,7 @@ services:
         condition: service_healthy
     networks:
       - theos-network
+      - agivys_default
     restart: always
 
   # 2. Theos API (PAT) - Porta 5011
@@ -53,6 +54,7 @@ services:
         condition: service_healthy
     networks:
       - theos-network
+      - agivys_default
     restart: always
 
   # 3. Theos Landing API - Porta 5013
@@ -70,11 +72,14 @@ services:
         condition: service_healthy
     networks:
       - theos-network
+      - agivys_default
     restart: always
 
 networks:
   theos-network:
     driver: bridge
+  agivys_default:
+    external: true
 
 volumes:
   theos_db_data:
