@@ -24,14 +24,14 @@ public class ExecuteRefundCommandHandler : IRequestHandler<ExecuteRefundCommand,
             .Include(r => r.Purchase)
             .FirstOrDefaultAsync(r => r.Id == request.RefundRequestId, cancellationToken);
 
-        if (refund == null || refund.Status != RefundStatus.Approved)
-            throw new Exception("Solicitação não encontrada ou não está aprovada.");
+        if (refund == null || (refund.Status != RefundStatus.Approved && refund.Status != RefundStatus.Failed))
+            throw new Theos.Application.Common.Exceptions.BadRequestException("Solicitação não encontrada ou não está com status válido para execução.");
 
         if (string.IsNullOrWhiteSpace(refund.Purchase.AsaasPaymentId))
         {
             refund.MarkAsFailed("Pagamento Asaas não encontrado.");
             await _context.SaveChangesAsync(cancellationToken);
-            throw new Exception("Pagamento Asaas não encontrado para esta compra.");
+            throw new Theos.Application.Common.Exceptions.BadRequestException("Pagamento Asaas não encontrado para esta compra.");
         }
 
         try
