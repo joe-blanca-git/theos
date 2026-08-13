@@ -1,6 +1,6 @@
 // Configuração do endpoint da API (Altere para localhost se estiver desenvolvendo localmente)
-const API_BASE = "https://portaltheos.com.br/theos-landing-api/api/v1/Courses";
-const API_TEACHERS = "https://portaltheos.com.br/theos-landing-api/api/v1/Teachers";
+const API_BASE = "https://portaltheos.com.br/landing-api/api/v1/Courses";
+const API_TEACHERS = "https://portaltheos.com.br/landing-api/api/v1/Teachers";
 
 document.addEventListener("DOMContentLoaded", () => {
     if (document.getElementById("container-cursos")) {

@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Get Article ID from URL
     const urlParams = new URLSearchParams(window.location.search);
     const articleId = urlParams.get('id');
-    const API_BLOG = "https://portaltheos.com.br/theos-landing-api/api/v1/BlogPosts";
+    const API_BLOG = "https://portaltheos.com.br/landing-api/api/v1/BlogPosts";
     let articles = [];
 
     // Generate slug helper (same as home-blog)

@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const API_BLOG = "https://portaltheos.com.br/theos-landing-api/api/v1/BlogPosts";
+    const API_BLOG = "https://portaltheos.com.br/landing-api/api/v1/BlogPosts";
     const gridContainer = document.getElementById('homeBlogGrid');
     const emptyState = document.getElementById('homeEmptyState');
     const btnSeeAll = document.getElementById('btnSeeAllBlog');

@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentTag = null;
     
     // API endpoint
-    const API_BLOG = "https://portaltheos.com.br/theos-landing-api/api/v1/BlogPosts";
+    const API_BLOG = "https://portaltheos.com.br/landing-api/api/v1/BlogPosts";
 
     // Elements
     const heroContainer = document.getElementById('heroArticleContainer');
