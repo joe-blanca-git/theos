@@ -5,8 +5,8 @@ export const environment = {
   supportedLanguages: ['pt-BR'],
 
   //=============================DESENVOLVIMENTO=======================================================
-  apiAgivysUrl: 'https://portaltheos.com.br/agivys-api/api/v1/',
-  apiAvivysAuthUrl: 'https://portaltheos.com.br/agivys-api/api/v1/authentication/',
-  apiTheosUrl: 'https://portaltheos.com.br/theos-admin-api/api/v1/',
+  apiAgivysUrl: 'https://joederblanca.com.br/agivys-api/api/v1/',
+  apiAvivysAuthUrl: 'https://joederblanca.com.br/agivys-api/api/v1/authentication/',
+  apiTheosUrl: 'https://portaltheos.com.br/admin-api/api/v1/',
   //===================================================================================================
 };
