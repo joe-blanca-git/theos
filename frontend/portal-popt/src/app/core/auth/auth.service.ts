@@ -99,8 +99,9 @@ export class AuthService extends BaseService {
     if (!token) return false;
 
     try {
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      const exp = payload?.exp * 1000;
+      const payload = this.authUtil.decodeToken(token);
+      if (!payload || !payload.exp) return false;
+      const exp = payload.exp * 1000;
       return Date.now() < exp;
     } catch (e) {
       return false;

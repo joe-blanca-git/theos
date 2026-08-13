@@ -9,7 +9,11 @@ export class AuthUtil {
         const token = response.token;
         let expiresStr = '';
         try {
-            const payload = JSON.parse(atob(token.split('.')[1]));
+            let base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+            while (base64.length % 4) {
+                base64 += '=';
+            }
+            const payload = JSON.parse(atob(base64));
             if (payload && payload.exp) {
                 const expDate = new Date(payload.exp * 1000);
                 expiresStr = `; expires=${expDate.toUTCString()}`;
@@ -35,7 +39,11 @@ export class AuthUtil {
 
     public decodeToken(token: string): any {
         try {
-            return JSON.parse(atob(token.split('.')[1]));
+            let base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+            while (base64.length % 4) {
+                base64 += '=';
+            }
+            return JSON.parse(atob(base64));
         } catch (e) {
             return null;
         }
