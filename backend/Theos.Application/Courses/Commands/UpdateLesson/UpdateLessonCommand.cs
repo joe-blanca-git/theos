@@ -1,5 +1,6 @@
 using MediatR;
 using Theos.Application.Common.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Theos.Application.Courses.Commands.UpdateLesson
 {
@@ -44,9 +45,20 @@ namespace Theos.Application.Courses.Commands.UpdateLesson
         {
             var currentUser = await _userContextService.GetCurrentUserAsync();
 
-            var lesson = await _context.Lessons.FindAsync(new object[] { request.Id }, cancellationToken: cancellationToken);
+            var lesson = await _context.Lessons
+                .Include(l => l.Module)
+                .ThenInclude(m => m.Course)
+                .ThenInclude(c => c.CourseTeachers)
+                .FirstOrDefaultAsync(l => l.Id == request.Id, cancellationToken);
+                
             if (lesson == null)
                 throw new InvalidOperationException($"Aula com ID {request.Id} não encontrada.");
+
+            var currentTeacher = await _context.Teachers.FirstOrDefaultAsync(t => t.IdAgivys == currentUser.ExternalId, cancellationToken);
+            if (currentTeacher == null || (currentTeacher.Role != "Admin" && !lesson.Module.Course.CourseTeachers.Any(ct => ct.TeacherId == currentTeacher.Id)))
+            {
+                throw new UnauthorizedAccessException("Você não tem permissão para modificar esta aula.");
+            }
 
             lesson.Name = request.Name;
             lesson.Description = request.Description;

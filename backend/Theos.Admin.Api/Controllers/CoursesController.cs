@@ -49,7 +49,7 @@ namespace Theos.Admin.Api.Controllers
         /// cursos → módulos → aulas com todos os detalhes.
         /// Usado principalmente pela Landing Page e páginas de detalhes de cursos.
         /// </remarks>
-        [AllowAnonymous]
+        [Authorize(Roles = "Teacher,Admin")]
         [HttpGet]
         [SwaggerOperation(Summary = "Lista cursos com módulos e aulas", Description = "Retorna uma lista completa de cursos ativos com todos os módulos e aulas inclusos.")]
         [ProducesResponseType(typeof(List<CourseDto>), StatusCodes.Status200OK)]

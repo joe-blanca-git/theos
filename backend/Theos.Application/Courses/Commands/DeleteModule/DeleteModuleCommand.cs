@@ -23,23 +23,34 @@ namespace Theos.Application.Courses.Commands.DeleteModule
         private readonly ITheosDbContext _context;
         private readonly IBunnyVideoService _bunnyVideoService;
         private readonly ICloudflareStorageService _cloudflareStorageService;
+        private readonly IUserContextService _userContextService;
 
-        public DeleteModuleCommandHandler(ITheosDbContext context, IBunnyVideoService bunnyVideoService, ICloudflareStorageService cloudflareStorageService)
+        public DeleteModuleCommandHandler(ITheosDbContext context, IBunnyVideoService bunnyVideoService, ICloudflareStorageService cloudflareStorageService, IUserContextService userContextService)
         {
             _context = context;
             _bunnyVideoService = bunnyVideoService;
             _cloudflareStorageService = cloudflareStorageService;
+            _userContextService = userContextService;
         }
 
         public async Task<Unit> Handle(DeleteModuleCommand request, CancellationToken cancellationToken)
         {
+            var currentUser = await _userContextService.GetCurrentUserAsync();
+
             var module = await _context.Modules
                 .Include(m => m.Lessons)
                 .Include(m => m.Course)
+                .ThenInclude(c => c.CourseTeachers)
                 .FirstOrDefaultAsync(m => m.Id == request.Id, cancellationToken);
 
             if (module == null)
                 throw new InvalidOperationException($"Módulo com ID {request.Id} não encontrado.");
+
+            var currentTeacher = await _context.Teachers.FirstOrDefaultAsync(t => t.IdAgivys == currentUser.ExternalId, cancellationToken);
+            if (currentTeacher == null || (currentTeacher.Role != "Admin" && !module.Course.CourseTeachers.Any(ct => ct.TeacherId == currentTeacher.Id)))
+            {
+                throw new UnauthorizedAccessException("Você não tem permissão para deletar este módulo.");
+            }
 
             // Apagar vídeos das aulas no Bunny.net
             if (module.Lessons.Any() && module.Course != null && !string.IsNullOrEmpty(module.Course.BunnyLibraryId))

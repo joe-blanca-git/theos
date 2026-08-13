@@ -56,10 +56,11 @@ namespace Theos.Application.Courses.Commands.CreateLesson
             if (module == null)
                 throw new InvalidOperationException($"Módulo com ID {request.ModuleId} não encontrado.");
 
-            // Verificar se o usuário atual é professor do curso vinculado a este módulo
-            bool isTeacherOfCourse = module.Course.CourseTeachers.Any(ct => ct.Teacher.IdAgivys == currentUser.ExternalId);
-            if (!isTeacherOfCourse)
+            var currentTeacher = await _context.Teachers.FirstOrDefaultAsync(t => t.IdAgivys == currentUser.ExternalId, cancellationToken);
+            if (currentTeacher == null || (currentTeacher.Role != "Admin" && !module.Course.CourseTeachers.Any(ct => ct.Teacher.IdAgivys == currentUser.ExternalId)))
+            {
                 throw new UnauthorizedAccessException("Você não tem permissão para adicionar aulas a este módulo/curso.");
+            }
 
             var lesson = Lesson.Create(
                 request.Name,
