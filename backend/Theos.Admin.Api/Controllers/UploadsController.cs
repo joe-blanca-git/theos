@@ -22,14 +22,14 @@ namespace Theos.Admin.Api.Controllers
 
         [HttpPost("Image")]
         [Authorize]
-        [RequestSizeLimit(3 * 1024 * 1024)] // 3MB limit (slightly above 2MB for safety margin)
+        [RequestSizeLimit(10 * 1024 * 1024)] // 10MB limit
         public async Task<IActionResult> UploadImage(IFormFile file, [FromQuery] string folder = "courses/covers")
         {
             if (file == null || file.Length == 0)
                 return BadRequest(new { message = "Nenhum arquivo enviado." });
 
-            if (file.Length > 2 * 1024 * 1024)
-                return BadRequest(new { message = "O arquivo excede o limite de 2MB." });
+            if (file.Length > 10 * 1024 * 1024)
+                return BadRequest(new { message = "O arquivo excede o limite de 10MB." });
 
             var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".webp" };
             var extension = Path.GetExtension(file.FileName).ToLowerInvariant();
