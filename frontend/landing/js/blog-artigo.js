@@ -77,7 +77,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('articleReadTime').innerText = getReadingTime(article.content);
 
     // Populate Content
-    document.getElementById('articleContent').innerHTML = article.content;
+    // Substituímos &nbsp; por espaço normal para evitar que o navegador entenda tudo como uma única palavra gigante (problema comum ao colar texto de outros editores)
+    document.getElementById('articleContent').innerHTML = article.content.replace(/&nbsp;/g, ' ');
 
     // Populate Tags
     const tagsContainer = document.getElementById('articleTags');
