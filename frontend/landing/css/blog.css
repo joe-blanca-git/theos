@@ -242,8 +242,12 @@
 
 .content-formatted p, 
 .content-formatted span, 
-.content-formatted div {
+.content-formatted div,
+.content-formatted blockquote,
+.content-formatted * {
   white-space: normal !important;
+  word-break: normal !important;
+  overflow-wrap: break-word !important;
 }
 
 @media (max-width: 768px) {
