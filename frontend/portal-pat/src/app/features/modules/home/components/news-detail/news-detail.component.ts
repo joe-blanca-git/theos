@@ -49,6 +49,10 @@ export class NewsDetailComponent implements OnInit {
     try {
       this.newsDetail = await this.homeService.getNewsDetail(this.newsId);
       
+      if (this.newsDetail && this.newsDetail.content) {
+        this.newsDetail.content = this.newsDetail.content.replace(/&nbsp;/g, ' ').replace(/\u00A0/g, ' ');
+      }
+      
       const homeData = await this.homeService.getHomeData();
       if (homeData && homeData.latestNews) {
         this.allRecentPosts = homeData.latestNews.filter(n => n.id !== this.newsId).slice(0, 4);

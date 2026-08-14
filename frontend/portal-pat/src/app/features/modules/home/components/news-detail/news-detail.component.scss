@@ -43,4 +43,10 @@
   p {
     margin-bottom: 1.5rem;
   }
+  
+  &, *, p, span, div, blockquote {
+    white-space: normal !important;
+    word-break: normal !important;
+    overflow-wrap: break-word !important;
+  }
 }
