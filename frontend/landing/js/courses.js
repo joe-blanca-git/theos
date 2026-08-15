@@ -219,6 +219,9 @@ async function fetchCursoDetalhes() {
         const descSubEl = document.getElementById("course-description-sub");
         if (descSubEl) descSubEl.textContent = curso.descriptionSub || "";
 
+        const subtitleSectionEl = document.getElementById("course-subtitle-section");
+        if (subtitleSectionEl && curso.descriptionSub) subtitleSectionEl.textContent = curso.descriptionSub;
+
         const levelEl = document.getElementById("course-level");
         if (levelEl) levelEl.textContent = curso.level || "Intermediário";
 
