@@ -141,7 +141,7 @@
                          placeholder="000.000.000-00 (CPF)" 
                          [(ngModel)]="pixCpf">
                 </div>
-                <button class="btn btn-dark rounded-pill px-4 py-3 fw-bold w-100" 
+                <button class="btn btn-success rounded-pill px-4 py-3 fw-bold w-100" 
                         [disabled]="isLoadingPix || !pixCpf || !pixHolderName" 
                         (click)="generatePix()">
                   <span *ngIf="isLoadingPix" class="spinner-border spinner-border-sm me-2"></span>
@@ -159,7 +159,7 @@
                 <div class="d-flex flex-column align-items-center gap-3">
                   <div class="input-group" style="max-width: 400px;">
                     <input type="text" class="form-control bg-dark text-truncate" [value]="pixCopiaECola" readonly>
-                    <button class="btn btn-outline-dark" type="button" (click)="copyPixCode()">
+                    <button class="btn btn-outline-success" type="button" (click)="copyPixCode()">
                       <i class="fas fa-copy"></i> Copiar
                     </button>
                   </div>
@@ -235,7 +235,7 @@
                 </div>
 
                 <div class="mt-4 pt-3 border-top">
-                  <button type="submit" class="btn btn-dark w-100 rounded-pill py-3 fw-bold" [disabled]="isProcessing">
+                  <button type="submit" class="btn btn-success w-100 rounded-pill py-3 fw-bold" [disabled]="isProcessing">
                     <span *ngIf="isProcessing" class="spinner-border spinner-border-sm me-2"></span>
                     {{ isProcessing ? 'Processando...' : 'Finalizar Pagamento' }}
                   </button>

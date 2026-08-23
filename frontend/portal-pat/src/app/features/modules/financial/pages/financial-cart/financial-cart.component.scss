@@ -16,6 +16,35 @@ $cubic-bezier: cubic-bezier(0.4, 0, 0.2, 1);
   animation: fadeIn 0.4s ease-out forwards;
 }
 
+/* --- Cart Grid Layout (Mobile vs Desktop) --- */
+.cart-grid-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+
+  @media (min-width: 992px) {
+    display: grid;
+    grid-template-columns: 7fr 5fr;
+    gap: 2rem 2.5rem;
+    align-items: start;
+
+    .block-presentation {
+      grid-column: 1;
+      grid-row: 1;
+    }
+
+    .block-checkout {
+      grid-column: 2;
+      grid-row: 1 / span 2;
+    }
+
+    .block-content {
+      grid-column: 1;
+      grid-row: 2;
+    }
+  }
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;

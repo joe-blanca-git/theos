@@ -10,13 +10,11 @@
   </div>
 
   <!-- Cart Content -->
-  <div class="row g-4 g-lg-5" *ngIf="!isLoading && course">
+  <div class="cart-grid-container" *ngIf="!isLoading && course">
 
-    <!-- LEFT: Course Info -->
-    <div class="col-12 col-lg-7">
-      
-      <!-- Course Presentation Card -->
-      <div class="card border-0 rounded-4 shadow-sm bg-dark mb-4">
+    <!-- BLOCK 1: Course Presentation -->
+    <div class="block-presentation">
+      <div class="card border-0 rounded-4 shadow-sm bg-dark">
         <div class="row g-0 flex-column flex-md-row">
           
           <!-- Image Column (40% desktop) -->
@@ -87,57 +85,10 @@
           
         </div>
       </div>
-
-      <!-- Course Content Card -->
-      <div class="card border-0 rounded-4 shadow-sm bg-dark" *ngIf="courseDetail">
-        <div class="card-body p-4">
-          
-          <h5 class="fw-bold mb-4 d-flex align-items-center gap-2 text-white" style="font-size: 1.1rem;">
-            <i class="fas fa-list-ul" style="color: #6366f1;"></i> Conteúdo do Curso
-          </h5>
-
-          <!-- Domains -->
-          <div *ngIf="courseDetail.domains && courseDetail.domains.length > 0" class="mb-4 pb-2 border-bottom border-secondary border-opacity-10">
-            <h6 class="fw-bold text-white-50 mb-3 text-uppercase" style="font-size: 0.7rem; letter-spacing: 0.5px;">O que você vai aprender</h6>
-            <ul class="list-unstyled mb-0 row">
-              <li *ngFor="let domain of courseDetail.domains" class="col-12 col-md-6 d-flex align-items-start gap-2 mb-3">
-                <i class="fas fa-check-circle mt-1 flex-shrink-0" style="color: #10b981; font-size: 0.8rem;"></i>
-                <div>
-                  <span class="d-block fw-semibold text-white" style="font-size: 0.82rem;">{{ domain.title }}</span>
-                  <span *ngIf="domain.description" class="text-white-50 mt-1 d-block" style="font-size: 0.72rem; line-height: 1.4;">{{ domain.description }}</span>
-                </div>
-              </li>
-            </ul>
-          </div>
-
-          <!-- Modules -->
-          <div *ngIf="courseDetail.modules && courseDetail.modules.length > 0">
-            <h6 class="fw-bold text-white-50 mb-3 text-uppercase" style="font-size: 0.7rem; letter-spacing: 0.5px;">Grade Curricular</h6>
-            <div class="accordion accordion-flush" id="accordionModules">
-              <div class="accordion-item bg-transparent border-0 mb-2" *ngFor="let module of courseDetail.modules; let i = index">
-                <h2 class="accordion-header" [id]="'headingModule' + i">
-                  <button class="accordion-button bg-secondary bg-opacity-10 text-white rounded-3 py-3 px-3 shadow-none d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" [attr.data-bs-target]="'#collapseModule' + i" aria-expanded="true" [attr.aria-controls]="'collapseModule' + i" style="font-size: 0.82rem; font-weight: 600;">
-                    <span class="d-flex align-items-center gap-2">
-                      <span class="text-white-50">{{ i + 1 }}.</span> {{ module.title }}
-                    </span>
-                  </button>
-                </h2>
-                <div [id]="'collapseModule' + i" class="accordion-collapse collapse show" [attr.aria-labelledby]="'headingModule' + i">
-                  <div class="accordion-body px-4 py-3 text-white-50 border-start border-2 ms-3 mt-1 mb-2" style="font-size: 0.8rem; line-height: 1.5; border-color: rgba(99,102,241,0.3) !important;">
-                    {{ module.description || 'Nenhuma descrição informada para este módulo.' }}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-        </div>
-      </div>
-      
     </div>
 
-    <!-- RIGHT: Checkout -->
-    <div class="col-12 col-lg-5">
+    <!-- BLOCK 2: Checkout (Produto & Resumo do Pedido) -->
+    <div class="block-checkout">
       <div class="position-lg-sticky" style="top: 2rem;">
 
         <!-- Purchase Options -->
@@ -212,5 +163,54 @@
 
       </div>
     </div>
+
+    <!-- BLOCK 3: Course Content -->
+    <div class="block-content" *ngIf="courseDetail">
+      <div class="card border-0 rounded-4 shadow-sm bg-dark">
+        <div class="card-body p-4">
+          
+          <h5 class="fw-bold mb-4 d-flex align-items-center gap-2 text-white" style="font-size: 1.1rem;">
+            <i class="fas fa-list-ul" style="color: #6366f1;"></i> Conteúdo do Curso
+          </h5>
+
+          <!-- Domains -->
+          <div *ngIf="courseDetail.domains && courseDetail.domains.length > 0" class="mb-4 pb-2 border-bottom border-secondary border-opacity-10">
+            <h6 class="fw-bold text-white-50 mb-3 text-uppercase" style="font-size: 0.7rem; letter-spacing: 0.5px;">O que você vai aprender</h6>
+            <ul class="list-unstyled mb-0 row">
+              <li *ngFor="let domain of courseDetail.domains" class="col-12 col-md-6 d-flex align-items-start gap-2 mb-3">
+                <i class="fas fa-check-circle mt-1 flex-shrink-0" style="color: #10b981; font-size: 0.8rem;"></i>
+                <div>
+                  <span class="d-block fw-semibold text-white" style="font-size: 0.82rem;">{{ domain.title }}</span>
+                  <span *ngIf="domain.description" class="text-white-50 mt-1 d-block" style="font-size: 0.72rem; line-height: 1.4;">{{ domain.description }}</span>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Modules -->
+          <div *ngIf="courseDetail.modules && courseDetail.modules.length > 0">
+            <h6 class="fw-bold text-white-50 mb-3 text-uppercase" style="font-size: 0.7rem; letter-spacing: 0.5px;">Grade Curricular</h6>
+            <div class="accordion accordion-flush" id="accordionModules">
+              <div class="accordion-item bg-transparent border-0 mb-2" *ngFor="let module of courseDetail.modules; let i = index">
+                <h2 class="accordion-header" [id]="'headingModule' + i">
+                  <button class="accordion-button bg-secondary bg-opacity-10 text-white rounded-3 py-3 px-3 shadow-none d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" [attr.data-bs-target]="'#collapseModule' + i" aria-expanded="true" [attr.aria-controls]="'collapseModule' + i" style="font-size: 0.82rem; font-weight: 600;">
+                    <span class="d-flex align-items-center gap-2">
+                      <span class="text-white-50">{{ i + 1 }}.</span> {{ module.title }}
+                    </span>
+                  </button>
+                </h2>
+                <div [id]="'collapseModule' + i" class="accordion-collapse collapse show" [attr.aria-labelledby]="'headingModule' + i">
+                  <div class="accordion-body px-4 py-3 text-white-50 border-start border-2 ms-3 mt-1 mb-2" style="font-size: 0.8rem; line-height: 1.5; border-color: rgba(99,102,241,0.3) !important;">
+                    {{ module.description || 'Nenhuma descrição informada para este módulo.' }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
