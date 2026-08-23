@@ -32,6 +32,23 @@ public class RefundsController : ControllerBase
         return Ok(result);
     }
 
+    [HttpGet("sales")]
+    public async Task<IActionResult> GetSalesForRefund([FromQuery] string? searchTerm)
+    {
+        var result = await _mediator.Send(new GetSalesForRefundQuery(searchTerm));
+        return Ok(result);
+    }
+
+    public record AdminRefundRequestDto(int PurchaseId);
+
+    [HttpPost("request")]
+    public async Task<IActionResult> RequestRefund([FromBody] AdminRefundRequestDto request)
+    {
+        var result = await _mediator.Send(new Theos.Application.Purchases.Commands.RefundCourse.RefundCourseCommand(request.PurchaseId));
+        if (!result.Success) return BadRequest(result);
+        return Ok(result);
+    }
+
     [HttpPost("{id}/approve")]
     public async Task<IActionResult> Approve(int id)
     {

@@ -29,8 +29,11 @@ builder.Services.AddCors(options =>
     options.AddPolicy("DevelopmentCors", policy =>
     {
         policy.SetIsOriginAllowed(origin => 
-                new Uri(origin).Host.EndsWith("portaltheos.com.br") || 
-                new Uri(origin).Host == "localhost")
+                !string.IsNullOrEmpty(origin) && (
+                    new Uri(origin).Host.EndsWith("portaltheos.com.br") || 
+                    new Uri(origin).Host == "localhost" ||
+                    new Uri(origin).Host == "127.0.0.1"
+                ))
               .AllowAnyMethod()
               .AllowAnyHeader()
               .AllowCredentials();

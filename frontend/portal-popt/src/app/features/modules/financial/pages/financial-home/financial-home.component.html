@@ -32,6 +32,9 @@
           <button *ngIf="activeTab === 'vendas'" class="btn btn-primary px-4 rounded-pill shadow-sm" (click)="openClosingModal()">
             <i class="fas fa-file-invoice-dollar me-2"></i> Processar Faturamento
           </button>
+          <button *ngIf="activeTab === 'reembolsos'" class="btn btn-primary px-4 rounded-pill shadow-sm" (click)="openRequestRefundModal()">
+            <i class="fas fa-undo-alt me-2"></i> Solicitar Reembolso
+          </button>
           <button *ngIf="activeTab === 'configuracoes'" class="btn btn-primary px-4 rounded-pill shadow-sm" (click)="openTaxModal()">
             <i class="fas fa-plus me-2"></i> Nova Taxa
           </button>
@@ -1207,6 +1210,155 @@
           <i class="fas fa-save" *ngIf="!isProcessingAction"></i> Salvar Taxa
         </button>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========================================== -->
+<!-- MODAL: SOLICITAR REEMBOLSO (VENDAS)        -->
+<!-- ========================================== -->
+<div class="modal fade" [class.show]="showRequestRefundModal" [style.display]="showRequestRefundModal ? 'block' : 'none'" tabindex="-1" style="background: rgba(0,0,0,0.5);">
+  <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable">
+    <div class="modal-content rounded-4 border-0 shadow-lg d-flex flex-column h-100">
+      
+      <!-- Premium Header -->
+      <div class="modal-header bg-dark border-bottom-0 pb-3 pt-4 px-4 rounded-top-4 position-relative overflow-hidden flex-shrink-0">
+        <div class="position-absolute top-0 end-0 p-3 opacity-25">
+          <i class="fas fa-undo-alt text-white" style="font-size: 8rem; transform: translate(20%, -30%);"></i>
+        </div>
+        <div class="d-flex align-items-center gap-3">
+          <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center shadow-sm flex-shrink-0" style="width: 48px; height: 48px;">
+            <i class="fas fa-undo-alt fs-5"></i>
+          </div>
+          <div>
+            <h5 class="modal-title fw-bolder text-white mb-1 fs-5">Solicitar Reembolso</h5>
+            <p class="mb-0 text-white-50 small">Selecione um pagamento da lista de vendas para gerar a solicitação de estorno.</p>
+          </div>
+        </div>
+        <button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 mt-4 me-4" (click)="closeRequestRefundModal()"></button>
+      </div>
+
+      <div class="modal-body bg-secondary bg-opacity-10 p-4 overflow-auto custom-scrollbar flex-grow-1">
+        
+        <!-- Pesquisa Rápida -->
+        <div class="card border-0 shadow-sm rounded-4 mb-4">
+          <div class="card-body p-3 d-flex align-items-center gap-3">
+            <div class="input-group">
+              <span class="input-group-text bg-white border-end-0"><i class="fas fa-search text-muted"></i></span>
+              <input type="text" class="form-control border-start-0 py-2" placeholder="Buscar por aluno, curso ou transação..." [(ngModel)]="requestRefundSearchTerm" (keyup.enter)="loadRefundableSales()">
+            </div>
+            <button class="btn btn-dark rounded-pill px-4 shadow-sm py-2" (click)="loadRefundableSales()" [disabled]="isLoadingRefundableSales">
+              Buscar
+            </button>
+          </div>
+        </div>
+
+        <!-- Regulamento / Critérios Alert -->
+        <div class="alert alert-info border-0 rounded-4 shadow-sm mb-4 d-flex align-items-center gap-3">
+          <i class="fas fa-info-circle fs-4 text-info"></i>
+          <div class="small">
+            <strong>Regra de Elegibilidade para Estorno:</strong> É permitido estornar vendas efetuadas em até <strong>7 dias</strong> da data da compra e que possuam menos de <strong>20% assistido</strong> do curso.
+          </div>
+        </div>
+
+        <!-- Tabela de Vendas -->
+        <div class="card border-0 shadow-sm rounded-4 flex-grow-1 overflow-hidden">
+          <div class="card-body p-0 custom-scrollbar position-relative" style="min-height: 250px;">
+            <table class="table table-hover align-middle mb-0" style="min-width: 900px;">
+              <thead class="bg-light bg-opacity-50 text-muted small fw-semibold sticky-top">
+                <tr>
+                  <th class="px-4 py-3 border-0" style="width: 50px;"></th>
+                  <th class="py-3 border-0">Aluno</th>
+                  <th class="py-3 border-0">Curso</th>
+                  <th class="py-3 border-0 text-end">Valor Pago</th>
+                  <th class="py-3 border-0 text-center">Status Pgto</th>
+                  <th class="py-3 border-0 text-center">% Assistido</th>
+                  <th class="py-3 border-0 text-center">Data Compra</th>
+                  <th class="px-4 py-3 border-0 text-center">Status Critério</th>
+                </tr>
+              </thead>
+              <tbody class="border-top-0">
+                <ng-container *ngIf="isLoadingRefundableSales">
+                  <tr *ngFor="let item of [1,2,3,4]">
+                    <td class="px-4"><div class="skeleton rounded-circle" style="width: 20px; height: 20px;"></div></td>
+                    <td><div class="skeleton rounded-2" style="width: 130px; height: 18px;"></div></td>
+                    <td><div class="skeleton rounded-2" style="width: 160px; height: 18px;"></div></td>
+                    <td class="text-end"><div class="skeleton rounded-2 ms-auto" style="width: 80px; height: 18px;"></div></td>
+                    <td class="text-center"><div class="skeleton rounded-pill mx-auto" style="width: 80px; height: 22px;"></div></td>
+                    <td class="text-center"><div class="skeleton rounded-2 mx-auto" style="width: 50px; height: 18px;"></div></td>
+                    <td class="text-center"><div class="skeleton rounded-2 mx-auto" style="width: 100px; height: 18px;"></div></td>
+                    <td class="px-4 text-center"><div class="skeleton rounded-pill mx-auto" style="width: 70px; height: 22px;"></div></td>
+                  </tr>
+                </ng-container>
+
+                <ng-container *ngIf="!isLoadingRefundableSales">
+                  <tr *ngIf="refundableSales.length === 0">
+                    <td colspan="8" class="text-center py-5 text-muted">
+                      Nenhuma venda encontrada para solicitação de reembolso.
+                    </td>
+                  </tr>
+                  <tr *ngFor="let sale of getPaginatedRefundableSales()" [class.table-active]="selectedPurchaseForRefund?.purchaseId === sale.purchaseId" (click)="selectPurchaseForRefund(sale)" style="cursor: pointer;">
+                    <td class="px-4 text-center">
+                      <input type="radio" class="form-check-input" name="saleSelection" [checked]="selectedPurchaseForRefund?.purchaseId === sale.purchaseId" (change)="selectPurchaseForRefund(sale)">
+                    </td>
+                    <td>
+                      <div class="d-flex align-items-center">
+                        <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex justify-content-center align-items-center me-2 fw-bold" style="width:30px;height:30px;font-size:0.75rem">
+                          {{sale.studentName.charAt(0)}}
+                        </div>
+                        <span class="fw-semibold text-dark">{{sale.studentName}}</span>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="fw-semibold text-dark text-truncate" style="max-width: 220px;" title="{{sale.courseName}}">{{sale.courseName}}</div>
+                    </td>
+                    <td class="text-end fw-semibold text-dark">{{formatCurrency(sale.grossValue)}}</td>
+                    <td class="text-center">
+                      <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 rounded-pill">
+                        {{sale.paymentStatus}}
+                      </span>
+                    </td>
+                    <td class="text-center fw-semibold text-dark">{{formatPercent(sale.courseProgress / 100)}}</td>
+                    <td class="text-center text-muted small">{{sale.purchaseDate | date:'dd/MM/yyyy HH:mm'}}</td>
+                    <td class="px-4 text-center">
+                      <span class="badge border border-opacity-25 rounded-pill px-3 py-1" [ngClass]="sale.isEligible ? 'bg-success bg-opacity-10 text-success border-success' : 'bg-danger bg-opacity-10 text-danger border-danger'">
+                        {{sale.isEligible ? 'Válido' : 'Inválido'}}
+                      </span>
+                    </td>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Paginação Modal -->
+          <div class="card-footer bg-white border-top p-3 d-flex justify-content-between align-items-center" *ngIf="refundableSales.length > 0">
+            <span class="text-muted small">Exibindo {{(requestRefundCurrentPage-1)*requestRefundPageSize + 1}} a {{requestRefundCurrentPage*requestRefundPageSize > refundableSales.length ? refundableSales.length : requestRefundCurrentPage*requestRefundPageSize}} de {{refundableSales.length}} vendas</span>
+            <nav>
+              <ul class="pagination pagination-sm mb-0">
+                <li class="page-item" [class.disabled]="requestRefundCurrentPage === 1">
+                  <button class="page-link shadow-none" (click)="changeRequestRefundPage(requestRefundCurrentPage-1)">Anterior</button>
+                </li>
+                <li class="page-item" *ngFor="let p of [].constructor(getRequestRefundTotalPages()); let i = index" [class.active]="requestRefundCurrentPage === i + 1">
+                  <button class="page-link shadow-none" (click)="changeRequestRefundPage(i + 1)">{{i + 1}}</button>
+                </li>
+                <li class="page-item" [class.disabled]="requestRefundCurrentPage === getRequestRefundTotalPages()">
+                  <button class="page-link shadow-none" (click)="changeRequestRefundPage(requestRefundCurrentPage+1)">Próximo</button>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer bg-secondary bg-opacity-10 border-top-0 px-4 py-3 d-flex justify-content-between align-items-center">
+        <button type="button" class="btn btn-light text-secondary border rounded-pill px-4 fw-semibold shadow-sm" (click)="closeRequestRefundModal()" [disabled]="isSubmittingRefundRequest">Cancelar</button>
+        <button type="button" class="btn btn-primary rounded-pill px-4 fw-bold shadow-sm d-flex align-items-center gap-2" (click)="confirmRequestRefund()" [disabled]="!selectedPurchaseForRefund || isSubmittingRefundRequest">
+          <span *ngIf="isSubmittingRefundRequest" class="spinner-border spinner-border-sm me-1"></span>
+          <i class="fas fa-paper-plane" *ngIf="!isSubmittingRefundRequest"></i> Solicitar Reembolso
+        </button>
+      </div>
+
     </div>
   </div>
 </div>

@@ -51,6 +51,18 @@ export interface RefundRequestDto {
   isEligible: boolean;
 }
 
+export interface RefundableSaleDto {
+  purchaseId: number;
+  studentName: string;
+  courseName: string;
+  grossValue: number;
+  paymentStatus: string;
+  courseProgress: number;
+  purchaseDate: string;
+  paymentMethod: string;
+  isEligible: boolean;
+}
+
 export enum TaxType {
   Pix = 1,
   CreditCard = 2,

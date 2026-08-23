@@ -65,6 +65,18 @@ export class FinancialService extends BaseService {
     return this.httpClient.post(url, {}, this.GetAuthHeaderJson());
   }
 
+  getSalesForRefund(searchTerm?: string): Observable<import('../models/financial.model').RefundableSaleDto[]> {
+    const params: any = {};
+    if (searchTerm) params.searchTerm = searchTerm;
+    const url = `${this.urlApiTheos}Refunds/sales`;
+    return this.httpClient.get<import('../models/financial.model').RefundableSaleDto[]>(url, { headers: this.GetAuthHeaderJson().headers, params });
+  }
+
+  requestRefund(purchaseId: number): Observable<any> {
+    const url = `${this.urlApiTheos}Refunds/request`;
+    return this.httpClient.post(url, { purchaseId }, this.GetAuthHeaderJson());
+  }
+
   // --- Taxes (FinancialTaxes) ---
 
   getFinancialTaxes(): Observable<import('../models/financial.model').FinancialTaxDto[]> {

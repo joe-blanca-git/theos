@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { FinancialService } from '../../services/financial.service';
-import { FinancialDashboardSummaryDto, FinancialClosingSimulationDto, RefundDashboardSummaryDto, RefundRequestDto, RefundStatus, FinancialTaxDto, CreateFinancialTaxCommand, TaxType } from '../../models/financial.model';
+import { FinancialDashboardSummaryDto, FinancialClosingSimulationDto, RefundDashboardSummaryDto, RefundRequestDto, RefundStatus, FinancialTaxDto, CreateFinancialTaxCommand, TaxType, RefundableSaleDto } from '../../models/financial.model';
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
 import { ToastService } from '../../../../../core/services/toast.service';
@@ -42,6 +42,16 @@ export class FinancialHomeComponent implements OnInit {
   showExecuteConfirm: boolean = false;
   rejectReason: string = '';
   isProcessingAction: boolean = false;
+
+  // Request Refund Modal State (Vendas)
+  showRequestRefundModal: boolean = false;
+  refundableSales: RefundableSaleDto[] = [];
+  selectedPurchaseForRefund: RefundableSaleDto | null = null;
+  isLoadingRefundableSales: boolean = false;
+  isSubmittingRefundRequest: boolean = false;
+  requestRefundSearchTerm: string = '';
+  requestRefundCurrentPage: number = 1;
+  requestRefundPageSize: number = 5;
   // -------------------------
 
   // --- CONFIGURAÇÕES E TAXAS STATE ---
@@ -438,6 +448,72 @@ export class FinancialHomeComponent implements OnInit {
         this.closeExecuteConfirm();
       }
     });
+  }
+
+  // --- NOVA SOLICITAÇÃO DE REEMBOLSO (VENDAS) ---
+  openRequestRefundModal() {
+    this.showRequestRefundModal = true;
+    this.selectedPurchaseForRefund = null;
+    this.requestRefundSearchTerm = '';
+    this.requestRefundCurrentPage = 1;
+    this.loadRefundableSales();
+  }
+
+  closeRequestRefundModal() {
+    this.showRequestRefundModal = false;
+    this.selectedPurchaseForRefund = null;
+    this.refundableSales = [];
+  }
+
+  loadRefundableSales() {
+    this.isLoadingRefundableSales = true;
+    this.financialService.getSalesForRefund(this.requestRefundSearchTerm).subscribe({
+      next: (res) => {
+        this.refundableSales = res;
+        this.isLoadingRefundableSales = false;
+      },
+      error: (err) => {
+        console.error(err);
+        this.refundableSales = [];
+        this.isLoadingRefundableSales = false;
+      }
+    });
+  }
+
+  selectPurchaseForRefund(sale: RefundableSaleDto) {
+    this.selectedPurchaseForRefund = sale;
+  }
+
+  confirmRequestRefund() {
+    if (!this.selectedPurchaseForRefund) return;
+    this.isSubmittingRefundRequest = true;
+    this.financialService.requestRefund(this.selectedPurchaseForRefund.purchaseId).subscribe({
+      next: (res) => {
+        this.toastService.success(res.message || 'Solicitação de reembolso gerada com sucesso!');
+        this.isSubmittingRefundRequest = false;
+        this.closeRequestRefundModal();
+        this.loadRefundsData();
+      },
+      error: (err) => {
+        console.error(err);
+        this.toastService.error(err.error?.message || 'Erro ao solicitar reembolso.');
+        this.isSubmittingRefundRequest = false;
+      }
+    });
+  }
+
+  getRequestRefundTotalPages(): number {
+    return Math.ceil(this.refundableSales.length / this.requestRefundPageSize) || 1;
+  }
+
+  getPaginatedRefundableSales(): RefundableSaleDto[] {
+    const startIndex = (this.requestRefundCurrentPage - 1) * this.requestRefundPageSize;
+    return this.refundableSales.slice(startIndex, startIndex + this.requestRefundPageSize);
+  }
+
+  changeRequestRefundPage(page: number) {
+    if (page < 1 || page > this.getRequestRefundTotalPages()) return;
+    this.requestRefundCurrentPage = page;
   }
 
   // Helpers de UI

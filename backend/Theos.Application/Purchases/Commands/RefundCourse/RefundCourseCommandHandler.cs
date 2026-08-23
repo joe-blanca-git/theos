@@ -23,7 +23,7 @@ public class RefundCourseCommandHandler : IRequestHandler<RefundCourseCommand, R
     {
         var currentUser = await _userContextService.GetCurrentUserAsync();
             var purchase = await _context.Purchases
-                .FirstOrDefaultAsync(p => p.Id == request.PurchaseId && p.UserId == currentUser.Id, cancellationToken);
+                .FirstOrDefaultAsync(p => p.Id == request.PurchaseId, cancellationToken);
 
             if (purchase == null)
             {
@@ -66,7 +66,7 @@ public class RefundCourseCommandHandler : IRequestHandler<RefundCourseCommand, R
                 .Where(c => c.Id == purchase.CourseId)
                 .Select(c => new {
                     TotalLessons = c.Modules.SelectMany(m => m.Lessons).Count(l => l.Active),
-                    CompletedLessons = c.Modules.SelectMany(m => m.Lessons).SelectMany(l => l.LessonViews).Count(lv => lv.UserId == currentUser.Id)
+                    CompletedLessons = c.Modules.SelectMany(m => m.Lessons).SelectMany(l => l.LessonViews).Count(lv => lv.UserId == purchase.UserId)
                 })
                 .FirstOrDefaultAsync(cancellationToken);
 
