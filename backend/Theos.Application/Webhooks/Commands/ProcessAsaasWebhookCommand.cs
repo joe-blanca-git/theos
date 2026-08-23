@@ -11,6 +11,8 @@ public class ProcessAsaasWebhookCommand : IRequest<bool>
 {
     public string Event { get; set; } = string.Empty;
     public string PaymentId { get; set; } = string.Empty;
+    public string? CustomerId { get; set; }
+    public string? ExternalReference { get; set; }
 }
 
 public class ProcessAsaasWebhookCommandHandler : IRequestHandler<ProcessAsaasWebhookCommand, bool>
@@ -31,21 +33,76 @@ public class ProcessAsaasWebhookCommandHandler : IRequestHandler<ProcessAsaasWeb
 
     public async Task<bool> Handle(ProcessAsaasWebhookCommand request, CancellationToken cancellationToken)
     {
-        _logger.LogInformation($"Processando webhook para PaymentId: {request.PaymentId}, Event: {request.Event}");
+        _logger.LogInformation($"Processando webhook para PaymentId: {request.PaymentId}, Event: {request.Event}, CustomerId: {request.CustomerId}, ExtRef: {request.ExternalReference}");
 
-        // 1. Tentar encontrar como Purchase (Avulso)
-        var purchase = await _context.Purchases
-            .Include(p => p.User)
-            .FirstOrDefaultAsync(p => p.AsaasPaymentId == request.PaymentId, cancellationToken);
+        Theos.Domain.Entities.Purchase? purchase = null;
+
+        // 1. Tentar encontrar por AsaasPaymentId exato
+        if (!string.IsNullOrEmpty(request.PaymentId))
+        {
+            purchase = await _context.Purchases
+                .Include(p => p.User)
+                .FirstOrDefaultAsync(p => p.AsaasPaymentId == request.PaymentId, cancellationToken);
+        }
+
+        // 2. Tentar encontrar por ExternalReference (que é o ID da Purchase no nosso banco)
+        if (purchase == null && !string.IsNullOrEmpty(request.ExternalReference) && int.TryParse(request.ExternalReference, out int purchaseId))
+        {
+            purchase = await _context.Purchases
+                .Include(p => p.User)
+                .FirstOrDefaultAsync(p => p.Id == purchaseId, cancellationToken);
+
+            if (purchase != null)
+            {
+                _logger.LogInformation($"Compra encontrada por ExternalReference: Id={purchase.Id}. Atualizando AsaasPaymentId para: {request.PaymentId}");
+                purchase.UpdateAsaasPaymentId(request.PaymentId);
+            }
+        }
+
+        // 3. Tentar encontrar por CustomerId (Asaas Customer) e vincular a uma compra pendente ou recente
+        if (purchase == null && !string.IsNullOrEmpty(request.CustomerId))
+        {
+            var user = await _context.Users
+                .FirstOrDefaultAsync(u => u.AsaasCustomerId == request.CustomerId, cancellationToken);
+
+            if (user != null)
+            {
+                // Busca primeiro qualquer compra do usuário que esteja pendente
+                purchase = await _context.Purchases
+                    .Include(p => p.User)
+                    .Where(p => p.UserId == user.Id && (p.Status == PurchaseStatus.Pending || string.IsNullOrEmpty(p.AsaasPaymentId)))
+                    .OrderByDescending(p => p.CreatedAt)
+                    .FirstOrDefaultAsync(cancellationToken);
+
+                if (purchase != null)
+                {
+                    _logger.LogInformation($"Compra pendente encontrada para usuário {user.Id} ({user.ExternalId}) por CustomerId: {request.CustomerId}. Vinculando AsaasPaymentId: {request.PaymentId}");
+                    purchase.UpdateAsaasPaymentId(request.PaymentId);
+                }
+                else if (request.Event == "PAYMENT_RECEIVED" || request.Event == "PAYMENT_CONFIRMED")
+                {
+                    // Caso o usuário pagou mas não havia uma Purchase pendente criada no banco
+                    var firstCourse = await _context.Courses.OrderByDescending(c => c.CreatedAt).FirstOrDefaultAsync(cancellationToken);
+                    if (firstCourse != null)
+                    {
+                        _logger.LogInformation($"Criando nova compra e matrícula automática para usuário {user.Id} no curso {firstCourse.Id}.");
+                        purchase = Theos.Domain.Entities.Purchase.Create(user.Id, firstCourse.Id, 0, "PIX");
+                        purchase.SetUser(user);
+                        purchase.SetCourse(firstCourse);
+                        purchase.UpdateAsaasPaymentId(request.PaymentId);
+                        _context.Purchases.Add(purchase);
+                    }
+                }
+            }
+        }
 
         if (purchase != null)
         {
-            _logger.LogInformation($"Compra encontrada: Id={purchase.Id}, Status atual={purchase.Status}. Processando evento...");
+            _logger.LogInformation($"Compra Id={purchase.Id}, Status atual={purchase.Status}. Processando evento...");
             return await ProcessPurchaseAsync(purchase, request.Event, cancellationToken);
         }
 
-        _logger.LogWarning($"Compra não encontrada para o PaymentId Asaas: {request.PaymentId}");
-        // Pagamento não encontrado em nossa base
+        _logger.LogWarning($"Nenhuma compra encontrada ou criada para o PaymentId Asaas: {request.PaymentId}, CustomerId: {request.CustomerId}");
         return false;
     }
 

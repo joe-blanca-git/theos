@@ -48,23 +48,36 @@ namespace Theos.Api.Controllers
 
                 string? eventType = null;
                 string? paymentId = null;
+                string? customerId = null;
+                string? externalReference = null;
 
                 if (payload.TryGetProperty("event", out var eventProp))
                     eventType = eventProp.GetString();
 
-                if (payload.TryGetProperty("payment", out var paymentProp) && paymentProp.TryGetProperty("id", out var idProp))
-                    paymentId = idProp.GetString();
-
-                if (string.IsNullOrEmpty(eventType) || string.IsNullOrEmpty(paymentId))
+                if (payload.TryGetProperty("payment", out var paymentProp))
                 {
-                    _logger.LogWarning($"[WEBHOOK ASAAS] Payload não contém event ou payment.id. Event: {eventType}, PaymentId: {paymentId}");
+                    if (paymentProp.TryGetProperty("id", out var idProp))
+                        paymentId = idProp.GetString();
+
+                    if (paymentProp.TryGetProperty("customer", out var custProp))
+                        customerId = custProp.GetString();
+
+                    if (paymentProp.TryGetProperty("externalReference", out var extProp))
+                        externalReference = extProp.GetString();
+                }
+
+                if (string.IsNullOrEmpty(eventType) || (string.IsNullOrEmpty(paymentId) && string.IsNullOrEmpty(customerId)))
+                {
+                    _logger.LogWarning($"[WEBHOOK ASAAS] Payload não contém event ou payment.id/customer. Event: {eventType}, PaymentId: {paymentId}");
                     return Ok(new { message = "Payload ignorado (incompatível)" });
                 }
 
                 var command = new Theos.Application.Webhooks.Commands.ProcessAsaasWebhookCommand
                 {
                     Event = eventType,
-                    PaymentId = paymentId
+                    PaymentId = paymentId ?? string.Empty,
+                    CustomerId = customerId,
+                    ExternalReference = externalReference
                 };
 
                 var result = await _mediator.Send(command);

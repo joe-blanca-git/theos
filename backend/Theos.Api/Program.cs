@@ -84,13 +84,16 @@ builder.Services.AddControllers()
         };
     });
 builder.Services.AddEndpointsApiExplorer();
-// builder.Services.AddSwaggerSetup();
+builder.Services.AddSwaggerSetup();
 
 var app = builder.Build();
 
-// Swagger desabilitado
-// app.UseSwagger(...);
-// app.UseSwaggerUI(...);
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Theos API v1");
+    c.RoutePrefix = "swagger";
+});
 
 app.UseSecurityHeaders();
 app.UseRateLimiter();
