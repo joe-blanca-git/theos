@@ -50,9 +50,6 @@ namespace Theos.Application.FinancialClosings.Queries
             var currentUser = await _userContextService.GetCurrentUserAsync();
             var teacher = await _context.Teachers.FirstOrDefaultAsync(t => t.IdAgivys == currentUser.ExternalId, cancellationToken);
 
-            if (teacher == null)
-                return new FinancialClosingSimulationDto(0, 0, 0, 0, 0, new List<FinancialClosingItemSimulationDto>());
-
             // Get active taxes
             var activeTaxes = await _context.FinancialTaxes
                 .Where(t => t.IsActive && t.EffectiveFrom <= DateTime.UtcNow)
@@ -64,10 +61,67 @@ namespace Theos.Application.FinancialClosings.Queries
             decimal pixTax = activeTaxes.FirstOrDefault(t => t?.Type == TaxType.Pix)?.Percentage ?? 0m;
             decimal creditCardTax = activeTaxes.FirstOrDefault(t => t?.Type == TaxType.CreditCard)?.Percentage ?? 0m;
 
-            // Elegibility: 7 days ago
             var thresholdDate = DateTime.UtcNow.AddDays(-7);
 
-            // Fetch eligible unbilled purchases
+            if (teacher == null)
+            {
+                // Global simulation for Admin (all approved purchases across all courses)
+                var allApprovedPurchases = await _context.Purchases
+                    .Include(p => p.Course)
+                    .ThenInclude(c => c.CourseTeachers)
+                    .Include(p => p.User)
+                    .Where(p => p.Status == PurchaseStatus.Approved)
+                    .ToListAsync(cancellationToken);
+
+                var globalItems = new List<FinancialClosingItemSimulationDto>();
+                decimal gGrossRevenue = 0;
+                decimal gBankFees = 0;
+                decimal gTheosFees = 0;
+                decimal gNetValue = 0;
+                decimal gTotalToReceive = 0;
+
+                foreach (var purchase in allApprovedPurchases)
+                {
+                    var firstTeacher = purchase.Course.CourseTeachers.FirstOrDefault();
+                    decimal teacherPercentage = firstTeacher?.ParticipationPercentage ?? 100m;
+
+                    decimal grossValue = purchase.Amount;
+                    decimal bankFeeValue = purchase.PaymentMethod == "PIX" ? pixTax : grossValue * (creditCardTax / 100m);
+                    decimal theosFeeValue = grossValue * (theosTax / 100m);
+                    decimal netValue = grossValue - bankFeeValue - theosFeeValue;
+                    decimal calculatedTeacherValue = netValue * (teacherPercentage / 100m);
+
+                    gGrossRevenue += grossValue;
+                    gBankFees += bankFeeValue;
+                    gTheosFees += theosFeeValue;
+                    gNetValue += netValue;
+                    gTotalToReceive += calculatedTeacherValue;
+
+                    globalItems.Add(new FinancialClosingItemSimulationDto(
+                        purchase.Id,
+                        purchase.Course.Name,
+                        purchase.User.FullName ?? "Aluno",
+                        purchase.CreatedAt,
+                        purchase.PaymentMethod,
+                        teacherPercentage,
+                        grossValue,
+                        bankFeeValue,
+                        theosFeeValue,
+                        calculatedTeacherValue
+                    ));
+                }
+
+                return new FinancialClosingSimulationDto(
+                    Math.Round(gGrossRevenue, 2),
+                    Math.Round(gBankFees, 2),
+                    Math.Round(gTheosFees, 2),
+                    Math.Round(gNetValue, 2),
+                    Math.Round(gTotalToReceive, 2),
+                    globalItems.OrderByDescending(i => i.PurchaseDate).ToList()
+                );
+            }
+
+            // Fetch eligible unbilled purchases for a specific teacher
             var eligiblePurchases = await _context.Purchases
                 .Include(p => p.Course)
                 .ThenInclude(c => c.CourseTeachers)
@@ -97,7 +151,7 @@ namespace Theos.Application.FinancialClosings.Queries
                 decimal netValue = grossValue - bankFeeValue - theosFeeValue;
                 decimal calculatedTeacherValue = netValue * teacherPercentage;
 
-                totalGrossRevenue += grossValue * teacherPercentage; // Proportionate gross revenue
+                totalGrossRevenue += grossValue * teacherPercentage;
                 totalBankFees += bankFeeValue * teacherPercentage;
                 totalTheosFees += theosFeeValue * teacherPercentage;
                 totalNetValue += netValue * teacherPercentage;

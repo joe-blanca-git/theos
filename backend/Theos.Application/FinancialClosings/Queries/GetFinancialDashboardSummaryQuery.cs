@@ -29,9 +29,6 @@ namespace Theos.Application.FinancialClosings.Queries
             var currentUser = await _userContextService.GetCurrentUserAsync();
             var teacher = await _context.Teachers.FirstOrDefaultAsync(t => t.IdAgivys == currentUser.ExternalId, cancellationToken);
 
-            if (teacher == null)
-                return new FinancialDashboardSummaryDto(0, 0, 0);
-
             // Get active taxes
             var activeTaxes = await _context.FinancialTaxes
                 .Where(t => t.IsActive && t.EffectiveFrom <= DateTime.UtcNow)
@@ -45,8 +42,46 @@ namespace Theos.Application.FinancialClosings.Queries
 
             var thresholdDate = DateTime.UtcNow.AddDays(-7);
 
+            if (teacher == null)
+            {
+                // Global summary for Admin (all unbilled approved purchases across the platform)
+                var globalUnbilledPurchases = await _context.Purchases
+                    .Where(p => p.Status == PurchaseStatus.Approved && 
+                                !_context.FinancialClosingItems.Any(fci => fci.PurchaseId == p.Id))
+                    .ToListAsync(cancellationToken);
+
+                decimal globalAvailable = 0;
+                decimal globalPending = 0;
+
+                foreach (var purchase in globalUnbilledPurchases)
+                {
+                    decimal bankTax = purchase.PaymentMethod == "PIX" ? pixTax : creditCardTax;
+                    decimal bankFeeValue = purchase.Amount * (bankTax / 100m);
+                    decimal theosFeeValue = purchase.Amount * (theosTax / 100m);
+                    decimal netValue = purchase.Amount - bankFeeValue - theosFeeValue;
+
+                    if (purchase.CreatedAt <= thresholdDate)
+                    {
+                        globalAvailable += netValue;
+                    }
+                    else
+                    {
+                        globalPending += netValue;
+                    }
+                }
+
+                decimal globalWithdrawn = await _context.FinancialClosings
+                    .Where(fc => fc.Status == ClosingStatus.Paid)
+                    .SumAsync(fc => fc.TotalToReceive, cancellationToken);
+
+                return new FinancialDashboardSummaryDto(
+                    Math.Round(globalAvailable, 2),
+                    Math.Round(globalPending, 2),
+                    Math.Round(globalWithdrawn, 2)
+                );
+            }
+
             // Fetch unbilled purchases (not in FinancialClosingItems) for courses where the teacher has a quota
-            // This is a simplified calculation for the dashboard
             var unbilledPurchases = await _context.Purchases
                 .Include(p => p.Course)
                 .ThenInclude(c => c.CourseTeachers)
@@ -63,9 +98,8 @@ namespace Theos.Application.FinancialClosings.Queries
                 var courseTeacher = purchase.Course.CourseTeachers.First(ct => ct.TeacherId == teacher.Id);
                 decimal teacherPercentage = courseTeacher.ParticipationPercentage / 100m;
 
-                decimal bankTax = purchase.PaymentMethod == "PIX" ? pixTax : creditCardTax; // Fallback to credit card for others like Boleto for now
+                decimal bankTax = purchase.PaymentMethod == "PIX" ? pixTax : creditCardTax;
 
-                // Net Value = Gross - (Gross * BankTax) - (Gross * TheosTax)
                 decimal bankFeeValue = purchase.Amount * (bankTax / 100m);
                 decimal theosFeeValue = purchase.Amount * (theosTax / 100m);
                 decimal netValue = purchase.Amount - bankFeeValue - theosFeeValue;
