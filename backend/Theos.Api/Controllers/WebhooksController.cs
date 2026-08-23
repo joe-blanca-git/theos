@@ -43,7 +43,29 @@ namespace Theos.Api.Controllers
             _logger.LogInformation($"[WEBHOOK ASAAS] Recebido payload: {body}");
             try
             {
-                using var document = System.Text.Json.JsonDocument.Parse(body);
+                var jsonBody = body;
+                if (jsonBody.StartsWith("data=", System.StringComparison.OrdinalIgnoreCase) || jsonBody.Contains("data=%7B") || jsonBody.Contains("data=%7b"))
+                {
+                    var parsed = System.Web.HttpUtility.ParseQueryString(jsonBody);
+                    var dataParam = parsed["data"];
+                    if (!string.IsNullOrEmpty(dataParam))
+                    {
+                        jsonBody = dataParam;
+                    }
+                    else
+                    {
+                        var dataIndex = jsonBody.IndexOf("data=", System.StringComparison.OrdinalIgnoreCase);
+                        if (dataIndex >= 0)
+                        {
+                            var rawData = jsonBody.Substring(dataIndex + 5);
+                            var ampIndex = rawData.IndexOf('&');
+                            if (ampIndex >= 0) rawData = rawData.Substring(0, ampIndex);
+                            jsonBody = System.Net.WebUtility.UrlDecode(rawData);
+                        }
+                    }
+                }
+
+                using var document = System.Text.Json.JsonDocument.Parse(jsonBody);
                 var payload = document.RootElement;
 
                 string? eventType = null;

@@ -59,7 +59,7 @@ public class ProcessAsaasWebhookCommandHandler : IRequestHandler<ProcessAsaasWeb
             }
         }
 
-        // 3. Tentar encontrar por CustomerId (Asaas Customer) e vincular a uma compra pendente ou recente
+        // 3. Tentar encontrar por CustomerId (Asaas Customer) e vincular a uma compra do usuário
         if (purchase == null && !string.IsNullOrEmpty(request.CustomerId))
         {
             var user = await _context.Users
@@ -67,25 +67,25 @@ public class ProcessAsaasWebhookCommandHandler : IRequestHandler<ProcessAsaasWeb
 
             if (user != null)
             {
-                // Busca primeiro qualquer compra do usuário que esteja pendente
+                // Busca a compra mais recente do usuário (independente do status atual)
                 purchase = await _context.Purchases
                     .Include(p => p.User)
-                    .Where(p => p.UserId == user.Id && (p.Status == PurchaseStatus.Pending || string.IsNullOrEmpty(p.AsaasPaymentId)))
+                    .Where(p => p.UserId == user.Id)
                     .OrderByDescending(p => p.CreatedAt)
                     .FirstOrDefaultAsync(cancellationToken);
 
                 if (purchase != null)
                 {
-                    _logger.LogInformation($"Compra pendente encontrada para usuário {user.Id} ({user.ExternalId}) por CustomerId: {request.CustomerId}. Vinculando AsaasPaymentId: {request.PaymentId}");
+                    _logger.LogInformation($"[WEBHOOK ASAAS] Compra recente Id={purchase.Id} encontrada para usuário {user.Id} ({user.ExternalId}) por CustomerId: {request.CustomerId}. Vinculando AsaasPaymentId: {request.PaymentId}");
                     purchase.UpdateAsaasPaymentId(request.PaymentId);
                 }
                 else if (request.Event == "PAYMENT_RECEIVED" || request.Event == "PAYMENT_CONFIRMED")
                 {
-                    // Caso o usuário pagou mas não havia uma Purchase pendente criada no banco
+                    // Caso o usuário pagou mas não havia uma Purchase criada no banco
                     var firstCourse = await _context.Courses.OrderByDescending(c => c.CreatedAt).FirstOrDefaultAsync(cancellationToken);
                     if (firstCourse != null)
                     {
-                        _logger.LogInformation($"Criando nova compra e matrícula automática para usuário {user.Id} no curso {firstCourse.Id}.");
+                        _logger.LogInformation($"[WEBHOOK ASAAS] Criando nova compra e matrícula automática para usuário {user.Id} no curso {firstCourse.Id}.");
                         purchase = Theos.Domain.Entities.Purchase.Create(user.Id, firstCourse.Id, 0, "PIX");
                         purchase.SetUser(user);
                         purchase.SetCourse(firstCourse);
@@ -98,11 +98,11 @@ public class ProcessAsaasWebhookCommandHandler : IRequestHandler<ProcessAsaasWeb
 
         if (purchase != null)
         {
-            _logger.LogInformation($"Compra Id={purchase.Id}, Status atual={purchase.Status}. Processando evento...");
+            _logger.LogInformation($"[WEBHOOK ASAAS] Compra Id={purchase.Id}, Status atual={purchase.Status}. Processando evento {request.Event}...");
             return await ProcessPurchaseAsync(purchase, request.Event, cancellationToken);
         }
 
-        _logger.LogWarning($"Nenhuma compra encontrada ou criada para o PaymentId Asaas: {request.PaymentId}, CustomerId: {request.CustomerId}");
+        _logger.LogWarning($"[WEBHOOK ASAAS] Nenhuma compra encontrada ou criada para o PaymentId Asaas: {request.PaymentId}, CustomerId: {request.CustomerId}, ExtRef: {request.ExternalReference}");
         return false;
     }
 

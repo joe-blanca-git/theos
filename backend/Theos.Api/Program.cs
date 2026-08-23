@@ -29,7 +29,8 @@ builder.Services.AddCors(options =>
     {
         policy.SetIsOriginAllowed(origin => 
                 new Uri(origin).Host.EndsWith("portaltheos.com.br") || 
-                new Uri(origin).Host == "localhost")
+                new Uri(origin).Host == "localhost" ||
+                new Uri(origin).Host == "127.0.0.1")
               .AllowAnyMethod()
               .AllowAnyHeader()
               .AllowCredentials();
@@ -84,16 +85,13 @@ builder.Services.AddControllers()
         };
     });
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerSetup();
+// builder.Services.AddSwaggerSetup();
 
 var app = builder.Build();
 
-app.UseSwagger();
-app.UseSwaggerUI(c =>
-{
-    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Theos API v1");
-    c.RoutePrefix = "swagger";
-});
+// Swagger desabilitado
+// app.UseSwagger();
+// app.UseSwaggerUI(...);
 
 app.UseSecurityHeaders();
 app.UseRateLimiter();
