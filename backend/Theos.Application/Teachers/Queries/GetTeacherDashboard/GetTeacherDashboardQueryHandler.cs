@@ -29,19 +29,25 @@ public class GetTeacherDashboardQueryHandler : IRequestHandler<GetTeacherDashboa
             .AsNoTracking()
             .FirstOrDefaultAsync(t => t.IdAgivys == request.IdAgivys && t.Active, cancellationToken);
 
-        if (teacher == null)
-            return dto;
+        IQueryable<int>? teacherCourseIdsQuery = null;
+        if (teacher != null)
+        {
+            teacherCourseIdsQuery = _context.CourseTeachers
+                .Where(ct => ct.TeacherId == teacher.Id)
+                .Select(ct => ct.CourseId);
+        }
 
-        // Courses owned by this teacher
-        var teacherCourseIdsQuery = _context.CourseTeachers
-            .Where(ct => ct.TeacherId == teacher.Id)
-            .Select(ct => ct.CourseId);
-            
         // Purchases
-        var approvedPurchases = await _context.Purchases
+        var approvedPurchasesQuery = _context.Purchases
             .AsNoTracking()
-            .Where(p => teacherCourseIdsQuery.Contains(p.CourseId) && p.Status == PurchaseStatus.Approved)
-            .ToListAsync(cancellationToken);
+            .Where(p => p.Status == PurchaseStatus.Approved);
+
+        if (teacherCourseIdsQuery != null)
+        {
+            approvedPurchasesQuery = approvedPurchasesQuery.Where(p => teacherCourseIdsQuery.Contains(p.CourseId));
+        }
+
+        var approvedPurchases = await approvedPurchasesQuery.ToListAsync(cancellationToken);
 
         dto.TotalCoursesSold = approvedPurchases.Count;
         dto.TotalRevenue = approvedPurchases.Sum(p => p.Amount);
@@ -75,10 +81,16 @@ public class GetTeacherDashboardQueryHandler : IRequestHandler<GetTeacherDashboa
         }
 
         // Enrollments
-        var enrollments = await _context.Enrollments
+        var enrollmentsQuery = _context.Enrollments
             .AsNoTracking()
-            .Where(e => teacherCourseIdsQuery.Contains(e.CourseId) && e.Active)
-            .ToListAsync(cancellationToken);
+            .Where(e => e.Active);
+
+        if (teacherCourseIdsQuery != null)
+        {
+            enrollmentsQuery = enrollmentsQuery.Where(e => teacherCourseIdsQuery.Contains(e.CourseId));
+        }
+
+        var enrollments = await enrollmentsQuery.ToListAsync(cancellationToken);
 
         dto.TotalActiveStudents = enrollments.Select(e => e.UserId).Distinct().Count();
         
@@ -89,20 +101,28 @@ public class GetTeacherDashboardQueryHandler : IRequestHandler<GetTeacherDashboa
             .Count();
 
         // Active published courses
-        dto.TotalActivePublishedCourses = await _context.Courses
-            .AsNoTracking()
-            .CountAsync(c => c.Active && teacherCourseIdsQuery.Contains(c.Id), cancellationToken);
+        var coursesQuery = _context.Courses.AsNoTracking().Where(c => c.Active);
+        if (teacherCourseIdsQuery != null)
+        {
+            coursesQuery = coursesQuery.Where(c => teacherCourseIdsQuery.Contains(c.Id));
+        }
+        dto.TotalActivePublishedCourses = await coursesQuery.CountAsync(cancellationToken);
 
         // Active classes
-        dto.TotalPublishedClassesOfActiveCourses = await _context.Lessons
-            .AsNoTracking()
-            .CountAsync(l => l.Module.Course.Active && teacherCourseIdsQuery.Contains(l.Module.CourseId), cancellationToken);
+        var classesQuery = _context.Lessons.AsNoTracking().Where(l => l.Module.Course.Active);
+        if (teacherCourseIdsQuery != null)
+        {
+            classesQuery = classesQuery.Where(l => teacherCourseIdsQuery.Contains(l.Module.CourseId));
+        }
+        dto.TotalPublishedClassesOfActiveCourses = await classesQuery.CountAsync(cancellationToken);
 
         // Ratings
-        var ratings = await _context.CourseRates
-            .AsNoTracking()
-            .Where(cr => teacherCourseIdsQuery.Contains(cr.CourseId))
-            .ToListAsync(cancellationToken);
+        var ratingsQuery = _context.CourseRates.AsNoTracking().AsQueryable();
+        if (teacherCourseIdsQuery != null)
+        {
+            ratingsQuery = ratingsQuery.Where(cr => teacherCourseIdsQuery.Contains(cr.CourseId));
+        }
+        var ratings = await ratingsQuery.ToListAsync(cancellationToken);
             
         dto.AverageCourseRating = ratings.Any() ? Math.Round((decimal)ratings.Average(r => r.Rate), 1) : 0;
 
@@ -113,7 +133,12 @@ public class GetTeacherDashboardQueryHandler : IRequestHandler<GetTeacherDashboa
             .Include(f => f.Lesson)
                 .ThenInclude(l => l.Module)
                     .ThenInclude(m => m.Course)
-            .Where(f => f.LessonId != null && f.Lesson != null && teacherCourseIdsQuery.Contains(f.Lesson.Module.CourseId));
+            .AsQueryable();
+
+        if (teacherCourseIdsQuery != null)
+        {
+            teacherTopicsQuery = teacherTopicsQuery.Where(f => f.LessonId != null && f.Lesson != null && teacherCourseIdsQuery.Contains(f.Lesson.Module.CourseId));
+        }
 
         dto.TotalOpenForumsWithoutReply = await teacherTopicsQuery
             .CountAsync(f => f.Status == ForumTopicStatus.Open && !f.Messages.Any(), cancellationToken);
