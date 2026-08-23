@@ -14,11 +14,68 @@ namespace Theos.Api.Controllers
     {
         private readonly IMediator _mediator;
         private readonly IConfiguration _configuration;
+        private readonly ILogger<WebhooksController> _logger;
 
-        public WebhooksController(IMediator mediator, IConfiguration configuration)
+        public WebhooksController(IMediator mediator, IConfiguration configuration, ILogger<WebhooksController> logger)
         {
             _mediator = mediator;
             _configuration = configuration;
+            _logger = logger;
+        }
+
+        [HttpPost("asaas")]
+        [Microsoft.AspNetCore.Authorization.AllowAnonymous]
+        public async Task<IActionResult> AsaasWebhook()
+        {
+            Request.EnableBuffering();
+            Request.Body.Position = 0;
+
+            using var reader = new System.IO.StreamReader(Request.Body, leaveOpen: true);
+            var body = await reader.ReadToEndAsync();
+            Request.Body.Position = 0;
+
+            if (string.IsNullOrWhiteSpace(body))
+            {
+                _logger.LogWarning("[WEBHOOK ASAAS] Recebeu payload vazio. Retornando 200 OK para evitar penalizações.");
+                return Ok(new { message = "Payload vazio ignorado" });
+            }
+
+            _logger.LogInformation($"[WEBHOOK ASAAS] Recebido payload: {body}");
+            try
+            {
+                using var document = System.Text.Json.JsonDocument.Parse(body);
+                var payload = document.RootElement;
+
+                string? eventType = null;
+                string? paymentId = null;
+
+                if (payload.TryGetProperty("event", out var eventProp))
+                    eventType = eventProp.GetString();
+
+                if (payload.TryGetProperty("payment", out var paymentProp) && paymentProp.TryGetProperty("id", out var idProp))
+                    paymentId = idProp.GetString();
+
+                if (string.IsNullOrEmpty(eventType) || string.IsNullOrEmpty(paymentId))
+                {
+                    _logger.LogWarning($"[WEBHOOK ASAAS] Payload não contém event ou payment.id. Event: {eventType}, PaymentId: {paymentId}");
+                    return Ok(new { message = "Payload ignorado (incompatível)" });
+                }
+
+                var command = new Theos.Application.Webhooks.Commands.ProcessAsaasWebhookCommand
+                {
+                    Event = eventType,
+                    PaymentId = paymentId
+                };
+
+                var result = await _mediator.Send(command);
+
+                return Ok(new { success = result });
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogError(ex, "[WEBHOOK ASAAS] Erro ao processar webhook.");
+                return Ok(new { message = "Erro interno ao processar webhook, retornado OK." });
+            }
         }
 
         [HttpPost("bunny")]
