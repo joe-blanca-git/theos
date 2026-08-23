@@ -24,6 +24,8 @@ namespace Theos.Api.Controllers
         }
 
         [HttpPost("asaas")]
+        [HttpPost("/v1/webhooks/asaas")]
+        [HttpPost("/api/v1/webhooks/asaas")]
         [Microsoft.AspNetCore.Authorization.AllowAnonymous]
         public async Task<IActionResult> AsaasWebhook()
         {
