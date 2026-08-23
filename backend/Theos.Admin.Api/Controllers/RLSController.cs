@@ -13,7 +13,7 @@ namespace Theos.Admin.Api.Controllers;
 [Authorize]
 public class RLSController : ApiControllerBase
 {
-    [HttpGet("getRoles")]
+    [HttpGet]
     [SwaggerOperation(Summary = "Obter Roles", Description = "Retorna a lista de todas as roles cadastradas.")]
     [ProducesResponseType(typeof(List<RoleDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetRoles()
@@ -22,7 +22,7 @@ public class RLSController : ApiControllerBase
         return Ok(result);
     }
 
-    [HttpPost("postAssignRole")]
+    [HttpPost("assignrole")]
     [SwaggerOperation(Summary = "Vincular Role", Description = "Vincula um usuário a uma role.")]
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -32,7 +32,7 @@ public class RLSController : ApiControllerBase
         return Ok(result);
     }
 
-    [HttpDelete("removeRole")]
+    [HttpDelete("removerole")]
     [SwaggerOperation(Summary = "Remover Role", Description = "Remove uma role de um usuário.")]
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]

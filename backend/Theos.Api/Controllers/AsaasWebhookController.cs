@@ -21,11 +21,18 @@ public class AsaasWebhookController : ApiControllerBase
     [HttpPost]
     public async Task<IActionResult> ReceiveWebhook()
     {
-        using var reader = new System.IO.StreamReader(Request.Body);
+        Request.EnableBuffering();
+        Request.Body.Position = 0;
+        
+        using var reader = new System.IO.StreamReader(Request.Body, leaveOpen: true);
         var body = await reader.ReadToEndAsync();
+        Request.Body.Position = 0;
 
         if (string.IsNullOrWhiteSpace(body))
-            return BadRequest("Payload vazio");
+        {
+            _logger.LogWarning("[WEBHOOK ASAAS] Recebeu payload vazio. Retornando 200 OK para evitar penalizações.");
+            return Ok(new { message = "Payload vazio ignorado" });
+        }
 
         _logger.LogInformation($"[WEBHOOK ASAAS] Recebido payload: {body}");
         try
@@ -34,11 +41,20 @@ public class AsaasWebhookController : ApiControllerBase
             var payload = document.RootElement;
 
             // Extrai as informações de evento e do payment.id
-            var eventType = payload.GetProperty("event").GetString();
-            var paymentId = payload.GetProperty("payment").GetProperty("id").GetString();
+            string? eventType = null;
+            string? paymentId = null;
+
+            if (payload.TryGetProperty("event", out var eventProp))
+                eventType = eventProp.GetString();
+
+            if (payload.TryGetProperty("payment", out var paymentProp) && paymentProp.TryGetProperty("id", out var idProp))
+                paymentId = idProp.GetString();
 
             if (string.IsNullOrEmpty(eventType) || string.IsNullOrEmpty(paymentId))
-                return BadRequest("Payload inválido");
+            {
+                _logger.LogWarning($"[WEBHOOK ASAAS] Payload não contém event ou payment.id. Event: {eventType}, PaymentId: {paymentId}");
+                return Ok(new { message = "Payload ignorado (incompatível)" });
+            }
 
             var command = new ProcessAsaasWebhookCommand
             {
