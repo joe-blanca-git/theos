@@ -19,11 +19,20 @@ public class AsaasWebhookController : ApiControllerBase
 
     // A rota do webhook geralmente não deve exigir [Authorize] porque o Asaas que faz a chamada de fora
     [HttpPost]
-    public async Task<IActionResult> ReceiveWebhook([FromBody] JsonElement payload)
+    public async Task<IActionResult> ReceiveWebhook()
     {
-        _logger.LogInformation($"[WEBHOOK ASAAS] Recebido payload: {payload.GetRawText()}");
+        using var reader = new System.IO.StreamReader(Request.Body);
+        var body = await reader.ReadToEndAsync();
+
+        if (string.IsNullOrWhiteSpace(body))
+            return BadRequest("Payload vazio");
+
+        _logger.LogInformation($"[WEBHOOK ASAAS] Recebido payload: {body}");
         try
         {
+            var document = JsonDocument.Parse(body);
+            var payload = document.RootElement;
+
             // Extrai as informações de evento e do payment.id
             var eventType = payload.GetProperty("event").GetString();
             var paymentId = payload.GetProperty("payment").GetProperty("id").GetString();
@@ -46,6 +55,10 @@ public class AsaasWebhookController : ApiControllerBase
         {
             // Retorna 200 pro Asaas parar de tentar caso seja um payload diferente do padrão
             return Ok();
+        }
+        catch (JsonException)
+        {
+            return BadRequest("JSON inválido");
         }
         catch (Exception ex)
         {

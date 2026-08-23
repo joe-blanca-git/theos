@@ -351,8 +351,14 @@ export class FinancialPaymentComponent implements OnInit {
   }
 
   copyPixCode() {
-    // Mock copy to clipboard
-    alert('Código PIX copiado para a área de transferência!');
+    if (this.pixCopiaECola) {
+      navigator.clipboard.writeText(this.pixCopiaECola).then(() => {
+        this.toastService.success('Código PIX copiado para a área de transferência!');
+      }).catch(err => {
+        console.error('Erro ao copiar código PIX', err);
+        this.toastService.error('Erro ao copiar o código PIX. Tente copiar manualmente.');
+      });
+    }
   }
 
   processPayment() {
