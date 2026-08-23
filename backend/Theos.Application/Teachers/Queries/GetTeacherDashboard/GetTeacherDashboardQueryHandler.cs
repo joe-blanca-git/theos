@@ -24,13 +24,16 @@ public class GetTeacherDashboardQueryHandler : IRequestHandler<GetTeacherDashboa
         var todayStart = now.Date;
         var todayEnd = todayStart.AddDays(1);
 
-        // Find the teacher
+        // Find the teacher if requested
         var teacher = await _context.Teachers
             .AsNoTracking()
             .FirstOrDefaultAsync(t => t.IdAgivys == request.IdAgivys && t.Active, cancellationToken);
 
         IQueryable<int>? teacherCourseIdsQuery = null;
-        if (teacher != null)
+
+        // If user is NOT Admin and is a registered teacher, filter specifically for that teacher.
+        // If user IS Admin, teacherCourseIdsQuery remains null to aggregate across ALL platform courses.
+        if (!request.IsAdmin && teacher != null)
         {
             teacherCourseIdsQuery = _context.CourseTeachers
                 .Where(ct => ct.TeacherId == teacher.Id)

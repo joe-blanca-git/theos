@@ -94,18 +94,28 @@ public class TeachersController : ApiControllerBase
         return Ok(new { message = result.Message });
     }
     /// <summary>
-    /// Obtém o dashboard completo do professor autenticado.
+    /// Obtém o dashboard completo (global para Admin, filtrado para professor).
     /// </summary>
     [HttpGet("dashboard")]
     public async Task<ActionResult<TeacherDashboardDto>> GetTeacherDashboard()
     {
         // Extract IdAgivys from current user context token claims
-        var idAgivys = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-        
-        if (string.IsNullOrEmpty(idAgivys))
-            return Unauthorized("ID do usuário não encontrado no token.");
+        var idAgivys = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value
+                    ?? User.FindFirst("nameid")?.Value
+                    ?? User.FindFirst("sub")?.Value;
 
-        var dto = await Mediator.Send(new GetTeacherDashboardQuery { IdAgivys = idAgivys });
+        // In Admin API (portal-popt), default to admin view unless explicitly restricted
+        bool isAdmin = true;
+        if (User?.Identity?.IsAuthenticated == true)
+        {
+            var roles = User.Claims.Where(c => c.Type == "role" || c.Type == System.Security.Claims.ClaimTypes.Role).Select(c => c.Value).ToList();
+            if (roles.Count > 0 && !roles.Any(r => r.Equals("Admin", StringComparison.OrdinalIgnoreCase) || r.Equals("Administrador", StringComparison.OrdinalIgnoreCase)))
+            {
+                isAdmin = false;
+            }
+        }
+
+        var dto = await Mediator.Send(new GetTeacherDashboardQuery { IdAgivys = idAgivys ?? string.Empty, IsAdmin = isAdmin });
         return Ok(dto);
     }
 }

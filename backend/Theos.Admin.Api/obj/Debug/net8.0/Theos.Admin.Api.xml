@@ -252,7 +252,7 @@
         </member>
         <member name="M:Theos.Admin.Api.Controllers.TeachersController.GetTeacherDashboard">
             <summary>
-            Obtém o dashboard completo do professor autenticado.
+            Obtém o dashboard completo (global para Admin, filtrado para professor).
             </summary>
         </member>
         <member name="M:Theos.Admin.Api.Controllers.TicketCategoriesController.GetCategories">
